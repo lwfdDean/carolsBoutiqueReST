@@ -8,6 +8,6 @@ public interface IServiceBoutique {
     List<Boutique> getAllBoutiques();
     String registerNewBoutique(Boutique boutique);
     Boutique login(Map<String,String> loginDetails);
-    String changePassword(Map<String, String> paswordDetails);
+    String changePassword(Map<String, String> passwordDetails);
     String changeDailyTarget(Map<String,Double> newTarget);
 }

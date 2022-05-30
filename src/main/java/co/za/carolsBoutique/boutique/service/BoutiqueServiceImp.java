@@ -15,14 +15,21 @@ public class BoutiqueServiceImp implements IServiceBoutique{
     
     @Override
     public List<Boutique> getAllBoutiques() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dao.findAllBoutiques();
     }
 
     @Override
     public String registerNewBoutique(Boutique boutique) {
-        return "";
+        boutique.setId(generateBoutiqueId(boutique));
+        if(dao.findBoutique(boutique.getId())==null){
+            if (verifyPassword(boutique.getPassword())) {
+                return dao.addBoutique(boutique)?"Boutique added, boutique Id ="+boutique.getId():"Couldnt add boutique";
+            }
+            return "invalid password";
+        }
+        return "boutique already exists";
     }
-
+    
     @Override
     public Boutique login(Map<String, String> loginDetails) {
         String id = loginDetails.keySet().iterator().next();
@@ -36,13 +43,45 @@ public class BoutiqueServiceImp implements IServiceBoutique{
     }
 
     @Override
-    public String changePassword(Map<String, String> paswordDetails) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String changePassword(Map<String, String> passwordDetails) {
+        String id = passwordDetails.keySet().iterator().next();
+        if (verifyPassword(passwordDetails.get(id))) {
+            return dao.updateBoutique(id,passwordDetails.get(id))?"password Updated":"could not update the password";
+        }
+        return "invalid password supplied";
     }
 
     @Override
     public String changeDailyTarget(Map<String, Double> newTarget) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String id = newTarget.keySet().iterator().next();
+        return dao.updateBoutique(id, newTarget.get(id))?"target updated":"could not update target";
     }
     
+    private String generateBoutiqueId(Boutique boutique){
+        StringBuilder id = new StringBuilder();
+        id.append(boutique.getLocation().charAt(0)
+                +boutique.getLocation().charAt(boutique.getLocation().length()-1)
+                +(int)(Math.random()*10000)
+                +boutique.getLocation().charAt((int)boutique.getLocation().length()/2)
+        );
+        return id.toString();
+    }
+    
+    private boolean verifyPassword(String password){
+        if (password == null || password.isBlank() || password.isEmpty() || password.length()!=12) {
+            return false;
+        }
+        int nums = 0;
+        int chars = 0;
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isDigit(password.charAt(i))) {
+                nums++;
+            }
+            if (Character.isLetter(password.charAt(i))) {
+                chars++;
+            }
+        }
+        return nums>0 && chars>0;
+    }
+
 }
