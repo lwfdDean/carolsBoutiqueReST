@@ -9,5 +9,8 @@ package co.za.carolsBoutique.product.controller;
  * @author User
  */
 public class ProductResource {
+        
+    
+    
     
 }
