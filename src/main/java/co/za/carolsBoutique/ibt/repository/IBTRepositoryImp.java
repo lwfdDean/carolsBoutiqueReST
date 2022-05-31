@@ -94,6 +94,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if (rs!=null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return ibt;
@@ -101,17 +108,90 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public List<IBT> findStoreIBTS(String storeId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<IBT> ibtRequests = new ArrayList<>();
+        if (con!=null) {
+            try {
+                ps = con.prepareStatement("select * from ibt where approvingBoutique = ?");
+                ps.setString(1, storeId);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    String productId = rs.getString("product");
+                    String size = rs.getString("size");
+                    Product product = getIbtProduct(productId, size);
+                    ibtRequests.add(new IBT(rs.getString("id"),
+                            rs.getString("customerEmail"),
+                            rs.getBoolean("approved"),
+                            product,
+                            size,
+                            rs.getString("requestingBoutique"),
+                            rs.getString("approvingBoutique")
+                    ));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (rs!=null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return ibtRequests;
     }
 
     @Override
     public boolean updateIBT(String ibtId, boolean approved) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (con!=null) {
+            try {
+                ps = con.prepareStatement("update ibt set approved = ? where id = ?");
+                ps.setBoolean(1, approved);
+                ps.setString(2, ibtId);
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                if (ps!=null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rowsAffected == 1;
     }
 
     @Override
     public boolean deleteIBT(String ibtId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (con!=null) {
+            try {
+                ps = con.prepareStatement("delete from ibt where id = ?");
+                ps.setString(1, ibtId);
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                if (ps!=null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rowsAffected == 1;
     }
 
     private Product getIbtProduct(String productId, String size) {
@@ -187,6 +267,49 @@ public class IBTRepositoryImp implements IIBTRepository {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<IBT> findStoreIBTRequests(String storeId) {
+        List<IBT> ibtRequested = new ArrayList<>();
+        if (con!=null) {
+            try {
+                ps = con.prepareStatement("select * from ibt where requestingBoutique = ?");
+                ps.setString(1, storeId);
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    String productId = rs.getString("product");
+                    String size = rs.getString("size");
+                    Product product = getIbtProduct(productId, size);
+                    ibtRequested.add(new IBT(rs.getString("id"),
+                            rs.getString("customerEmail"),
+                            rs.getBoolean("approved"),
+                            product,
+                            size,
+                            rs.getString("requestingBoutique"),
+                            rs.getString("approvingBoutique")
+                    ));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (rs!=null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return ibtRequested;
     }
 
 }

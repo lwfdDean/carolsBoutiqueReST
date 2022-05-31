@@ -7,6 +7,7 @@ public interface IIBTRepository {
     boolean addIBT(IBT ibt);
     IBT findIBT(String ibtId);
     List<IBT> findStoreIBTS(String storeId);
+    List<IBT> findStoreIBTRequests(String storeId);
     boolean updateIBT(String ibtId, boolean approved);
     boolean deleteIBT(String ibtId);
 }
