@@ -18,15 +18,16 @@ public class EmployeeServiceImp implements IServiceEmployee{
 
     @Override
     public Employee login(Map<String, String> loginDetails) {
-        Employee employee = dao.findEmployee(loginDetails.keySet().iterator().next());
+        String id = loginDetails.keySet().iterator().next();
+        Employee employee = dao.findEmployee(id);
         if (employee!=null) {
-            return employee.getPassword().equals(loginDetails.get(loginDetails.keySet().iterator().next()))?employee:null;
+            return employee.getPassword().equals(loginDetails.get(id))?employee:null;
         }
         return null;
     }
 
     private boolean verifyPassword(String password){
-        if (password == null || password.isEmpty() || password.length()==12) {
+        if (password == null || password.isEmpty() || password.length()==8) {
             return false;
         }
         int nums = 0;

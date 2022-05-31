@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface IProductRepository {
     Product findProduct(String productId);
+    Product findProductBySize(String productId, String size);
     List<Product> findAllProducts();
     boolean addProduct(Product product);
     boolean deleteProduct(String productId);

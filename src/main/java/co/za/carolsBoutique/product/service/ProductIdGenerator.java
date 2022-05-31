@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package co.za.carolsBoutique.product.service;
 
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 
-/**
- *
- * @author 27609
- */
 public class ProductIdGenerator implements CodeGenerator{
 
     @Override

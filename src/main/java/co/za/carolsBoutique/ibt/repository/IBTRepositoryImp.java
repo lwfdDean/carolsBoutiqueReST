@@ -94,7 +94,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
                     } catch (SQLException ex) {
@@ -109,7 +109,7 @@ public class IBTRepositoryImp implements IIBTRepository {
     @Override
     public List<IBT> findStoreIBTS(String storeId) {
         List<IBT> ibtRequests = new ArrayList<>();
-        if (con!=null) {
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select * from ibt where approvingBoutique = ?");
                 ps.setString(1, storeId);
@@ -129,7 +129,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
+            } finally {
                 if (ps != null) {
                     try {
                         ps.close();
@@ -137,7 +137,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
                     } catch (SQLException ex) {
@@ -151,7 +151,7 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public boolean updateIBT(String ibtId, boolean approved) {
-        if (con!=null) {
+        if (con != null) {
             try {
                 ps = con.prepareStatement("update ibt set approved = ? where id = ?");
                 ps.setBoolean(1, approved);
@@ -159,8 +159,8 @@ public class IBTRepositoryImp implements IIBTRepository {
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
@@ -174,15 +174,15 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public boolean deleteIBT(String ibtId) {
-        if (con!=null) {
+        if (con != null) {
             try {
                 ps = con.prepareStatement("delete from ibt where id = ?");
                 ps.setString(1, ibtId);
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
@@ -209,7 +209,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                     product = new Product(rs1.getString("id"),
                             rs1.getString("name"),
                             rs1.getString("description"),
-                            size,
+                            getProductSizes(productId),
                             rs1.getString("color"),
                             rs1.getDouble("price"),
                             findProductCategories(productId));
@@ -217,14 +217,14 @@ public class IBTRepositoryImp implements IIBTRepository {
             } catch (SQLException ex) {
                 Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                if (ps1!=null) {
+                if (ps1 != null) {
                     try {
                         ps1.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs1!=null) {
+                if (rs1 != null) {
                     try {
                         rs1.close();
                     } catch (SQLException ex) {
@@ -236,43 +236,79 @@ public class IBTRepositoryImp implements IIBTRepository {
         return product;
     }
 
-    private List<String> findProductCategories(String productId) {
-        List<String> categories = new ArrayList<String>();
+    private List<String> getProductSizes(String productId) {
         PreparedStatement ps2 = null;
         ResultSet rs2 = null;
-        try {
-            ps2 = con.prepareStatement("select category from product_category where product = ?");
-            ps2.setString(1, productId);
-            rs2 = ps2.executeQuery();
-            while (rs2.next()) {
-                categories.add(rs2.getString("category"));
-            }
-            return categories;
-        } catch (SQLException se) {
-            se.printStackTrace();
-        } finally {
-            if (rs2 != null) {
-                try {
-                    rs2.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        List<String> sizes = new ArrayList<>();
+        if (con != null) {
+            try {
+                ps2 = con.prepareStatement("select id from size inner join product_size on product_size.size = size.id where product_size.product=?");
+                ps2.setString(1, productId);
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    sizes.add(rs2.getString("id"));
                 }
-            }
-            if (ps2 != null) {
-                try {
-                    ps2.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs2 != null) {
+                    try {
+                        rs2.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps2 != null) {
+                    try {
+                        ps2.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
-        return null;
+        return sizes;
+    }
+
+    private List<String> findProductCategories(String productId) {
+        List<String> categories = new ArrayList<>();
+        PreparedStatement ps2 = null;
+        ResultSet rs2 = null;
+        if (con != null) {
+            try {
+                ps2 = con.prepareStatement("select category from product_category where product = ?");
+                ps2.setString(1, productId);
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    categories.add(rs2.getString("category"));
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } finally {
+                if (rs2 != null) {
+                    try {
+                        rs2.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps2 != null) {
+                    try {
+                        ps2.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+
+        return categories;
     }
 
     @Override
     public List<IBT> findStoreIBTRequests(String storeId) {
         List<IBT> ibtRequested = new ArrayList<>();
-        if (con!=null) {
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select * from ibt where requestingBoutique = ?");
                 ps.setString(1, storeId);
@@ -292,7 +328,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
+            } finally {
                 if (ps != null) {
                     try {
                         ps.close();
@@ -300,7 +336,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
                     } catch (SQLException ex) {

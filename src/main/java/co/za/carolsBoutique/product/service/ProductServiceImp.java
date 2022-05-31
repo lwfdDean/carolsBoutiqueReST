@@ -28,10 +28,10 @@ public class ProductServiceImp implements IServiceProduct{
 
     @Override
     public String addProduct(Product product) {
-       if(dao.findProduct(product.getId())==null){
+        if(dao.findProduct(product.getId())==null){
             return dao.addProduct(product)?"Successfully added product":"Adding product failed"; 
         }
-       return "Product with the provided ID already exists";
+        return "Product with the provided ID already exists";
     }
 
     @Override
