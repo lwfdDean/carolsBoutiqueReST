@@ -10,7 +10,9 @@ public interface IServiceEmployee {
     String register(Employee employee);
     String promoteToTeller(Map<String,String> employeeDetails);
     List<Employee> getAllEmployees();
+    String removeemployee(String employeeId);
     
     List<Role> getAllRoles();
-    Role getRole();
+    Role getRole(String roleId);
+    
 }

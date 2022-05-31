@@ -1,16 +1,18 @@
 package co.za.carolsBoutique.boutique.service;
 
 import co.za.carolsBoutique.boutique.model.Boutique;
-import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.boutique.repository.IBoutiqueRepository;
+import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import java.util.List;
 import java.util.Map;
 
 public class BoutiqueServiceImp implements IServiceBoutique{
     private IBoutiqueRepository dao;
+    private CodeGenerator gen;
 
-    public BoutiqueServiceImp(IBoutiqueRepository dao) {
-        this.dao = new BoutiqueRepositoryImp();
+    public BoutiqueServiceImp(IBoutiqueRepository dao, CodeGenerator gen) {
+        this.dao = dao;
+        this.gen = gen;
     }
     
     @Override
@@ -20,7 +22,7 @@ public class BoutiqueServiceImp implements IServiceBoutique{
 
     @Override
     public String registerNewBoutique(Boutique boutique) {
-        boutique.setId(generateBoutiqueId(boutique));
+        boutique.setId(gen.generateId(boutique.getLocation(), true));
         if(dao.findBoutique(boutique.getId())==null){
             if (verifyPassword(boutique.getPassword())) {
                 return dao.addBoutique(boutique)?"Boutique added, boutique Id ="+boutique.getId():"Couldnt add boutique";
@@ -55,16 +57,6 @@ public class BoutiqueServiceImp implements IServiceBoutique{
     public String changeDailyTarget(Map<String, Double> newTarget) {
         String id = newTarget.keySet().iterator().next();
         return dao.updateBoutique(id, newTarget.get(id))?"target updated":"could not update target";
-    }
-    
-    private String generateBoutiqueId(Boutique boutique){
-        StringBuilder id = new StringBuilder();
-        id.append(boutique.getLocation().charAt(0)
-                +boutique.getLocation().charAt(boutique.getLocation().length()-1)
-                +(int)(Math.random()*10000)
-                +boutique.getLocation().charAt((int)boutique.getLocation().length()/2)
-        );
-        return id.toString();
     }
     
     private boolean verifyPassword(String password){

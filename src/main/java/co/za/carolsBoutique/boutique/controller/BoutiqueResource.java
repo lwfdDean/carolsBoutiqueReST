@@ -2,6 +2,7 @@ package co.za.carolsBoutique.boutique.controller;
 
 import co.za.carolsBoutique.boutique.model.Boutique;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
+import co.za.carolsBoutique.boutique.service.BoutiqueIdGenerator;
 import co.za.carolsBoutique.boutique.service.BoutiqueServiceImp;
 import co.za.carolsBoutique.boutique.service.IServiceBoutique;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class BoutiqueResource {
     private IServiceBoutique service;
 
     public BoutiqueResource() {
-        service = new BoutiqueServiceImp(new BoutiqueRepositoryImp());
+        service = new BoutiqueServiceImp(new BoutiqueRepositoryImp(),new BoutiqueIdGenerator());
     }
     
     @POST

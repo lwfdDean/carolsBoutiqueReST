@@ -23,7 +23,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
     }
 
     private boolean verifyPassword(String password){
-        if (password == null || password.isBlank() || password.isEmpty() || password.length()!=12) {
+        if (password == null || password.isBlank() || password.isEmpty() || password.length()==12) {
             return false;
         }
         int nums = 0;
@@ -57,7 +57,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
 
     @Override
     public List<Employee> getAllEmployees() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dao.findAllEmployees();
     }
 
     @Override
@@ -66,7 +66,12 @@ public class EmployeeServiceImp implements IServiceEmployee{
     }
 
     @Override
-    public Role getRole() {
+    public Role getRole(String roleId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public String removeemployee(String employeeId) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
