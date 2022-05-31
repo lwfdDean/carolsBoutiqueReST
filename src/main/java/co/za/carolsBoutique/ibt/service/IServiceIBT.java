@@ -9,5 +9,4 @@ public interface IServiceIBT {
     IBT getIBT(String ibtId);
     List<IBT> findStoreIBTS(String storeId);
     String approveIBT(Map<String,Boolean> approvedIBT);
-    String rejectIBT(String ibtId);
 }

@@ -1,4 +1,4 @@
-package co.za.carolsBoutique.product.repository;
+    package co.za.carolsBoutique.product.repository;
 
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.product.model.Category;
