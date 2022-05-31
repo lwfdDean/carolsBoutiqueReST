@@ -60,7 +60,7 @@ public class BoutiqueServiceImp implements IServiceBoutique{
     }
     
     private boolean verifyPassword(String password){
-        if (password == null || password.isBlank() || password.isEmpty() || password.length()!=12) {
+        if (password == null || password.isEmpty() || password.length()!=12) {
             return false;
         }
         int nums = 0;
