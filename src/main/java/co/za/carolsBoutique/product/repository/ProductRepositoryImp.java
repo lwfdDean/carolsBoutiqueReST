@@ -410,5 +410,31 @@ public class ProductRepositoryImp implements IProductRepository{
         }
         return roles == 1;
     }
+
+    @Override
+    public boolean addReservedItem(String productId, String customerEmial) {
+//          try {
+//            ps = con.prepareStatement("INSERT INTO reservedproduct(id,customerEmail,stock) VALUES(?,?,?);");
+//            ps.setString(1, productId);
+//            ps.setString(2, customerEmial);
+//            ps.executeUpdate();
+//            return true;
+//        }catch(SQLException se){
+//            se.printStackTrace();
+//            return false;
+//        }finally{
+//           if(ps!=null){
+//                try {
+//                    ps.close();
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }
+        return false;
+
+    }
+        
+    
     
 }

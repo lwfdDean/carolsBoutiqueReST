@@ -16,6 +16,6 @@ public interface IProductRepository {
     List<Category> findAllCategories();
     boolean addCategory(Category category);
     boolean deleteCategory(String categoryId);
-    
+    boolean addReservedItem(String productId, String customerEmial);
     
 }
