@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.employee.service;
 
+import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import co.za.carolsBoutique.employee.repository.IEmployeeRepository;
@@ -8,9 +9,11 @@ import java.util.Map;
 
 public class EmployeeServiceImp implements IServiceEmployee{
     private IEmployeeRepository dao;
+    private CodeGenerator gen;
 
-    public EmployeeServiceImp(IEmployeeRepository dao) {
+    public EmployeeServiceImp(IEmployeeRepository dao, CodeGenerator gen) {
         this.dao = dao;
+        this.gen = gen;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.product.controller;
 
-import co.za.carolsBoutique.boutique.model.Boutique;
+
+import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import co.za.carolsBoutique.product.service.IServiceProduct;
@@ -13,6 +14,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,9 +34,9 @@ public class ProductResource {
     }
     
     @GET
-    @Path("/findProduct")
+    @Path("/findProduct/{productId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findProduct(String productId){
+    public Response findProduct(@PathParam("productId")String productId){
         return Response.status(Response.Status.OK).entity(service.findProduct(productId)).build();
     }
      //deleteProduct
@@ -47,14 +49,12 @@ public class ProductResource {
     }
     
     @DELETE
-    @Path("/deleteProduct")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/deleteProduct/{productId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteProduct(String productId){
+    public Response deleteProduct(@PathParam("productId") String productId){
         return Response.status(Response.Status.OK).entity(service.deleteProduct(productId)).build();
     }
     
-    //findAllCategories
     @POST
     @Path("/updateProductPrice")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -76,4 +76,28 @@ public class ProductResource {
     public Response findAllCategories(){
         return Response.status(Response.Status.OK).entity(service.findAllCategories()).build();
     }
+    
+    @GET
+    @Path("/findCategory/{categoryId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findCategory(@PathParam("categoryId")String categoryId){
+        return Response.status(Response.Status.OK).entity(service.findCategory(categoryId)).build();
+   }
+   
+    @POST
+    @Path("/addCategory")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCategory(Category category){
+        return Response.status(Response.Status.OK).entity(service.addCategory(category)).build();
+    }
+    
+    //deleteCategory
+    @POST
+    @Path("/deleteCategory/{categoryId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCategory(@PathParam("categoryId")String categoryId){
+        return Response.status(Response.Status.OK).entity(service.deleteCategory(categoryId)).build();
+   }
 }
