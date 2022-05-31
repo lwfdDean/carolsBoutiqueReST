@@ -1,7 +1,5 @@
 package co.za.carolsBoutique.employee.repository;
 
-import co.za.carolsBoutique.boutique.model.Boutique;
-import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import java.sql.Connection;
@@ -26,12 +24,12 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             con = DriverManager.getConnection(url, "root", "Root");
         } catch (SQLException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
