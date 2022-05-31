@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.product.service;
 
+import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.repository.IProductRepository;
@@ -9,9 +10,10 @@ import java.util.Map;
 
 public class ProductServiceImp implements IServiceProduct{
     private IProductRepository dao;
-    
-    public ProductServiceImp(IProductRepository dao){
+    private CodeGenerator gen;
+    public ProductServiceImp(IProductRepository dao,CodeGenerator gen){
         this.dao = dao;
+        this.gen = gen;
     }
 
     @Override
