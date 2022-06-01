@@ -13,7 +13,7 @@ public interface IServiceProduct {
     String deleteProduct(String productId);
     String updateProductPrice(Map<String,Double>newPrice);
     
-    List<Product> SerachForItem(ArrayList<String> categoriesId);
+    List<Product> SerachForItem(List<String> categoriesId);
     
     List<Category> findAllCategories();
     Category findCategory(String categoryId);

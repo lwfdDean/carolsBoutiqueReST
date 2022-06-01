@@ -43,9 +43,10 @@ public class ProductServiceImp implements IServiceProduct{
     public String updateProductPrice(Map<String, Double> newPrice) {
         return dao.updateProduct(newPrice)?"Successfully updated product price":"Updateding product price failed";
     }
-
+    
+    //Changes made(Laurence) changed ArrayList to List(param), including interface
     @Override
-    public List<Product> SerachForItem(ArrayList<String> categoriesId) {
+    public List<Product> SerachForItem(List<String> categoriesId) {
         return  dao.findProductsByCategories(categoriesId);
     }
 
@@ -64,7 +65,7 @@ public class ProductServiceImp implements IServiceProduct{
         }
         return "Cagegory alrady exsists";
     }
-
+    //(Laurence, think we should use cat.name, we dont need the ID outside the database)
     @Override
     public String deleteCategory(String categoryId) {
         return dao.deleteCategory(categoryId)?"Successfully deleted category":"Deleting category failed";
