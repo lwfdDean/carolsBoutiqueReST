@@ -4,7 +4,9 @@ import co.za.carolsBoutique.Sale.model.Sale;
 
 
 public interface ISaleRepository {
-    public boolean addSale(Sale sale);
-    public boolean removeSaleLineItem(String saleId, String itemId);
-    
+    boolean addSale(Sale sale);
+    boolean removeSaleLineItem(String saleId, String productId);
+    boolean updateSale(String saleId, Double totalPrice);
+	Sale findSale(String saleId);
+	boolean updateSaleLineItem(String oldProductId, String newProductId, String saleId);
 }
