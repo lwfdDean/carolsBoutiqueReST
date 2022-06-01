@@ -209,17 +209,17 @@ public class ProductRepositoryImp implements IProductRepository {
         return product;
     }
 
-    private List<String> getProductSizes(String productId) {
+    private List<String> getProductSizes(String productId) {//(Laurence) changed quarie(from id to name)
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         List<String> sizes = new ArrayList<>();
         if (con != null) {
             try {
-                ps1 = con.prepareStatement("select id from size inner join product_size on product_size.size = size.id where product_size.product=?");
+                ps1 = con.prepareStatement("select name from size inner join product_size on product_size.size = size.id where product_size.product=?");
                 ps1.setString(1, productId);
                 rs1 = ps1.executeQuery();
                 while (rs1.next()) {
-                    sizes.add(rs1.getString("id"));
+                    sizes.add(rs1.getString("name"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -288,15 +288,28 @@ public class ProductRepositoryImp implements IProductRepository {
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         List<String> categories = new ArrayList<>();
+        List<String> categoriesName = new ArrayList<>();
         if (con != null) {
             try {
-                ps1 = con.prepareStatement("select category from product_category where product = ?");
+                ps1 = con.prepareStatement("select category from product_category where product=?");
                 ps1.setString(1, productId);
                 rs1 = ps1.executeQuery();
                 while (rs1.next()) {
                     categories.add(rs1.getString("category"));
                 }
-                return categories;
+                rs1.close();
+                ps1.close();
+                for (int i = 0; i < categories.size(); i++) {
+                    ps1 = con.prepareStatement("select name from category where id=?");
+                    ps1.setString(1, categories.get(i));
+                    rs1 = ps1.executeQuery();
+                    rs1.next();
+                    categoriesName.add(rs1.getString("name"));
+                    rs1.close();
+                    ps1.close();
+                
+                }
+                return categoriesName;
             } catch (SQLException se) {
                 se.printStackTrace();
             } finally {
@@ -460,13 +473,21 @@ public class ProductRepositoryImp implements IProductRepository {
         return rowsAffected == 1;
     }
 
-    @Override
+    @Override//(Laurence) had to change statement completely, had to delete dependency first
     public boolean deleteCategory(String categoryId) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("DELETE FROM category WHERE  name=?");
+                ps = con.prepareStatement("DELETE FROM product_category WHERE category = ?");
                 ps.setString(1, categoryId);
                 rowsAffected = ps.executeUpdate();
+                if(rowsAffected==1){
+                    ps = con.prepareStatement("DELETE FROM category WHERE id = ?");
+                    ps.setString(1, categoryId);
+                    rowsAffected = ps.executeUpdate();
+                }else{
+                    return false;
+                }
+               
             } catch (SQLException se) {
                 se.printStackTrace();
             } finally {
