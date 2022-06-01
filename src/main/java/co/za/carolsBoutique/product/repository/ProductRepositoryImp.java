@@ -3,12 +3,14 @@ package co.za.carolsBoutique.product.repository;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.StockEntry;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -34,6 +36,137 @@ public class ProductRepositoryImp implements IProductRepository {
         } catch (SQLException ex) {
             Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public boolean addProduct(Product product) {
+        boolean success = false;
+        if (con != null) {
+            try {/*TODO: add a category/product*/
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("INSERT INTO product(id,name,description,color,price) VALUES(?,?,?,?,?);");
+                ps.setString(1, product.getId());
+                ps.setString(2, product.getName());
+                ps.setString(3, product.getDescription());
+                ps.setString(5, product.getColor());
+                ps.setDouble(6, product.getPrice());
+                rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 1) {
+                    if (addProductCategory(product) && addProductSizes(product)) {
+                        con.commit();
+                        success = true;
+                        con.setAutoCommit(true);
+                    } else {
+                        con.rollback();
+                        con.setAutoCommit(true);
+                    }
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+                return false;
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return success;
+    }
+
+    private boolean addProductSizes(Product product) {
+        PreparedStatement ps1 = null;
+        int rows = 0;
+        if (con != null) {
+            try {
+                List<String> sizes = product.getSizes();
+                for (int i = 0; i < sizes.size(); i++) {
+                    ps1 = con.prepareStatement("INSERT INTO product_size(product,size) VALUES(?,?)");
+                    ps1.setString(1, product.getId());
+                    ps1.setString(2, sizes.get(i));
+                    rows += ps1.executeUpdate();
+                    ps1.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rows == product.getSizes().size();
+    }
+
+    private boolean addProductCategory(Product product) {
+        PreparedStatement ps1 = null;
+        int roles = 0;
+        if (con != null) {
+            try {
+                List<String> catagories = product.getCategories();
+                for (int i = 0; i < catagories.size(); i++) {
+                    ps1 = con.prepareStatement("INSERT INTO product_category(product,category) VALUES(?,?)");
+                    ps1.setString(1, product.getId());
+                    ps1.setString(2, catagories.get(i));
+                    roles += ps1.executeUpdate();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return roles == product.getCategories().size();
+    }
+
+    @Override
+    public boolean addStockEntry(StockEntry stockEntry, List<String> stockId, Product product) {
+        if (con != null) {
+            try {
+                for (int i = 0; i < product.getSizes().size(); i++) {
+                    ps = con.prepareStatement("insert into stock(id,product,boutique,quantity,size) values(?,?,?,?,?)");
+                    ps.setString(1, stockId.get(i));
+                    ps.setString(2, product.getId());
+                    ps.setString(3, stockEntry.getBoutiqueId());
+                    ps.setInt(4, stockEntry.getQuantity());
+                    ps.setString(5, product.getSizes().get(i));
+                    rowsAffected += ps.executeUpdate();
+                    ps.close();
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rowsAffected == product.getSizes().size();
     }
 
     @Override //laurence
@@ -187,99 +320,6 @@ public class ProductRepositoryImp implements IProductRepository {
     }
 
     @Override
-    public boolean addProduct(Product product) {
-        boolean success = false;
-        if (con != null) {
-            try {/*TODO: add a category/product*/
-                con.setAutoCommit(false);
-                ps = con.prepareStatement("INSERT INTO product(id,name,description,color,price) VALUES(?,?,?,?,?);");
-                ps.setString(1, product.getId());
-                ps.setString(2, product.getName());
-                ps.setString(3, product.getDescription());
-                ps.setString(5, product.getColor());
-                ps.setDouble(6, product.getPrice());
-                rowsAffected = ps.executeUpdate();
-                if (rowsAffected == 1) {
-                    if (addProductCategory(product) && addProductSizes(product)) {
-                        con.commit();
-                        success = true;
-                        con.setAutoCommit(true);
-                    } else {
-                        con.rollback();
-                        con.setAutoCommit(true);
-                    }
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-                return false;
-            } finally {
-                if (ps != null) {
-                    try {
-                        ps.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        return success;
-    }
-
-    private boolean addProductSizes(Product product) {
-        PreparedStatement ps1 = null;
-        int rows = 0;
-        if (con != null) {
-            try {
-                List<String> sizes = product.getSizes();
-                for (int i = 0; i < sizes.size(); i++) {
-                    ps1 = con.prepareStatement("INSERT INTO product_size(product,size) VALUES(?,?)");
-                    ps1.setString(1, product.getId());
-                    ps1.setString(2, sizes.get(i));
-                    rows += ps1.executeUpdate();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            } finally {
-                if (ps1 != null) {
-                    try {
-                        ps1.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        return rows == product.getSizes().size();
-    }
-
-    private boolean addProductCategory(Product product) {
-        PreparedStatement ps1 = null;
-        int roles = 0;
-        if (con != null) {
-            try {
-                List<String> catagories = product.getCategories();
-                for (int i = 0; i < catagories.size(); i++) {
-                    ps1 = con.prepareStatement("INSERT INTO product_category(product,category) VALUES(?,?)");
-                    ps1.setString(1, product.getId());
-                    ps1.setString(2, catagories.get(i));
-                    roles += ps1.executeUpdate();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            } finally {
-                if (ps1 != null) {
-                    try {
-                        ps1.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        return roles == product.getCategories().size();
-    }
-
-    @Override
     public boolean deleteProduct(String productId) {
         if (con != null) {
             try {
@@ -367,77 +407,77 @@ public class ProductRepositoryImp implements IProductRepository {
     @Override
     public List<Category> findAllCategories() {
         List<Category> categories = new ArrayList<>();
-        if (con!=null) {
+        if (con != null) {
             try {
-            ps = con.prepareStatement("select id,name from category");
-            rs = ps.executeQuery();
-            while (rs.next()) {
+                ps = con.prepareStatement("select id,name from category");
+                rs = ps.executeQuery();
+                while (rs.next()) {
 
-                categories.add(new Category(rs.getString("id"), rs.getString("name")));
-            }
-        } catch (SQLException se) {
-            se.printStackTrace();
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    categories.add(new Category(rs.getString("id"), rs.getString("name")));
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
         }
         return categories;
     }
 
     @Override
     public boolean addCategory(Category category) {
-        if (con!=null) {
+        if (con != null) {
             try {
-            ps = con.prepareStatement("INSERT INTO category(id,name) VALUES(?,?);");
-            ps.setString(1, category.getId());
-            ps.setString(2, category.getName());
-            rowsAffected = ps.executeUpdate();
-        } catch (SQLException se) {
-            se.printStackTrace();
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                ps = con.prepareStatement("INSERT INTO category(id,name) VALUES(?,?);");
+                ps.setString(1, category.getId());
+                ps.setString(2, category.getName());
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
-        }
         }
         return rowsAffected == 1;
     }
 
     @Override
     public boolean deleteCategory(String categoryId) {
-        if (con!=null) {
+        if (con != null) {
             try {
-            ps = con.prepareStatement("DELETE FROM category WHERE  id=?");
-            ps.setString(1, categoryId);
-            rowsAffected = ps.executeUpdate();
-        } catch (SQLException se) {
-            se.printStackTrace();
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                ps = con.prepareStatement("DELETE FROM category WHERE  name=?");
+                ps.setString(1, categoryId);
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
-        }
         }
         return rowsAffected == 1;
     }
@@ -446,65 +486,41 @@ public class ProductRepositoryImp implements IProductRepository {
     public List<Product> findProductsByCategories(List<String> categoriesId) {
         List<String> productIds = new ArrayList();
         List<Product> products = new ArrayList();
-        if (con!=null) {
-             try {
-            for (int i = 0; i < categoriesId.size(); i++) {
-                ps = con.prepareStatement("select product from product_category where category = ?");
-                ps.setString(1, categoriesId.get(i));
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    String product = rs.getString("product");
-                    if (!productIds.contains(product)) {
-                        productIds.add(product);
-                        products.add(findProduct(product));
+        if (con != null) {
+            try {
+                for (int i = 0; i < categoriesId.size(); i++) {
+                    ps = con.prepareStatement("select product from product_category where catogory = ?");
+                    ps.setString(1, categoriesId.get(i));
+                    rs = ps.executeQuery();
+                    while (rs.next()) {
+                        String product = rs.getString("product");
+                        if (!productIds.contains(product)) {
+                            productIds.add(product);
+                            products.add(findProduct(product));
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
         }
-        }
-       
+
         return products;
-    }
-
-    @Override
-    public boolean addReservedItem(String productId, String customerEmial) {
-//          try {
-//            ps = con.prepareStatement("INSERT INTO reservedproduct(id,customerEmail,stock) VALUES(?,?,?);");
-//            ps.setString(1, productId);
-//            ps.setString(2, customerEmial);
-//            ps.executeUpdate();
-//            return true;
-//        }catch(SQLException se){
-//            se.printStackTrace();
-//            return false;
-//        }finally{
-//           if(ps!=null){
-//                try {
-//                    ps.close();
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        }
-        return false;
-
     }
 
     @Override
@@ -532,9 +548,128 @@ public class ProductRepositoryImp implements IProductRepository {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return product;
+    }
+
+    @Override
+    public Map<String, Integer> findStockEntry(String productId, String boutiqueId, String size) {
+        Map<String, Integer> stockEntry = new HashMap<>();
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("select id,quantity from stock where product=? and boutique = ? amd size = ?");
+                ps.setString(1, productId);
+                ps.setString(2, boutiqueId);
+                ps.setString(3, size);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    stockEntry.put(rs.getString("id"), rs.getInt("quantity"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return stockEntry;
+    }
+
+    @Override
+    public boolean addNewStockLog(String employeeId, int quantityBefore, int quantityAdded, String stockId) {
+        boolean success = false;
+        if (con != null) {
+            try {
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("insert into stocklog(quantityAdded,quantityBefore,employee,stock) values (?,?,?,?)");
+                ps.setInt(1, quantityAdded);
+                ps.setInt(2, quantityBefore);
+                ps.setString(3, employeeId);
+                ps.setString(3, stockId);
+                rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 1) {
+                    if (addStock(stockId, (quantityAdded + quantityBefore))) {
+                        con.commit();
+                        con.setAutoCommit(true);
+                        success = true;
+                    }
+                } else {
+                    con.rollback();
+                    con.setAutoCommit(true);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return success;
+    }
+
+    private boolean addStock(String stockId, int newQuantity) {
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        int rows = 0;
+        if (con != null) {
+            try {
+                ps1 = con.prepareStatement("update stock set quantity = ? where id = ?");
+                ps1.setInt(1, newQuantity);
+                ps1.setString(2, stockId);
+                rows = ps1.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rows == 1;
     }
 
 }

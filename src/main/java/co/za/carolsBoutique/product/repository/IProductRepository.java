@@ -2,6 +2,7 @@ package co.za.carolsBoutique.product.repository;
 
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.StockEntry;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +14,14 @@ public interface IProductRepository {
     boolean deleteProduct(String productId);
     boolean updateProduct(Map<String, Double> newPrice);
     List<Product> findProductsByCategories(List<String> categoriesId);
+    
     Category findCategory(String categoryId);
     List<Category> findAllCategories();
     boolean addCategory(Category category);
     boolean deleteCategory(String categoryId);
-    boolean addReservedItem(String productId, String customerEmial);
+    
+    Map<String,Integer> findStockEntry(String productId,String boutiqueId,String size);
+    boolean addStockEntry(StockEntry stockEntry,List<String> stockId,Product product);
+    boolean addNewStockLog(String employeeId,int quantityBefore,int quantityAdded,String stockId);
     
 }

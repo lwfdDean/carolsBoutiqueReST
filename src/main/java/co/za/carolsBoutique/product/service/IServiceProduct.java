@@ -2,6 +2,7 @@ package co.za.carolsBoutique.product.service;
 
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.StockEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,6 @@ public interface IServiceProduct {
     Category findCategory(String categoryId);
     String addCategory(Category category);
     String deleteCategory(String categoryId);
+    
+    String logStock(Map<Product,StockEntry> stockInfo);
 }
