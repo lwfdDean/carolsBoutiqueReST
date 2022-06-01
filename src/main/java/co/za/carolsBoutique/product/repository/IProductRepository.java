@@ -23,5 +23,5 @@ public interface IProductRepository {
     Map<String,Integer> findStockEntry(String productId,String boutiqueId,String size);
     boolean addStockEntry(StockEntry stockEntry,List<String> stockId,Product product);
     boolean addNewStockLog(String employeeId,int quantityBefore,int quantityAdded,String stockId);
-    
+    Map<String,String> findAvailabeStock(String productId);
 }

@@ -12,8 +12,9 @@ public class Employee {
     private String id;
     private String name;
     private String surname;
+    private String emailAddress;
     private String password;
     private String managerCode;
-    private String role;
+    private Role role;
     private String boutique;
 }

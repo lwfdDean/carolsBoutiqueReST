@@ -14,6 +14,8 @@ public interface IServiceProduct {
     String deleteProduct(String productId);
     String updateProductPrice(Map<String,Double>newPrice);
     
+    Map<String,String> findStockOfProduct(String productId);
+    
     List<Product> SerachForItem(List<String> categoriesId);
     
     List<Category> findAllCategories();
