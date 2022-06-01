@@ -221,25 +221,124 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
         }
         return rowsAffected == 1;
     }
-
-    @Override //freddy
+    
+    //freddy
+    @Override 
+    
     public Role findRole(String roleId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+         Role role = null;
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("select * from role where id=?");
+                ps.setString(1, roleId);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    role = new Role(rs.getString("id"), rs.getString("name"), rs.getInt(" authorizationlvl"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return role;
     }
 
     @Override
-    public List<Role> findAllRoles() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Role> findAllRoles() {  
+       List<Role> role = new ArrayList<>();
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("Select * from role");
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    role.add(new Role(rs.getString("id"),
+                            rs.getString("name"),
+                            rs.getInt("authorizationlvl")));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return role; 
+       
     }
 
     @Override
     public boolean addRole(Role role) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("Insert Into role(id,name,authorizationlvl) values(?,?,?)");
+                ps.setString(1, role.getId());
+                ps.setString(2, role.getName());
+                ps.setInt(3, role.getAuthorizationLevel());
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+               
+               } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return rowsAffected == 1; 
     }
 
     @Override
     public boolean deleteRole(String roleId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("DELETE FROM role Where id= ?");
+                ps.setString(1, roleId);
+
+                rowsAffected = ps.executeUpdate();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return rowsAffected == 1;
     }
 
 }

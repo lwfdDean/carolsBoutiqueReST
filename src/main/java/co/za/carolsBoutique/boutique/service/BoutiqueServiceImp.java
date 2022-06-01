@@ -29,7 +29,7 @@ public class BoutiqueServiceImp implements IServiceBoutique{
             }
             return "invalid password";
         }
-        return "boutique already exists";
+        return "Boutique already exists";
     }
     
     @Override

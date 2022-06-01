@@ -48,7 +48,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
     public String register(Employee employee) {
         if (dao.findEmployee(employee.getId())==null) {
             if (verifyPassword(employee.getPassword())) {
-                return dao.addEmployee(employee)?"Employee added your employeeId = "+employee.getId():"Couldnt add employee";
+                return dao.addEmployee(employee)?"Employee added your employeeId = "+employee.getId():"Couldn't add employee";
             }
             return "invalid password";
         }
