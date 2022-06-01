@@ -62,11 +62,11 @@ public class TestProductServiceImp {
         product2 = null;
     }
 
-     @Test//private methods return id's instaid of names(size and cat)
+     @Test//Passes the test
      public void testFindAllProducts() {
          assertEquals(allProducts, service.findAllProducts());
      }
-      @Test//private methods return id's instaid of names(size and cat)
+      @Test//Passes the test
      public void testFindProduct() {
         assertEquals(product, service.findProduct(product.getId()));
      }
@@ -103,7 +103,7 @@ public class TestProductServiceImp {
          assertEquals("Successfully added category", service.addCategory(new Category("2","Shirts")));
      }
      
-       @Test//error message: Cannot delete or update a parent row: a foreign key constraint fails (`carolsboutique`.`product_category`, CONSTRAINT `product_category_ibfk_2` FOREIGN KEY (`category`) REFERENCES `category` (`id`))
+       @Test//Test passed
      public void testDeleteCategory() {
          assertEquals("Successfully deleted category", service.deleteCategory("1"));
      }
