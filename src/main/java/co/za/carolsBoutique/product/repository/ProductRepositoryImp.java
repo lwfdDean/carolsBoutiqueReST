@@ -25,7 +25,7 @@ public class ProductRepositoryImp implements IProductRepository {
 
         String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -114,8 +114,8 @@ public class ProductRepositoryImp implements IProductRepository {
     public List<Product> findAllProducts() {
         List<Product> products = new ArrayList<>();
         if (con != null) {
-            try {
-                ps = con.prepareStatement("select id,name,description,size,color,price from products");
+            try {                         //(Laurence) fixed statement (products to product)(removed size)
+                ps = con.prepareStatement("select id,name,description,color,price from product");
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     String productId = rs.getString("id");
@@ -424,7 +424,7 @@ public class ProductRepositoryImp implements IProductRepository {
     public boolean deleteCategory(String categoryId) {
         if (con!=null) {
             try {
-            ps = con.prepareStatement("DELETE FROM category WHERE  name=?");
+            ps = con.prepareStatement("DELETE FROM category WHERE  id=?");
             ps.setString(1, categoryId);
             rowsAffected = ps.executeUpdate();
         } catch (SQLException se) {
@@ -449,7 +449,7 @@ public class ProductRepositoryImp implements IProductRepository {
         if (con!=null) {
              try {
             for (int i = 0; i < categoriesId.size(); i++) {
-                ps = con.prepareStatement("select product from product_category where catogory = ?");
+                ps = con.prepareStatement("select product from product_category where category = ?");
                 ps.setString(1, categoriesId.get(i));
                 rs = ps.executeQuery();
                 while (rs.next()) {
