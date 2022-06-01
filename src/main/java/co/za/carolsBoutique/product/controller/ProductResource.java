@@ -3,6 +3,7 @@ package co.za.carolsBoutique.product.controller;
 
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import co.za.carolsBoutique.product.service.IServiceProduct;
 import co.za.carolsBoutique.product.service.ProductIdGenerator;
@@ -41,11 +42,11 @@ public class ProductResource {
     }
      //deleteProduct
     @POST
-    @Path("/addProduct")
+    @Path("/logStock")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addProduct(Product newProduct){
-        return Response.status(Response.Status.OK).entity(service.addProduct(newProduct)).build();
+    public Response addProduct(Map<Product,StockEntry> stockInfo){
+        return Response.status(Response.Status.OK).entity(service.logStock(stockInfo)).build();
     }
     
     @DELETE

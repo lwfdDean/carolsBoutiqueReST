@@ -3,6 +3,7 @@ package co.za.carolsBoutique.product.service;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,4 +71,32 @@ public class ProductServiceImp implements IServiceProduct{
         return dao.deleteCategory(categoryId)?"Successfully deleted category":"Deleting category failed";
 
     }
+
+    @Override
+    public String logStock(Map<Product,StockEntry> stockInfo) {
+        Product product = stockInfo.keySet().iterator().next();
+        StockEntry stockEntry = stockInfo.get(product);
+        if (product!=null) {
+            if(dao.addProduct(product)){
+                if (dao.addStockEntry(stockEntry, generateStockIds(product), product)) {
+                    
+                }
+            }
+        }
+        return "";///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+    
+//    String[] productEntry =stockEntry.getProductCode().split(" ");
+//        Map<String,Integer> entry = dao.findStockEntry(productEntry[0], stockEntry.getBoutiqueId(), productEntry[1]);
+//        String stockId = entry.keySet().iterator().next();
+//        return dao.addNewStockLog(stockEntry.getEmployeeId(),stockEntry.getQuantity(),entry.get(stockId),stockId)?
+//                "Stcok loaded":
+//                "stock could not be loaded";
+
+    private List<String> generateStockIds(Product product) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    
+    
 }
