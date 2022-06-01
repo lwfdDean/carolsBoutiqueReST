@@ -27,7 +27,7 @@ public class ProductRepositoryImp implements IProductRepository {
 
         String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -247,8 +247,8 @@ public class ProductRepositoryImp implements IProductRepository {
     public List<Product> findAllProducts() {
         List<Product> products = new ArrayList<>();
         if (con != null) {
-            try {
-                ps = con.prepareStatement("select id,name,description,size,color,price from products");
+            try {                         //(Laurence) fixed statement (products to product)(removed size)
+                ps = con.prepareStatement("select id,name,description,color,price from product");
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     String productId = rs.getString("id");

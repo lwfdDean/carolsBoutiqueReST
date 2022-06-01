@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
+
 package boutique;
 
 import co.za.carolsBoutique.boutique.model.Boutique;
@@ -24,10 +21,12 @@ public class TestBoutiqueServiceImp {
 	BoutiqueServiceImp boutiqueService = null;
 	
 	public TestBoutiqueServiceImp() {
-	}
+	
+        }
 	
 	@BeforeAll
 	public static void setUpClass() {
+            
 	}
 	
 	@AfterAll
@@ -36,7 +35,7 @@ public class TestBoutiqueServiceImp {
 	
 	@BeforeEach
 	public void setUp() {
-		boutiqueService = new BoutiqueServiceImp(dao, gen);
+           boutiqueService = new BoutiqueServiceImp(dao, gen);
 	}
 	
 	@AfterEach
@@ -47,13 +46,13 @@ public class TestBoutiqueServiceImp {
 	@Test
 	public void testRegisterNewBoutique() {
 		Boutique testBoutique = new Boutique("123", "joburg", 200.23, "123456789012");
-		Assert.assertEquals("Boutique added, boutique Id =" + testBoutique.getId(), boutiqueService.registerNewBoutique(testBoutique));
+		Assert.assertEquals("Boutique added, boutique Id=" + testBoutique.getId(), boutiqueService.registerNewBoutique(testBoutique));
 	}
 	
 	@Test
 	public void testEmptyIdRegisterNewBoutique() {
 		Boutique testBoutique = new Boutique(null, "joburg", 200.23, "123456789012");
-		Assert.assertEquals("Boutique added, boutique Id =" + testBoutique.getId(), boutiqueService.registerNewBoutique(testBoutique));
+		Assert.assertEquals("Boutique added, boutique Id=" + testBoutique.getId(), boutiqueService.registerNewBoutique(testBoutique));
 	}
 	
 	@Test
@@ -65,7 +64,7 @@ public class TestBoutiqueServiceImp {
 	
 	@Test
 	public void testChangePassword() {
-		Map<String, String> testpasswordDetails = new HashMap<String, String>();
+		Map<String,String> testpasswordDetails = new HashMap<String, String>();
 		testpasswordDetails.put("12", "123asd56789t");
 		Assert.assertEquals("password Updated", boutiqueService.changePassword(testpasswordDetails));
 	}
