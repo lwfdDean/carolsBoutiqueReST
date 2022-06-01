@@ -5,6 +5,7 @@ import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
+import static java.lang.Math.random;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,24 +79,36 @@ public class ProductServiceImp implements IServiceProduct{
         Product product = stockInfo.keySet().iterator().next();
         StockEntry stockEntry = stockInfo.get(product);
         if (product!=null) {
-            if(dao.addProduct(product)){
-                if (dao.addStockEntry(stockEntry, generateStockIds(product), product)) {
-                    
-                }
-            }
+            dao.addProduct(product);
+            dao.addStockEntry(stockEntry, generateStockIds(product,stockEntry.getBoutiqueId()), product);
         }
-        return "";///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        String[] productEntry =stockEntry.getProductCode().split(" ");
+        Map<String,Integer> entry = dao.findStockEntry(productEntry[0], stockEntry.getBoutiqueId(), productEntry[1]);
+        String stockId = entry.keySet().iterator().next();
+        return dao.addNewStockLog(stockEntry.getEmployeeId(),stockEntry.getQuantity(),entry.get(stockId),stockId)?
+                "Stcok loaded":
+                "stock could not be loaded";
     }
     
-//    String[] productEntry =stockEntry.getProductCode().split(" ");
-//        Map<String,Integer> entry = dao.findStockEntry(productEntry[0], stockEntry.getBoutiqueId(), productEntry[1]);
-//        String stockId = entry.keySet().iterator().next();
-//        return dao.addNewStockLog(stockEntry.getEmployeeId(),stockEntry.getQuantity(),entry.get(stockId),stockId)?
-//                "Stcok loaded":
-//                "stock could not be loaded";
+    
 
-    private List<String> generateStockIds(Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private List<String> generateStockIds(Product product,String boutiqueId) {
+        List<String> stockIds = new ArrayList<>();
+        for (int i = 0; i < product.getSizes().size(); i++) {
+            StringBuilder sb = new StringBuilder();
+            String cat = product.getCategories().get((int)(Math.random()*product.getCategories().size()));
+            sb.append((int)(random()*100000+1000));
+            sb.append(product.getSizes().get((int)(Math.random()*product.getSizes().size())));
+            sb.append(cat.charAt((int)(Math.random()*cat.length())));
+            stockIds.add(sb.toString());
+        }
+        return stockIds;
+    }
+
+    @Override
+    public Map<String, String> findStockOfProduct(String productId) {
+        Product product = dao.findProduct(productId);
+        return dao.findAvailabeStock(product.getId());
     }
     
     

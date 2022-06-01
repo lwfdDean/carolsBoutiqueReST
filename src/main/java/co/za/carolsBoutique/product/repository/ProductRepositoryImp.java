@@ -672,4 +672,39 @@ public class ProductRepositoryImp implements IProductRepository {
         return rows == 1;
     }
 
+    @Override
+    public Map<String, String> findAvailabeStock(String productId) {
+        Map<String, String> available = new HashMap<>();
+        if (con!=null) {
+            try {
+                ps = con.prepareStatement("select boutique,size from stock where product = ?");
+                ps.setString(1, productId);
+                rs = ps.executeQuery();
+                while (rs.next()) {                    
+                    available.put(rs.getString("boutique"),rs.getString("size"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return available;
+    }
+
+    
+
 }

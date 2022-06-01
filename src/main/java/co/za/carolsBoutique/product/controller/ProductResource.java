@@ -8,7 +8,7 @@ import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import co.za.carolsBoutique.product.service.IServiceProduct;
 import co.za.carolsBoutique.product.service.ProductIdGenerator;
 import co.za.carolsBoutique.product.service.ProductServiceImp;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -65,10 +65,19 @@ public class ProductResource {
     }
     
     @GET
-    @Path("/SerachForItem")
+    @Path("/SearchForItem")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response SerachForItem(ArrayList<String> categoriesId){
+    public Response SerachForItem(List<String> categoriesId){
         return Response.status(Response.Status.OK).entity(service.SerachForItem(categoriesId)).build();
+    }
+    
+    @GET
+    @Path("/findAvailableStock/{productId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findAvailableStock(@PathParam("productId")String productId){
+        return Response.status(Response.Status.OK).entity(service.findStockOfProduct(productId)).build();
     }
     
     @GET
