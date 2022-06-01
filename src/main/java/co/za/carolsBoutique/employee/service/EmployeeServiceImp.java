@@ -4,6 +4,7 @@ import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import co.za.carolsBoutique.employee.repository.IEmployeeRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,18 +67,27 @@ public class EmployeeServiceImp implements IServiceEmployee{
 
     @Override
     public List<Role> getAllRoles() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Role> role = new ArrayList<>();
+        return role;
     }
 
     @Override
     public Role getRole(String roleId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return dao.findRole(roleId);
     }
 
     @Override
     public String removeemployee(String employeeId) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    @Override
+    public String addRole(Role role) {
+        if (dao.findRole(role.getId())==null) {
+            return dao.addRole(role)?"Success":"Failure";
+        }
+        return "Role already exists";
+    }    
     
     
 }

@@ -14,5 +14,6 @@ public interface IServiceEmployee {
     
     List<Role> getAllRoles();
     Role getRole(String roleId);
+    String addRole(Role role);
     
 }

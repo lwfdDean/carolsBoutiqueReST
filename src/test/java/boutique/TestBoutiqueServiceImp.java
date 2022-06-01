@@ -77,4 +77,15 @@ public class TestBoutiqueServiceImp {
 		Assert.assertEquals("target updated", boutiqueService.changeDailyTarget(testNewTarget));
 	}
 	
+        @Test
+	public void testEmptyDailyTargetRegisterNewBoutique() {
+		Boutique testBoutique = new Boutique("123", "joburg", null, "1234567890ab");
+		Assert.assertEquals("Couldnt add boutique", boutiqueService.registerNewBoutique(testBoutique));
+	}
+	
+	@Test
+	public void testEmptyPasswordRegisterNewBoutique() {
+		Boutique testBoutique = new Boutique("123", "joburg", 200.23, null);
+		Assert.assertEquals("Couldnt add boutique", boutiqueService.registerNewBoutique(testBoutique));
+	}
 }
