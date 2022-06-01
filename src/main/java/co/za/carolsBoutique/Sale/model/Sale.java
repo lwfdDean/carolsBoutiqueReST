@@ -17,4 +17,5 @@ public class Sale {
     private boolean approved;
     private Double totalPrice;
     private List<Product> items;
+	private String boutique;
 }
