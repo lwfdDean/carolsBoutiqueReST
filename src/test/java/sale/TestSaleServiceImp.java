@@ -5,6 +5,7 @@ import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.Sale.repository.SaleRepositoryImp;
 import co.za.carolsBoutique.Sale.service.SaleIdGenerator;
 import co.za.carolsBoutique.Sale.service.SaleServiceImp;
+import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.product.model.Product;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class TestSaleServiceImp {
     public void setUp() {
         dao = new SaleRepositoryImp();
         gen = new SaleIdGenerator();
-        service = new SaleServiceImp(dao, gen);
+        service = new SaleServiceImp(dao, gen, new PaymentGateway());
         List<Product> products = new ArrayList();
         List sizes = new ArrayList<String>();
         sizes.add("Large");
@@ -54,7 +55,7 @@ public class TestSaleServiceImp {
 
      @Test//test passed
      public void testCreateNewSale() {
-        assertEquals("Sale added, sale Id = "+saleTest.getId(), service.createNewSale(saleTest));
+        assertEquals("Sale added, sale Id = "+saleTest.getId(), service.checkout(saleTest));
      }
      
      @Test//test passed, accept not returning products in sale
