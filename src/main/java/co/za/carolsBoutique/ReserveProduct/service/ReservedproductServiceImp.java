@@ -31,13 +31,14 @@ public class ReservedproductServiceImp implements IServiceReservedproduct{
     public String removeReserveProduct(String reserveProductid) {
         return dao.deleteReserveProduct(reserveProductid)?"Deteting item successful":"Deletion failed";
     }
-////////Complete FindProductByProductCode for this method
+    
     @Override
     public Product collectKeepAside(String customerEmail) {
         String stockId = dao.findReserveProduct(customerEmail);
         Map<String,String> productInfo = dao.addStock(stockId);
-        String productCode = productInfo.keySet().iterator().next() + " " + productInfo.get(productInfo.keySet().iterator().next());
-        return new Product();
+        String productId = productInfo.keySet().iterator().next();
+        String size = productInfo.get(productId);
+        return dao.findProductByProductCode(productId, size);
     }
     
     

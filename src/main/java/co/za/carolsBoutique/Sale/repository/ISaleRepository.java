@@ -1,11 +1,12 @@
 package co.za.carolsBoutique.Sale.repository;
 
 import co.za.carolsBoutique.Sale.model.Sale;
-
+import java.sql.Timestamp;
 
 public interface ISaleRepository {
     boolean addSale(Sale sale);
-    boolean updateSale(String saleId, Double totalPrice);
-	Sale findSale(String saleId);
-	boolean updateSaleLineItem(String oldProductId, String newProductId, String saleId);
+    boolean updateSale(String saleId, Double totalPrice,String productId);
+    Sale findSale(String saleId);
+    boolean updateSaleLineItem(String saleId, String returnedProductId, String newProductId);
+    Timestamp findSaleDate(String saleId);
 }
