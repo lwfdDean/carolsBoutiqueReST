@@ -7,12 +7,9 @@ package co.za.carolsBoutique.ReserveProduct.service;
 import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
 import co.za.carolsBoutique.ReserveProduct.repository.ReservedproductRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
-import co.za.carolsBoutique.employee.repository.IEmployeeRepository;
+import co.za.carolsBoutique.product.model.Product;
+import java.util.Map;
 
-/**
- *
- * @author 27609
- */
 public class ReservedproductServiceImp implements IServiceReservedproduct{
      private ReservedproductRepository dao;
     private CodeGenerator gen;
@@ -21,19 +18,27 @@ public class ReservedproductServiceImp implements IServiceReservedproduct{
         this.dao = dao;
         this.gen = gen;
     }
-    @Override
-    public Reservedproduct findReserveProduct(String reserveProductid) {
-        return dao.findReserveProduct(reserveProductid);
-    }
 
     @Override
     public String makeReserveProduct(Reservedproduct reserveProduct) {
-        return dao.addReserveProduct(reserveProduct)?"Reserved item successfully":"Reservation failed";
+        String[] productInfo = reserveProduct.getProductCode().split(" ");
+        Map<String,Integer> entry = dao.findStockEntry(productInfo[0], reserveProduct.getBoutiqueId(), productInfo[1]);
+        String id = entry.keySet().iterator().next();
+        return dao.addReserveProduct(reserveProduct,id,entry.get(id))?"product reserved":"error occured";
     }
 
     @Override
     public String removeReserveProduct(String reserveProductid) {
         return dao.deleteReserveProduct(reserveProductid)?"Deteting item successful":"Deletion failed";
     }
+////////Complete FindProductByProductCode for this method
+    @Override
+    public Product collectKeepAside(String customerEmail) {
+        String stockId = dao.findReserveProduct(customerEmail);
+        Map<String,String> productInfo = dao.addStock(stockId);
+        String productCode = productInfo.keySet().iterator().next() + " " + productInfo.get(productInfo.keySet().iterator().next());
+        return new Product();
+    }
+    
     
 }
