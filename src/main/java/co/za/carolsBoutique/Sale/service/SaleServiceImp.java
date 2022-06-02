@@ -9,10 +9,6 @@ import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.employee.model.Employee;
 
-/**
- *
- * @author wille
- */
 public class SaleServiceImp implements IServiceSale{
 	private ISaleRepository dao;
 	private CodeGenerator gen;
@@ -24,7 +20,7 @@ public class SaleServiceImp implements IServiceSale{
 	
 	@Override//generating ID
 	public String createNewSale(Sale sale) {
-		sale.setId(gen.generateId(sale.getBoutique(), true));
+		sale.setId(gen.generateId(sale.getCustomerEmail(), sale.getBoutique(), true));
 			return dao.addSale(sale)?"Sale added, sale Id = "+sale.getId():"Could not add boutique";
 	}
 

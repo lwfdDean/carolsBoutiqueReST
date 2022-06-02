@@ -17,5 +17,7 @@ public interface IServiceEmployee {
     List<Role> getAllRoles();
     Role getRole(String roleId);
     String addRole(Role role);
+
+	Boolean verifyManagerCode(Map<String, String> managerCode);
     
 }

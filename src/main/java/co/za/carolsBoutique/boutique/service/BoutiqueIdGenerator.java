@@ -16,12 +16,9 @@ public class BoutiqueIdGenerator implements CodeGenerator {//^
                         i--;
                         continue;
                     }
-                    if (i == 2) {
-                        sb.append(num);
-                    }
                     sb.append(a);
                 }
-                if (i % 2 != 0) {
+                if (i % 2 == 0) {
                     char a = subSource.charAt((int) (Math.random() * subSource.length()));
                     if (!Character.isLetter(a)) {
                         i--;
