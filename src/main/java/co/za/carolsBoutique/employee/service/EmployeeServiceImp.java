@@ -27,8 +27,8 @@ public class EmployeeServiceImp implements IServiceEmployee{
         return null;
     }
 
-    private boolean verifyPassword(String password){
-        if (password == null || password.isEmpty() || password.length()==8) {
+    private boolean verifyKey(String password, int length){
+        if (password == null || password.isEmpty() || password.length()==length) {
             return false;
         }
         int nums = 0;
@@ -47,7 +47,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
     @Override
     public String register(Employee employee) {
         if (dao.findEmployee(employee.getId())==null) {
-            if (verifyPassword(employee.getPassword())) {
+            if (verifyKey(employee.getPassword(),8)) {
                 return dao.addEmployee(employee)?"Employee added your employeeId = "+employee.getId():"Couldn't add employee";
             }
             return "invalid password";
@@ -56,13 +56,40 @@ public class EmployeeServiceImp implements IServiceEmployee{
     }
 
     @Override
-    public String promoteToTeller(Map<String, String> employeeDetails) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public String promoteToTeller(List<String> employeeDetails) {
+        String empId = employeeDetails.get(0);
+        String password = employeeDetails.get(1);
+        String roleId = employeeDetails.get(2);
+        if (verifyKey(password,8)) {
+            return dao.updateToTeller(empId, password, roleId)?"Employee promoted":"Problem promoting the employee";
+        }
+        return "The password provided is invalid";
     }
-
+    
     @Override
-    public List<Employee> getAllEmployees() {
-        return dao.findAllEmployees();
+    public String promoteToManager(List<String> employeeDetails) {
+        String empId = employeeDetails.get(0);
+        String managerCode = employeeDetails.get(1);
+        String roleId = employeeDetails.get(2);
+        if (verifyKey(managerCode,6)) {
+            return dao.updateToManager(empId, managerCode, roleId)?"Employee promoted":"Problem promoting the employee";
+        }
+        return "The password provided is invalid";
+    }
+    
+    @Override
+    public List<Employee> getAllByRole(String roleId,String boutiqueId) {
+        return dao.findAllByRole(roleId,boutiqueId);
+    }
+    
+    @Override
+    public String removeemployee(String employeeId) {
+        return dao.deleteEmployee(employeeId)?"employee removed":"could not remove employee";
+    }
+    
+    @Override
+    public List<Employee> getAllEmployees(String boutiqueId) {
+        return dao.findAllEmployees(boutiqueId);
     }
 
     @Override
@@ -77,17 +104,10 @@ public class EmployeeServiceImp implements IServiceEmployee{
     }
 
     @Override
-    public String removeemployee(String employeeId) {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    @Override
     public String addRole(Role role) {
         if (dao.findRole(role.getId())==null) {
             return dao.addRole(role)?"Success":"Failure";
         }
         return "Role already exists";
     }    
-    
-    
 }

@@ -5,6 +5,7 @@ import co.za.carolsBoutique.employee.repository.EmployeeRepositoryImp;
 import co.za.carolsBoutique.employee.service.EmployeeIdGenerator;
 import co.za.carolsBoutique.employee.service.EmployeeServiceImp;
 import co.za.carolsBoutique.employee.service.IServiceEmployee;
+import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -39,18 +40,25 @@ public class EmployeeResource {
         return Response.status(Response.Status.OK).entity(service.login(loginDetails)).build();
     }
     
-    @Path("/getAllEmployees")
+    @Path("/getAllEmployees/{boutiqueId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllEmployees(){
-        return Response.status(Response.Status.OK).entity(service.getAllEmployees()).build();
+    public Response getAllEmployees(@PathParam("boutiqueId")String boutiqueId){
+        return Response.status(Response.Status.OK).entity(service.getAllEmployees(boutiqueId)).build();
+    }
+    
+    @Path("/getAllByRole/{roleId}/{boutiqueId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllByRole(@PathParam("roleId")String roleId,@PathParam("boutiqueId")String boutiqueId){
+        return Response.status(Response.Status.OK).entity(service.getAllByRole(roleId,boutiqueId)).build();
     }
     
     @Path("/promoteToTeller")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response promoteToTeller(Map<String,String> employeeDetails){
+    public Response promoteToTeller(List<String> employeeDetails){
         return Response.status(Response.Status.OK).entity(service.promoteToTeller(employeeDetails)).build();
     }
     
