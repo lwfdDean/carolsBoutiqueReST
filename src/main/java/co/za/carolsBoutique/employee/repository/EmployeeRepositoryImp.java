@@ -22,7 +22,7 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
     public EmployeeRepositoryImp() {
         String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -268,7 +268,8 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                 ps1.setString(1, employeeId);
                 rs1 = ps1.executeQuery();
                 if (rs1.next()) {
-                    role = new Role(rs.getString("id"), rs.getString("name"), rs.getInt("authorizationlvl"));
+                    role = new Role(rs1.getString("id"), rs1.getString("name"), rs1.getInt("authorizationlvl"));
+                    System.out.println(role.getName());
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);

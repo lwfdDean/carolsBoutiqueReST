@@ -9,6 +9,7 @@ import co.za.carolsBoutique.ibt.model.IBT;
 import co.za.carolsBoutique.ibt.repository.IBTRepositoryImp;
 import co.za.carolsBoutique.ibt.service.IBTIdGenerator;
 import co.za.carolsBoutique.ibt.service.IBTServiceImp;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -40,6 +41,10 @@ public class TestIBTServiceImp {
     
     @Before
     public void setUp() {
+        
+        dao = new IBTRepositoryImp();
+        gen = new IBTIdGenerator();
+        iBTService = new IBTServiceImp(dao,gen);
     }
     
     @After
@@ -47,9 +52,14 @@ public class TestIBTServiceImp {
     }
 
     @Test
+    public void testFindStoreIBT(){
+        List<IBT> ibtTest = dao.findStoreIBTS("");
+        assertEquals(ibtTest, iBTService.getIBT(""));
+    }
+    
+    @Test
     public void testRequestIBT(){
-       //  testIbt = new IBT("Ib12","fred@vzap.co.za", "joburg", 200.23, "123456789012");
-	//	Assert.assertEquals("Boutique added, boutique Id=" + testIbt.getId(), iBTService.testRequest(testIbt);
+       
     }
     
     //
