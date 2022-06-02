@@ -57,7 +57,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
 
     @Override
     public String promoteToTeller(Map<String, String> employeeDetails) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
@@ -78,7 +78,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
 
     @Override
     public String removeemployee(String employeeId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override

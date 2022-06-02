@@ -66,7 +66,7 @@ public class TestEmployeeServiceImp {
                  "MyBout123"      
                   );
         //Assert.assertEquals("Employee added, employeeId=" + testRegEmployee.getId(), employeeService.register(testRegEmployee));
-     Assert.assertEquals(employeeService,testRegEmployee);
+        Assert.assertEquals(testRegEmployee, employeeService.register(testRegEmployee));
      }
      
      @Test
@@ -77,17 +77,13 @@ public class TestEmployeeServiceImp {
                     gen.generateId("id", true));
          assertEquals(employeeService,getAllMyEmployees);
      }
-    //EXAMPLE
-    //   String message = "Hello World";	
-    //   MessageUtil messageUtil = new MessageUtil(message);
-    //
-    //   @Test
-    //   public void testPrintMessage() {
-    //   assertEquals(message,messageUtil.printMessage());
+    
      
      @Test
      public  void testGetAllRoles(){
-         Employee getAllR = new Employee();
+         Employee getAllR = new Employee(
+                 
+         );
          Assert.assertEquals(employeeService,getAllR);
         
      }
