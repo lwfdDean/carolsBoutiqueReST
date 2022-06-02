@@ -10,10 +10,6 @@ import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.employee.model.Employee;
 
-/**
- *
- * @author wille
- */
 public class SaleServiceImp implements IServiceSale{
 	private ISaleRepository dao;
 	private CodeGenerator gen;

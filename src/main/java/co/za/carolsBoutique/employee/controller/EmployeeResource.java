@@ -75,4 +75,13 @@ public class EmployeeResource {
     public Response getAllRoles(){
         return Response.status(Response.Status.OK).entity(service.getAllRoles()).build();
     }
+	
+	@Path("/verifyManagerCode")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response verifyManagerCode(Map<String, String> managerCode){
+		return Response.status(Response.Status.OK).entity(service.verifyManagerCode(managerCode)).build();
+	}
+	
 }

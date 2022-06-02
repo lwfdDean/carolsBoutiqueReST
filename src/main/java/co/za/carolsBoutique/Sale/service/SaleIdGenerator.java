@@ -14,12 +14,80 @@ public class SaleIdGenerator implements CodeGenerator{
 
 	@Override
 	public String generateId(String mainSource, String subSource, boolean alphaNumeric) {
-		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+		StringBuilder sb = new StringBuilder();
+		if (alphaNumeric) {
+			int num = (int) (Math.random() * 9000 + 1000);
+			for (int i = 0; i < 6; i++) {
+				if (i % 2 != 0) {
+					char a = mainSource.charAt((int) (Math.random() * mainSource.length()));
+					if (!Character.isLetter(a)) {
+						i--;
+						continue;
+					}
+					sb.append(a);
+				}
+				if (i % 2 == 0) {
+					char a = subSource.charAt((int) (Math.random() * subSource.length()));
+					if (!Character.isLetter(a)) {
+						i--;
+						continue;
+					}
+					if (i == 2) {
+						sb.append(num);
+					}
+					sb.append(a);
+				}
+			}
+		} else {
+			for (int i = 0; i < 10; i++) {
+				if (i % 2 != 0) {
+					char a = mainSource.charAt((int) (Math.random() * mainSource.length()));
+					if (!Character.isLetter(a)) {
+						i--;
+						continue;
+					}
+					sb.append(a);
+				}
+				if (i % 2 == 0) {
+					char a = subSource.charAt((int) (Math.random() * subSource.length()));
+					if (!Character.isLetter(a)) {
+						i--;
+						continue;
+					}
+					sb.append(a);
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	@Override
 	public String generateId(String source, boolean alphaNumeric) {
-		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+		StringBuilder sb = new StringBuilder();
+		if (alphaNumeric) {
+			int num = (int) (Math.random() * 9000 + 1000);
+			for (int i = 0; i < 6; i++) {
+				char a = source.charAt((int) (Math.random() * source.length()));
+				if (!Character.isLetter(a)) {
+					i--;
+					continue;
+				}
+				if (i == 2) {
+					sb.append(num);
+				}
+				sb.append(a);
+			}
+		} else {
+			for (int i = 0; i < 10; i++) {
+				char a = source.charAt((int) (Math.random() * source.length()));
+				if (!Character.isLetter(a)) {
+					i--;
+					continue;
+				}
+				sb.append(a);
+			}
+		}
+		return sb.toString();
 	}
 	
 }
