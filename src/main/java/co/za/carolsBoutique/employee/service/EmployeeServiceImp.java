@@ -110,8 +110,11 @@ public class EmployeeServiceImp implements IServiceEmployee{
         return "Role already exists";
     }    
 
-	@Override/////////Dont test yet
+	@Override
 	public Boolean verifyManagerCode(Map<String, String> managerCode) {
-		return true;
+		if(dao.verifyManagerCode(managerCode)){
+			return true;
+		}
+		return false;
 	}
 }

@@ -20,20 +20,19 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 	private ResultSet rs;
 	private int rowsAffected;
 
-   public EmployeeRepositoryImp() {
-        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            con = DriverManager.getConnection(url, "root", "Root");
-        } catch (SQLException ex) {
-            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+	public EmployeeRepositoryImp() {
+		String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		try {
+			con = DriverManager.getConnection(url, "root", "Root");
+		} catch (SQLException ex) {
+			Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
 	@Override
 	public Employee findEmployee(String employeeId) {
@@ -217,40 +216,40 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 		return rowsAffected == 1;
 	}
 
-    private Role getEmployeeRole(String employeeId) {
-        Role role = null;
-        PreparedStatement ps1 = null;
-        ResultSet rs1 = null;
-        if (con != null) {
-            try {
-                ps1 = con.prepareStatement("select * from role inner join employee on employee.role = role.id where employee.id = ?");
-                ps1.setString(1, employeeId);
-                rs1 = ps1.executeQuery();
-                if (rs1.next()) {
-                    role = new Role(rs1.getString("id"), rs1.getString("name"), rs1.getInt("authorizationlvl"));
-                    System.out.println(role.getName());
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                if (ps1 != null) {
-                    try {
-                        ps1.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (rs1 != null) {
-                    try {
-                        rs1.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        return role;
-    }
+	private Role getEmployeeRole(String employeeId) {
+		Role role = null;
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		if (con != null) {
+			try {
+				ps1 = con.prepareStatement("select * from role inner join employee on employee.role = role.id where employee.id = ?");
+				ps1.setString(1, employeeId);
+				rs1 = ps1.executeQuery();
+				if (rs1.next()) {
+					role = new Role(rs1.getString("id"), rs1.getString("name"), rs1.getInt("authorizationlvl"));
+					System.out.println(role.getName());
+				}
+			} catch (SQLException ex) {
+				Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+			} finally {
+				if (ps1 != null) {
+					try {
+						ps1.close();
+					} catch (SQLException ex) {
+						Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+				if (rs1 != null) {
+					try {
+						rs1.close();
+					} catch (SQLException ex) {
+						Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			}
+		}
+		return role;
+	}
 
 	@Override
 	public List<Employee> findAllByRole(String roleId, String boutiqueId) {
@@ -414,20 +413,44 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 		return rowsAffected == 1;
 	}
 
-	@Override//////////////Dont test yet
+	@Override
 	public boolean verifyManagerCode(Map<String, String> managerInformation) {
+		boolean verified = false;
 		String boutiqueId = managerInformation.keySet().iterator().next();
-		if(con != null){
+		String managersUniqueCode = managerInformation.get(boutiqueId);
+		if (con != null) {
 			try {
 				ps = con.prepareStatement("SELECT id FROM employee WHERE boutique = ? AND managerUniqueCode = ?");
 				ps.setString(1, boutiqueId);
-				ps.setString(2, managerInformation.get(boutiqueId));
-				
+				ps.setString(2, managersUniqueCode);
+				rs = ps.executeQuery();
+				if (rs.next()) {
+					String employeeId = rs.getString("id");
+					if (employeeId != null) {
+						verified = true;
+					}
+				}
+
 			} catch (SQLException ex) {
 				Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException ex) {
+						Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+				if (ps != null) {
+					try {
+						rs.close();
+					} catch (SQLException ex) {
+						Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
 			}
 		}
-		return true;
+		return verified;
 	}
 
 }
