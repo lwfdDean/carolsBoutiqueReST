@@ -19,8 +19,8 @@ public class EmployeeServiceImp implements IServiceEmployee{
 
     @Override
     public Employee login(Map<String, String> loginDetails) {
-        String id = loginDetails.keySet().iterator().next();
-        Employee employee = dao.findEmployee(id);
+        String id = loginDetails.keySet().iterator().next();    //this line is to get the keys in the map(id)
+        Employee employee = dao.findEmployee(id);               //looks in the database if a user exists with this id
         if (employee!=null) {
             return employee.getPassword().equals(loginDetails.get(id))?employee:null;
         }
@@ -94,8 +94,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
 
     @Override
     public List<Role> getAllRoles() {
-        List<Role> role = new ArrayList<>();
-        return role;
+        return dao.findAllRoles();
     }
 
     @Override
