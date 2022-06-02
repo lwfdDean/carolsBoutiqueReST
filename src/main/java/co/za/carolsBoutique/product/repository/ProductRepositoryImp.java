@@ -48,8 +48,8 @@ public class ProductRepositoryImp implements IProductRepository {
                 ps.setString(1, product.getId());
                 ps.setString(2, product.getName());
                 ps.setString(3, product.getDescription());
-                ps.setString(5, product.getColor());
-                ps.setDouble(6, product.getPrice());
+                ps.setString(4, product.getColor());
+                ps.setDouble(5, product.getPrice());
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     if (addProductCategory(product) && addProductSizes(product)) {
@@ -594,7 +594,7 @@ public class ProductRepositoryImp implements IProductRepository {
         Map<String, Integer> stockEntry = new HashMap<>();
         if (con != null) {
             try {
-                ps = con.prepareStatement("select id,quantity from stock where product=? and boutique = ? amd size = ?");
+                ps = con.prepareStatement("select id,quantity from stock where product=? and boutique = ? and size = ?");
                 ps.setString(1, productId);
                 ps.setString(2, boutiqueId);
                 ps.setString(3, size);
@@ -634,7 +634,7 @@ public class ProductRepositoryImp implements IProductRepository {
                 ps.setInt(1, quantityAdded);
                 ps.setInt(2, quantityBefore);
                 ps.setString(3, employeeId);
-                ps.setString(3, stockId);
+                ps.setString(4, stockId);
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     if (addStock(stockId, (quantityAdded + quantityBefore))) {
@@ -693,7 +693,7 @@ public class ProductRepositoryImp implements IProductRepository {
         return rows == 1;
     }
 
-    @Override
+    @Override//(Laurence)method retruns ID of boutique,size
     public Map<String, String> findAvailabeStock(String productId) {
         Map<String, String> available = new HashMap<>();
         if (con!=null) {

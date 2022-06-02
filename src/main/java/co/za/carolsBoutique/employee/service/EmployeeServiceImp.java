@@ -109,4 +109,9 @@ public class EmployeeServiceImp implements IServiceEmployee{
         }
         return "Role already exists";
     }    
+
+	@Override/////////Dont test yet
+	public Boolean verifyManagerCode(Map<String, String> managerCode) {
+		return true;
+	}
 }
