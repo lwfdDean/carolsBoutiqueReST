@@ -11,5 +11,5 @@ import lombok.ToString;
 public class Reservedproduct {
     private String productCode;
     private String customerEmail;
-	private String boutiqueId;
+    private String boutiqueId;
 }

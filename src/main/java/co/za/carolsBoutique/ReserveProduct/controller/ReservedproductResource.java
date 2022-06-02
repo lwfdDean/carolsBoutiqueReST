@@ -38,10 +38,11 @@ public class ReservedproductResource {
     public Response addProduct(Reservedproduct reservedproduct){
         return Response.status(Response.Status.OK).entity(service.makeReserveProduct(reservedproduct)).build();
     }
-     @GET
-    @Path("/findProduct/{reservedproductId}")
+    
+    @GET
+    @Path("/findKeepAside/{email}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findProduct(@PathParam("reservedproductId")String reservedproductId){
-        return Response.status(Response.Status.OK).entity(service.findReserveProduct(reservedproductId)).build();
+    public Response findKeepAside(@PathParam("email")String customerEmail){
+        return Response.status(Response.Status.OK).entity(service.collectKeepAside(customerEmail)).build();
     }
 }
