@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class IBTServiceImp implements IServiceIBT{
-     private IIBTRepository dao;
+    private IIBTRepository dao;
     private CodeGenerator gen;
     public IBTServiceImp(IIBTRepository dao,CodeGenerator gen){
         this.dao = dao;

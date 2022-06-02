@@ -9,6 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reservedproduct {
-    private String producId;
+    private String productCode;
     private String customerEmail;
+    private String boutiqueId;
 }

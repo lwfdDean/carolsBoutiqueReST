@@ -78,7 +78,7 @@ public class ProductServiceImp implements IServiceProduct{
     public String logStock(Map<Product,StockEntry> stockInfo) {
         Product product = stockInfo.keySet().iterator().next();
         StockEntry stockEntry = stockInfo.get(product);
-        if (product!=null) {
+        if (product.getId()!=null) {
             dao.addProduct(product);
             dao.addStockEntry(stockEntry, generateStockIds(product,stockEntry.getBoutiqueId()), product);
         }
@@ -109,6 +109,11 @@ public class ProductServiceImp implements IServiceProduct{
     public Map<String, String> findStockOfProduct(String productId) {
         Product product = dao.findProduct(productId);
         return dao.findAvailabeStock(product.getId());
+    }
+
+    @Override////////////////////////
+    public Product findProduct(Map<String, String> productInfo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     
