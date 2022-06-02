@@ -24,8 +24,9 @@ public class SaleServiceImp implements IServiceSale{
 	
 	@Override//generating ID
 	public String createNewSale(Sale sale) {
-		sale.setId(gen.generateId(sale.getBoutique(), true));
-			return dao.addSale(sale)?"Sale added, sale Id = "+sale.getId():"Could not add boutique";
+		//sale.setId(gen.generateId(sale.getBoutique(), true));
+                        
+			return dao.addSale(sale)?"Sale added, sale Id = "+sale.getId():"Could not add sale";
 	}
 
 	@Override

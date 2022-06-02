@@ -5,6 +5,7 @@
 package co.za.carolsBoutique.Sale.repository;
 
 import co.za.carolsBoutique.Sale.model.Sale;
+import co.za.carolsBoutique.employee.model.Role;
 import co.za.carolsBoutique.product.model.Product;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,7 +27,7 @@ public class SaleRepositoryImp implements ISaleRepository{
 	public SaleRepositoryImp() {
 		String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException ex) {
 			Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -37,7 +38,7 @@ public class SaleRepositoryImp implements ISaleRepository{
 		}
 	}
 
-	@Override
+	@Override//(Laurence)need to add sale line items in this method
 	public boolean addSale(Sale sale) {
 		if (con != null) {
 			try {
@@ -48,6 +49,7 @@ public class SaleRepositoryImp implements ISaleRepository{
 				ps.setDouble(4, sale.getTotalPrice());
 				ps.setString(5, sale.getEmployee());
 				ps.setString(6, sale.getBoutique());
+                                addSalelineItems(sale.getItems(),sale.getId());
 				rowsAffected = ps.executeUpdate();
 			} catch (SQLException ex) {
 				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,7 +64,44 @@ public class SaleRepositoryImp implements ISaleRepository{
 			}
 		}
 		return rowsAffected == 1;
-	}
+	}//(Dean) need to edit sale line item in db, remove Id
+        //(Laurence) this method is not yet done(made it while testing the service class  )
+        private boolean addSalelineItems(List<Product>saleProducts,String saleId){
+            PreparedStatement ps1 = null;
+            rowsAffected = 0;
+            if (con != null) {
+			try {
+                            for (int i = 0; i < saleProducts.size(); i++) {
+                                Product product = saleProducts.get(i);
+                                System.out.println(saleId);
+                                System.out.println(product.getId());
+                                ps1 = con.prepareStatement("INSERT INTO sale_line_item(id,sale, product) VALUES(?,?,?)");
+				ps1.setString(1, saleId);
+                                ps1.setString(2, saleId);
+				ps1.setString(3, product.getId());
+				rowsAffected = ps.executeUpdate();
+                                new Role();
+                                if(rowsAffected!=1){
+                                    ps1.close();
+                                    return false;
+                                }
+                                ps1.close();
+                            }
+				
+			} catch (SQLException ex) {
+				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+			} finally {
+				if (ps1 != null) {
+					try {
+						ps1.close();
+					} catch (SQLException ex) {
+						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			}
+		}
+		return rowsAffected == 1;
+        }
 
 	@Override
 	public boolean removeSaleLineItem(String saleId, String productId) {
