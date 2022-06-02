@@ -5,6 +5,7 @@
 package co.za.carolsBoutique.Sale.repository;
 
 import co.za.carolsBoutique.Sale.model.Sale;
+import co.za.carolsBoutique.employee.model.Role;
 import co.za.carolsBoutique.product.model.Product;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -346,5 +347,4 @@ public class SaleRepositoryImp implements ISaleRepository {
         }
         return rows == productCodes.size();
     }
-    
 }

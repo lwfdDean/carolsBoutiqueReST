@@ -86,7 +86,7 @@ public class ProductServiceImp implements IServiceProduct{
         Map<String,Integer> entry = dao.findStockEntry(productEntry[0], stockEntry.getBoutiqueId(), productEntry[1]);
         String stockId = entry.keySet().iterator().next();
         return dao.addNewStockLog(stockEntry.getEmployeeId(),stockEntry.getQuantity(),entry.get(stockId),stockId)?
-                "Stcok loaded":
+                "Stock loaded":
                 "stock could not be loaded";
     }
     
@@ -107,7 +107,10 @@ public class ProductServiceImp implements IServiceProduct{
 
     @Override
     public Map<String, String> findStockOfProduct(String productId) {
+        
         Product product = dao.findProduct(productId);
+        System.out.println("found product");
+        System.out.println(product.getName());
         return dao.findAvailabeStock(product.getId());
     }
 

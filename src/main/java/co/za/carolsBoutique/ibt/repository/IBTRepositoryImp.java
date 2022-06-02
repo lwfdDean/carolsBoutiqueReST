@@ -80,8 +80,9 @@ public class IBTRepositoryImp implements IIBTRepository {
                             rs.getBoolean("approved"),
                             product,
                             size,
-                            rs.getString("requestingBoutique"),
-                            rs.getString("approvingBoutique")
+                            rs.getString("approvingBoutique"),
+                            rs.getString("requestingBoutique")
+                            
                     );
                 }
             } catch (SQLException ex) {
@@ -123,8 +124,8 @@ public class IBTRepositoryImp implements IIBTRepository {
                             rs.getBoolean("approved"),
                             product,
                             size,
-                            rs.getString("requestingBoutique"),
-                            rs.getString("approvingBoutique")
+                            rs.getString("approvingBoutique"),
+                            rs.getString("requestingBoutique")
                     ));
                 }
             } catch (SQLException ex) {

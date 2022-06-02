@@ -1,31 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ibt;
 
 import co.za.carolsBoutique.ibt.model.IBT;
 import co.za.carolsBoutique.ibt.repository.IBTRepositoryImp;
+import co.za.carolsBoutique.ibt.repository.IIBTRepository;
 import co.za.carolsBoutique.ibt.service.IBTIdGenerator;
 import co.za.carolsBoutique.ibt.service.IBTServiceImp;
+import co.za.carolsBoutique.product.model.Product;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-/**
- *
- * @author Administrator
- */
 public class TestIBTServiceImp {
-    
-        IBTRepositoryImp dao;
+        IBT ibtTest;
+        IIBTRepository dao;
 	IBTIdGenerator gen;
-	IBTServiceImp iBTService = null;
+	IBTServiceImp service = null;
+        Product product2;
+        List<IBT> ibts;
     
     public TestIBTServiceImp() {
     }
@@ -38,21 +36,52 @@ public class TestIBTServiceImp {
     public static void tearDownClass() {
     }
     
-    @Before
+    @Before//(Laurence) think we should use productCode, instaid of whole product and size
     public void setUp() {
+        dao = new IBTRepositoryImp();
+        gen = new IBTIdGenerator();
+        service = new IBTServiceImp(dao, gen);
+        List<String> sCats = new ArrayList<String>();
+        sCats.add("Shirts");
+        List sizes = new ArrayList<String>();
+        sizes.add("Universal");
+        product2 = new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00,sCats);
+        ibtTest = new IBT("1", "new@Test", false, product2, "22", "1", "2");
+        ibts = new ArrayList();
+        ibts.add(ibtTest);
     }
     
     @After
     public void tearDown() {
+        dao = null;
+        gen = null;
+        service = null;
+        product2 = null;
+        ibtTest = null;
     }
 
-    @Test
-    public void testRequestIBT(){
-       //  testIbt = new IBT("Ib12","fred@vzap.co.za", "joburg", 200.23, "123456789012");
-	//	Assert.assertEquals("Boutique added, boutique Id=" + testIbt.getId(), iBTService.testRequest(testIbt);
-    }
     
-    //
-    // @Test
-    // public void hello() {}
+
+     @Test//Passes the test
+     public void testRequestIBT() {
+        assertEquals("IBT has been requested", service.requestIBT(ibtTest));
+     }
+     
+     @Test//Category and size is returning ID
+     public void testGetIBT() {
+        assertEquals(ibtTest, service.getIBT(ibtTest.getId()));
+     }
+     
+      @Test//Category and size is returning ID
+     public void testFindStoreIBTS() {
+        assertEquals(ibts, service.findStoreIBTS("1"));
+     }
+     
+      @Test//Passed the test
+     public void testApproveIBT() {
+         Map<String,Boolean> entry = new HashMap();
+         entry.put("1", true);
+        assertEquals("IBT was approved", service.approveIBT(entry));
+     }
+
 }
