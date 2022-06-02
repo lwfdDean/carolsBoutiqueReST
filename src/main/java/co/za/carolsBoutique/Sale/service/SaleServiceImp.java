@@ -4,29 +4,28 @@
  */
 package co.za.carolsBoutique.Sale.service;
 
+import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.employee.model.Employee;
 
-/**
- *
- * @author wille
- */
 public class SaleServiceImp implements IServiceSale{
 	private ISaleRepository dao;
 	private CodeGenerator gen;
+        private PaymentGateway pg;
 
-	public SaleServiceImp(ISaleRepository dao, CodeGenerator gen) {
+	public SaleServiceImp(ISaleRepository dao, CodeGenerator gen, PaymentGateway pg) {
 		this.dao = dao;
 		this.gen = gen;
+                this.pg = pg;
 	}
 	
 	@Override//generating ID
-	public String createNewSale(Sale sale) {
-		//sale.setId(gen.generateId(sale.getBoutique(), true));
-                        
-			return dao.addSale(sale)?"Sale added, sale Id = "+sale.getId():"Could not add sale";
+	public String checkout(Sale sale) {
+            sale.setId(gen.generateId(sale.getBoutique(), true));
+            sale.setApproved(pg.makePayment(sale));
+            return dao.addSale(sale)?"accepted":"declined";
 	}
 
 	@Override
@@ -39,15 +38,6 @@ public class SaleServiceImp implements IServiceSale{
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public String removeSaleLineItem(String saleId, String productId, Employee manager, String managerUniqueCode) {
-		if(verfyManagersUniqueCode(manager, managerUniqueCode)){
-			return dao.removeSaleLineItem(saleId, productId)?"Sale line item has been removed":"Could not remove sale line item";
-		}
-		return "Managers unique code is incorrect";
-		
 	}
 	
 	@Override

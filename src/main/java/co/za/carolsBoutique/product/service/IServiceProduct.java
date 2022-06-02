@@ -10,6 +10,7 @@ import java.util.Map;
 public interface IServiceProduct {
     List<Product> findAllProducts();
     Product findProduct(String productId);
+    Product findProduct(Map<String,String> productInfo);
     String addProduct(Product product);
     String deleteProduct(String productId);
     String updateProductPrice(Map<String,Double>newPrice);

@@ -113,6 +113,11 @@ public class ProductServiceImp implements IServiceProduct{
         System.out.println(product.getName());
         return dao.findAvailabeStock(product.getId());
     }
+
+    @Override////////////////////////
+    public Product findProduct(Map<String, String> productInfo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
     
     

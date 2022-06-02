@@ -5,12 +5,14 @@
 package co.za.carolsBoutique.ReserveProduct.repository;
 
 import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
-import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
+import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,8 +20,9 @@ import java.util.logging.Logger;
  *
  * @author 27609
  */
-public class ReservedproductRepositoryImp implements ReservedproductRepository{
-     private Connection con;
+public class ReservedproductRepositoryImp implements ReservedproductRepository {
+
+    private Connection con;
     private PreparedStatement ps;
     private ResultSet rs;
     private int rowsAffected;
@@ -39,15 +42,15 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository{
     }
 
     @Override
-    public Reservedproduct findReserveProduct(String reserveProductid) {
-    Reservedproduct reserveProduct = null;
+    public String findReserveProduct(String customerEmail) {
+        String id = null;
         if (con != null) {
             try {
-                ps = con.prepareStatement("select * from reservedproduct where id=?");
-                ps.setString(1, reserveProductid);
+                ps = con.prepareStatement("select stock from reservedproduct where customerEmail=?");
+                ps.setString(1, customerEmail);
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    reserveProduct = new Reservedproduct(rs.getString("id"), rs.getString("customerEmail"));
+                    id = rs.getString("stock");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,17 +71,52 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository{
                 }
             }
         }
-        return reserveProduct;
+        return id;
     }
 
     @Override
-    public boolean addReserveProduct(Reservedproduct reserveProduct) {
-  if (con != null) {
+    public boolean addReserveProduct(Reservedproduct reserveProduct, String id, int quantity) {
+        boolean success = false;
+        if (con != null) {
             try {
-                ps = con.prepareStatement("insert into reservedproduct(id,customerEmail,collected) values(?,?,?)");
-                ps.setString(1, reserveProduct.getProducId());
-                ps.setString(2, reserveProduct.getCustomerEmail());
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("insert into reservedproduct(customerEmail,stock,collected) values(?,?,?)");
+                ps.setString(1, reserveProduct.getCustomerEmail());
+                ps.setString(2, id);
                 ps.setBoolean(3, false);
+                rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 1) {
+                    if (updateQuantity(id ,quantity-1)) {
+                        con.commit();
+                        success = true;
+                    }else{
+                        con.rollback();
+                    }
+                }else{
+                    con.rollback();
+                }
+                con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return success;
+    }
+
+    @Override
+    public boolean deleteReserveProduct(String reserveProductid) {
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("delete from reservedproduct where id=?");
+                ps.setString(1, reserveProductid);
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,23 +134,104 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository{
     }
 
     @Override
-    public boolean deleteReserveProduct(String reserveProductid) {
- if (con != null) {
+    public Map<String, Integer> findStockEntry(String productId, String boutiqueId, String size) {
+        Map<String, Integer> stockEntry = new HashMap<>();
+        if (con != null) {
             try {
-                ps = con.prepareStatement("delete from reservedproduct where id=?");
-                ps.setString(1, reserveProductid);
-                rowsAffected = ps.executeUpdate();
+                ps = con.prepareStatement("select id,quantity from stock where product=? and boutique = ? amd size = ?");
+                ps.setString(1, productId);
+                ps.setString(2, boutiqueId);
+                ps.setString(3, size);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    stockEntry.put(rs.getString("id"), rs.getInt("quantity"));
+                }
             } catch (SQLException ex) {
-                Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
-                        Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
         }
-        return rowsAffected == 1;    }
- }
+        return stockEntry;
+    }
+
+    @Override
+    public Map<String, String> addStock(String stockId) {
+        Map<String, String> productInfo = null;
+        if (con!=null) {
+            try {
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("select product,szie,quantity from stock where id =?");
+                ps.setString(1, stockId);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    int quantity = rs.getInt("quantity");
+                    String product = rs.getString("product");
+                    String size = rs.getString("size");
+                    if (updateQuantity(stockId,quantity+1)) {
+                        con.commit();
+                        productInfo.put(product, size);
+                    }else{
+                        con.rollback();
+                    }
+                }
+                con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return productInfo;
+    }
+
+    private boolean updateQuantity(String stockId, int quantity) {
+        PreparedStatement ps1 = null;
+        int rows = 0;
+        if (con!=null) {
+            try {
+                ps1 = con.prepareStatement("update stock set quantity = ? where id = ?");
+                ps1.setInt(1, quantity);
+                ps1.setString(2, stockId);
+                rows = ps1.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rows == 1;
+    }
+}
