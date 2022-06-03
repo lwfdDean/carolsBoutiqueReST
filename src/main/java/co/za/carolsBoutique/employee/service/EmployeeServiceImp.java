@@ -4,7 +4,6 @@ import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import co.za.carolsBoutique.employee.repository.IEmployeeRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
         }
         return null;
     }
-
+    //(laurence) why are we checking if the password is == to 8? and then retruning false?
     private boolean verifyKey(String password, int length){
         if (password == null || password.isEmpty() || password.length()==length) {
             return false;
