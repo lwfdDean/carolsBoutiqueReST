@@ -17,11 +17,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     private PreparedStatement ps;
     private ResultSet rs;
     private int rowsAffected;
-    
+
     public BoutiqueRepositoryImp() {
         String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -201,6 +201,53 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
             }
         }
         return boutiques;
+    }
+
+    @Override
+    public boolean subscribeToNewsletter(String contactMethod, String contactInfo) {
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("insert into subscriberlist(?) values(?)");
+                ps.setString(1, contactMethod);
+                ps.setString(2, contactInfo);
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return rowsAffected == 1;
+    }
+
+    @Override
+    public boolean addReview(int rating, String comment, String boutique) {
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("insert into review(rating, comment, boutique) values(?,?,?)");
+                ps.setInt(1, rating);
+                ps.setString(2, comment);
+                ps.setString(3, boutique);
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return rowsAffected == 1;
     }
 
 }

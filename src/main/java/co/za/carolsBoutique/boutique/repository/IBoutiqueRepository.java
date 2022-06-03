@@ -10,4 +10,8 @@ public interface IBoutiqueRepository {
     boolean updateBoutique(String boutiqueId, Double dailyTarget);
     boolean updateBoutique(String boutiqueid, String password);
     boolean deleteBoutique(String boutiqueId);
+
+    public boolean subscribeToNewsletter(String contactMethod, String contactInfo);
+
+    public boolean addReview(int rating, String comment, String boutique);
 }
