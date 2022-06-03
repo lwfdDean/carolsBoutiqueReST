@@ -50,7 +50,7 @@ public class SaleRepositoryImp implements ISaleRepository {
                 ps.setDouble(3, sale.getTotalPrice());
                 ps.setString(4, sale.getEmployee());
                 ps.setString(5, sale.getBoutique());
-                ps.setString(6,sale.getCardNumber());
+                ps.setString(6, sale.getCardNumber());
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     removeFromStock(sale);

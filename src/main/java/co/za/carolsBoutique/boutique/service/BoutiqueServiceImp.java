@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.boutique.service;
 
 import co.za.carolsBoutique.boutique.model.Boutique;
+import co.za.carolsBoutique.boutique.model.Review;
 import co.za.carolsBoutique.boutique.repository.IBoutiqueRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import java.util.List;
@@ -74,6 +75,15 @@ public class BoutiqueServiceImp implements IServiceBoutique{
             }
         }
         return nums>0 && chars>0;
+    }
+
+    @Override
+    public String rateTheBoutique(Review review) {
+        if (review.getContactMethod()!=null && review.getContactInfo()!=null) {
+            dao.subscribeToNewsletter(review.getContactMethod(),review.getContactInfo());
+        }
+        return dao.addReview(Integer.parseInt(review.getRating()),review.getComment(),review.getBoutique())?
+                "Thank you for rating our store":"an error occured";
     }
 
 }

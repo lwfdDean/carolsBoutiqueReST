@@ -28,6 +28,5 @@ public class Sale {
         this.items = items;
         this.boutique = boutique;
         this.cardNumber = cardNumber;
-    }
-    
+    }   
 }
