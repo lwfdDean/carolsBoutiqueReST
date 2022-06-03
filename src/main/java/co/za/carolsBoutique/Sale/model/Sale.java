@@ -20,13 +20,14 @@ public class Sale {
     private String boutique;
     private String cardNumber;
 
-    public Sale(String Id, String employee, boolean approved, Double totalPrice, List<Product> items, String boutique, String cardNumber) {
-        this.Id = Id;
-        this.employee = employee;
-        this.approved = approved;
-        this.totalPrice = totalPrice;
-        this.items = items;
-        this.boutique = boutique;
-        this.cardNumber = cardNumber;
-    }
+
+	public Sale(String Id, String employee, boolean approved, Double totalPrice, List<Product> items, String boutique, String cardNumber) {
+		this.Id = Id;
+		this.employee = employee;
+		this.approved = approved;
+		this.totalPrice = totalPrice;
+		this.items = items;
+		this.boutique = boutique;
+		this.cardNumber = cardNumber;
+	}
 }
