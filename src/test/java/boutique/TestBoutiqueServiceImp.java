@@ -5,6 +5,7 @@
 package boutique;
 //basic tests passed
 import co.za.carolsBoutique.boutique.model.Boutique;
+import co.za.carolsBoutique.boutique.model.Review;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.boutique.repository.IBoutiqueRepository;
 import co.za.carolsBoutique.boutique.service.BoutiqueIdGenerator;
@@ -90,6 +91,11 @@ public class TestBoutiqueServiceImp {
     @Test//Passed the test
     public void testChangeDailyTarget() {
         assertEquals("target updated", service.changeDailyTarget(changeTarget));
+     }
+    
+    @Test//Passed the test
+    public void testRateTheBoutique() {
+        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service", "emailAddress", "gg@gg", "1")));
      }
     
    

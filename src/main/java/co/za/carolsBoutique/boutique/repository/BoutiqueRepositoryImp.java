@@ -207,9 +207,9 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     public boolean subscribeToNewsletter(String contactMethod, String contactInfo) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("insert into subscriberlist(?) values(?)");
-                ps.setString(1, contactMethod);
-                ps.setString(2, contactInfo);
+                ps = con.prepareStatement("insert into subscriberlist(contactInfo,"+contactMethod+") values(?,?)");
+                ps.setString(1, contactInfo);
+                ps.setBoolean(2, true);
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
