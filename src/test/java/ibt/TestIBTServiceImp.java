@@ -1,5 +1,5 @@
 package ibt;
-
+//basic tests done, need discussion
 import co.za.carolsBoutique.ibt.model.IBT;
 import co.za.carolsBoutique.ibt.repository.IBTRepositoryImp;
 import co.za.carolsBoutique.ibt.repository.IIBTRepository;

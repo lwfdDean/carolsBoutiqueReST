@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  *
  * @author 27609
  */
-public class ReservedproductRepositoryImp implements ReservedproductRepository {
+public class ReservedproductRepositoryImp implements IReservedproductRepository {
 
     private Connection con;
     private PreparedStatement ps;
@@ -141,7 +141,7 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
         Map<String, Integer> stockEntry = new HashMap<>();
         if (con != null) {
             try {
-                ps = con.prepareStatement("select id,quantity from stock where product=? and boutique = ? amd size = ?");
+                ps = con.prepareStatement("select id,quantity from stock where product=? and boutique = ? and size = ?");
                 ps.setString(1, productId);
                 ps.setString(2, boutiqueId);
                 ps.setString(3, size);
@@ -173,7 +173,7 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
 
     @Override
     public Map<String, String> addStock(String stockId) {
-        Map<String, String> productInfo = null;
+        Map<String, String> productInfo = new HashMap();
         if (con!=null) {
             try {
                 con.setAutoCommit(false);
@@ -191,6 +191,7 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
                         con.rollback();
                     }
                 }
+                
                 con.setAutoCommit(true);
             } catch (SQLException ex) {
                 Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -209,7 +210,8 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            }
+                System.out.println("program not broken yet");//last line that prints out
+            }//throws a null pointer here, after executing both the closes successfully, at the end of the finally block
         }
         return productInfo;
     }
@@ -246,7 +248,7 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
                 ps = con.prepareStatement("select * from product inner join product_size on product_size.product = product.id"
                         + " where product.id = ? and product_size.size = ?");
                 ps.setString(1, productId);
-                ps.setString(1, size);
+                ps.setString(2, size);
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     List<String> sizes = new ArrayList<>();

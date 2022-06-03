@@ -5,16 +5,16 @@
 package co.za.carolsBoutique.ReserveProduct.service;
 
 import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
-import co.za.carolsBoutique.ReserveProduct.repository.ReservedproductRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.product.model.Product;
 import java.util.Map;
+import co.za.carolsBoutique.ReserveProduct.repository.IReservedproductRepository;
 
 public class ReservedproductServiceImp implements IServiceReservedproduct{
-     private ReservedproductRepository dao;
+     private IReservedproductRepository dao;
     private CodeGenerator gen;
 
-    public ReservedproductServiceImp(ReservedproductRepository dao, CodeGenerator gen) {
+    public ReservedproductServiceImp(IReservedproductRepository dao, CodeGenerator gen) {
         this.dao = dao;
         this.gen = gen;
     }
@@ -34,10 +34,13 @@ public class ReservedproductServiceImp implements IServiceReservedproduct{
     
     @Override
     public Product collectKeepAside(String customerEmail) {
+        System.out.println("beginning of service");
         String stockId = dao.findReserveProduct(customerEmail);
-        Map<String,String> productInfo = dao.addStock(stockId);
+        Map<String,String> productInfo = dao.addStock(stockId); //this line returns null
         String productId = productInfo.keySet().iterator().next();
         String size = productInfo.get(productId);
+        Product test = dao.findProductByProductCode(productId, size);
+        System.out.println(test.getCategories().get(0));
         return dao.findProductByProductCode(productId, size);
     }
     

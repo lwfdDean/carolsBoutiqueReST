@@ -1,5 +1,5 @@
 package product;
-
+//done with basic tests, need to test overloaded method of find product
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.StockEntry;
@@ -76,9 +76,13 @@ public class TestProductServiceImp {
         assertEquals(product, service.findProduct(product2.getId()));
      }
      
-      @Test//Passes the test
+     @Test//Passes the test
      public void testAddProduct() {
          assertEquals("Product with the provided ID already exists", service.addProduct(product));
+     }
+     @Test//Passes the test
+     public void testDeleteProduct() {
+         assertEquals("Successfully deleted product", service.deleteProduct("2"));
      }
      
       @Test//Passes the test

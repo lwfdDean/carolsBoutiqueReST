@@ -100,7 +100,7 @@ public class SaleRepositoryImp implements ISaleRepository {
                     ps1 = con.prepareStatement("update stock set quantity = quantity - 1 where boutique = ? and product = ? and size = ?");
                     ps1.setString(1, bId);
                     ps1.setString(2, prodId);
-                    ps1.setString(2, productCodes.get(prodId));
+                    ps1.setString(3, productCodes.get(prodId));
                     rows += ps1.executeUpdate();
                     ps1.close();
                 } catch (SQLException ex) {
@@ -421,6 +421,6 @@ public class SaleRepositoryImp implements ISaleRepository {
                 }
             }
         }
-        return rowsAffected == 1;
+        return success;
     }
 }
