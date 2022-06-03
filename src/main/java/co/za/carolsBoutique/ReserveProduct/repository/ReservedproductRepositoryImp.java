@@ -33,7 +33,7 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
     public ReservedproductRepositoryImp() {
         String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }

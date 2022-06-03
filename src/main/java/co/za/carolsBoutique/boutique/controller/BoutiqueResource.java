@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.boutique.controller;
 
 import co.za.carolsBoutique.boutique.model.Boutique;
+import co.za.carolsBoutique.boutique.model.Review;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.boutique.service.BoutiqueIdGenerator;
 import co.za.carolsBoutique.boutique.service.BoutiqueServiceImp;
@@ -59,5 +60,13 @@ public class BoutiqueResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeDailyTarget(Map<String,Double> newTaeget){
         return Response.status(Response.Status.OK).entity(service.changeDailyTarget(newTaeget)).build();
+    }
+    
+    @Path("/rateUs")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response rateTheBoutique(Review review){
+        return Response.status(Response.Status.OK).entity(service.rateTheBoutique(review)).build();
     }
 }
