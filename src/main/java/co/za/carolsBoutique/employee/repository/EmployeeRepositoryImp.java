@@ -80,7 +80,7 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 		List<Employee> employees = new ArrayList<>();
 		if (con != null) {
 			try {
-				ps = con.prepareStatement("select id,name,surname,pasword,managerUniqueCode,role,boutique from employee where boutique = ?");
+				ps = con.prepareStatement("select id,name,surname,password,managerUniqueCode,role,boutique,emailAddress from employee where boutique = ?");
 				ps.setString(1, boutiqueId);
 				rs = ps.executeQuery();
 				while (rs.next()) {
@@ -172,7 +172,7 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 	public boolean updateToTeller(String employeeId, String password, String roleId) {
 		if (con != null) {
 			try {
-				ps = con.prepareStatement("update employee set password=?, role= 'tel101' where id=?");
+				ps = con.prepareStatement("update employee set password=?, role= ? where id=?");
 				ps.setString(1, password);
 				ps.setString(2, roleId);
 				ps.setString(3, employeeId);
@@ -215,41 +215,39 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 		}
 		return rowsAffected == 1;
 	}
-
-	private Role getEmployeeRole(String employeeId) {
-		Role role = null;
-		PreparedStatement ps1 = null;
-		ResultSet rs1 = null;
-		if (con != null) {
-			try {
-				ps1 = con.prepareStatement("select * from role inner join employee on employee.role = role.id where employee.id = ?");
-				ps1.setString(1, employeeId);
-				rs1 = ps1.executeQuery();
-				if (rs1.next()) {
-					role = new Role(rs1.getString("id"), rs1.getString("name"), rs1.getInt("authorizationlvl"));
-					System.out.println(role.getName());
-				}
-			} catch (SQLException ex) {
-				Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps1 != null) {
-					try {
-						ps1.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-				if (rs1 != null) {
-					try {
-						rs1.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return role;
-	}
+    private Role getEmployeeRole(String employeeId) {
+        Role role = null;
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        if (con != null) {
+            try {
+                ps1 = con.prepareStatement("select * from role inner join employee on employee.role = role.id where employee.id = ?");
+                ps1.setString(1, employeeId);
+                rs1 = ps1.executeQuery();
+                if (rs1.next()) {
+                    role = new Role(rs1.getString("id"), rs1.getString("name"), rs1.getInt("authorizationlvl"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (rs1 != null) {
+                    try {
+                        rs1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return role;
+    }
 
 	@Override
 	public List<Employee> findAllByRole(String roleId, String boutiqueId) {
@@ -258,6 +256,7 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 			try {
 				ps = con.prepareStatement("select * from employee where role = ? and boutique = ?");
 				ps.setString(1, roleId);
+                                ps.setString(2, boutiqueId);
 				rs = ps.executeQuery();
 				while (rs.next()) {
 					String empId = rs.getString("id");
@@ -305,7 +304,7 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 				ps.setString(1, roleId);
 				rs = ps.executeQuery();
 				if (rs.next()) {
-					role = new Role(rs.getString("id"), rs.getString("name"), rs.getInt(" authorizationlvl"));
+					role = new Role(rs.getString("id"), rs.getString("name"), rs.getInt("authorizationlvl"));
 				}
 			} catch (SQLException ex) {
 				Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);

@@ -38,6 +38,7 @@ public class TestIBTServiceImp {
     
     @Before//(Laurence) think we should use productCode, instaid of whole product and size
     public void setUp() {
+        System.out.println("okokok");
         dao = new IBTRepositoryImp();
         gen = new IBTIdGenerator();
         service = new IBTServiceImp(dao, gen);
@@ -60,6 +61,8 @@ public class TestIBTServiceImp {
         ibtTest = null;
     }
 
+    //@Test//Test all
+    //public boolean testAll
     
 
      @Test//Passes the test

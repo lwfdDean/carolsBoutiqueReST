@@ -2,12 +2,16 @@
 package boutique;
 
 import co.za.carolsBoutique.boutique.model.Boutique;
+import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.boutique.repository.IBoutiqueRepository;
 import co.za.carolsBoutique.boutique.service.BoutiqueIdGenerator;
 import co.za.carolsBoutique.boutique.service.BoutiqueServiceImp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -18,10 +22,11 @@ public class TestBoutiqueServiceImp {
 	
 	IBoutiqueRepository dao;
 	BoutiqueIdGenerator gen;
-	BoutiqueServiceImp boutiqueService = null;
+	BoutiqueServiceImp service = null;
+        Boutique bTest;
+        List<Boutique> allBoutiques;
 	
-	public TestBoutiqueServiceImp() {
-	
+	public TestBoutiqueServiceImp() {   
         }
 	
 	@BeforeAll
@@ -33,58 +38,27 @@ public class TestBoutiqueServiceImp {
 	public static void tearDownClass() {
 	}
 	
-	@BeforeEach
+	@Before
 	public void setUp() {
-           boutiqueService = new BoutiqueServiceImp(dao, gen);
+            System.out.println("okokok");
+            dao = new BoutiqueRepositoryImp();
+            gen = new BoutiqueIdGenerator();
+            service = new BoutiqueServiceImp(dao, gen);
+            bTest = new Boutique("3", "Pretoria", 500.0, "123");
+            allBoutiques =  new ArrayList<Boutique>();
+            allBoutiques.add(new Boutique("1", "Johannesburg", 200.0, "123") );
+            allBoutiques.add(new Boutique("2", "CapeTown", 300.0, "123") );
 	}
 	
 	@AfterEach
 	public void tearDown() {
-		boutiqueService = null;
+            
 	}
 
 	@Test
-	public void testRegisterNewBoutique() {
-		Boutique testBoutique = new Boutique("123", "joburg", 200.23, "123456789012");
-		Assert.assertEquals("Boutique added, boutique Id=" + testBoutique.getId(), boutiqueService.registerNewBoutique(testBoutique));
+	public void testGetAllBoutiques() {
+            
+            assertEquals("Boutique added, boutique Id =3",service.registerNewBoutique(bTest));
 	}
 	
-	@Test
-	public void testEmptyIdRegisterNewBoutique() {
-		Boutique testBoutique = new Boutique(null, "joburg", 200.23, "123456789012");
-		Assert.assertEquals("Boutique added, boutique Id=" + testBoutique.getId(), boutiqueService.registerNewBoutique(testBoutique));
-	}
-	
-	@Test
-	public void testEmptyLocationRegisterNewBoutique() {
-		Boutique testBoutique = new Boutique("123", null, 200.23, "123456789012");
-		Assert.assertEquals("Couldnt add boutique", boutiqueService.registerNewBoutique(testBoutique));
-	}
-	
-	
-	@Test
-	public void testChangePassword() {
-		Map<String,String> testpasswordDetails = new HashMap<String, String>();
-		testpasswordDetails.put("12", "123asd56789t");
-		Assert.assertEquals("password Updated", boutiqueService.changePassword(testpasswordDetails));
-	}
-	
-	@Test
-	public void testChangeDailyTarget() {
-		Map<String, Double> testNewTarget = new HashMap<String, Double>();
-		testNewTarget.put("12", 500.0);
-		Assert.assertEquals("target updated", boutiqueService.changeDailyTarget(testNewTarget));
-	}
-	
-        @Test
-	public void testEmptyDailyTargetRegisterNewBoutique() {
-		Boutique testBoutique = new Boutique("123", "joburg", null, "1234567890ab");
-		Assert.assertEquals("Couldnt add boutique", boutiqueService.registerNewBoutique(testBoutique));
-	}
-	
-	@Test
-	public void testEmptyPasswordRegisterNewBoutique() {
-		Boutique testBoutique = new Boutique("123", "joburg", 200.23, null);
-		Assert.assertEquals("Couldnt add boutique", boutiqueService.registerNewBoutique(testBoutique));
-	}
 }

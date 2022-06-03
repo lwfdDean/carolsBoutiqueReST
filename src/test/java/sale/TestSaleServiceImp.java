@@ -43,7 +43,7 @@ public class TestSaleServiceImp {
         List sCats = new ArrayList<String>();
         sCats.add("Shirts");
         products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,sCats));
-        saleTest = new Sale("2", "new@Test", "1", true, 200.00, products, "1");
+        saleTest = new Sale("2", "new@Test", "1", true, 200.00, products, "1","");
     }
     
     @After
