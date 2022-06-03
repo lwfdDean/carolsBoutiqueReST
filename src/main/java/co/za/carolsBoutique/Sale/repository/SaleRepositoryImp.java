@@ -26,7 +26,7 @@ public class SaleRepositoryImp implements ISaleRepository {
     public SaleRepositoryImp() {
         String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -43,14 +43,14 @@ public class SaleRepositoryImp implements ISaleRepository {
         if (con != null) {
             try {
                 con.setAutoCommit(false);
-                ps = con.prepareStatement("INSERT INTO sale(id, customerEmail, approved, totalPrice, employee, boutique, cardNumber)"
-                        + " VALUES(?, ?, ?, ?, ?, ?, ?)");
+                ps = con.prepareStatement("INSERT INTO sale(id, approved, totalPrice, employee, boutique, cardNumber)"
+                        + " VALUES(?, ?, ?, ?, ?, ?)");
                 ps.setString(1, sale.getId());
-                ps.setString(2, sale.getCustomerEmail());
-                ps.setBoolean(3, sale.isApproved());
-                ps.setDouble(4, sale.getTotalPrice());
-                ps.setString(5, sale.getEmployee());
-                ps.setString(6, sale.getBoutique());
+                ps.setBoolean(2, sale.isApproved());
+                ps.setDouble(3, sale.getTotalPrice());
+                ps.setString(4, sale.getEmployee());
+                ps.setString(5, sale.getBoutique());
+                ps.setString(6,sale.getCardNumber());
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     removeFromStock(sale);
@@ -100,7 +100,7 @@ public class SaleRepositoryImp implements ISaleRepository {
                     ps1 = con.prepareStatement("update stock set quantity = quantity - 1 where boutique = ? and product = ? and size = ?");
                     ps1.setString(1, bId);
                     ps1.setString(2, prodId);
-                    ps1.setString(2, productCodes.get(prodId));
+                    ps1.setString(3, productCodes.get(prodId));
                     rows += ps1.executeUpdate();
                     ps1.close();
                 } catch (SQLException ex) {
@@ -155,7 +155,6 @@ public class SaleRepositoryImp implements ISaleRepository {
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     sale = new Sale(rs.getString("id"),
-                            rs.getString("customerEmail"),
                             rs.getString("employee"),
                             rs.getBoolean("approved"),
                             rs.getDouble("totalPrice"),
@@ -422,6 +421,6 @@ public class SaleRepositoryImp implements ISaleRepository {
                 }
             }
         }
-        return rowsAffected == 1;
+        return success;
     }
 }

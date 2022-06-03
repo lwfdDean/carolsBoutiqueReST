@@ -63,6 +63,7 @@ public class SaleIdGenerator implements CodeGenerator{
 
 	@Override
 	public String generateId(String source, boolean alphaNumeric) {
+            //the program stops here
 		StringBuilder sb = new StringBuilder();
 		if (alphaNumeric) {
 			int num = (int) (Math.random() * 9000 + 1000);
@@ -77,6 +78,7 @@ public class SaleIdGenerator implements CodeGenerator{
 				}
 				sb.append(a);
 			}
+                        System.out.println("id gen method is called");//doesn't reach this print
 		} else {
 			for (int i = 0; i < 10; i++) {
 				char a = source.charAt((int) (Math.random() * source.length()));
@@ -86,7 +88,9 @@ public class SaleIdGenerator implements CodeGenerator{
 				}
 				sb.append(a);
 			}
+                        System.out.println("id gen method is called");//doesn't reach this print
 		}
+                System.out.println("Id was returned");
 		return sb.toString();
 	}
 	

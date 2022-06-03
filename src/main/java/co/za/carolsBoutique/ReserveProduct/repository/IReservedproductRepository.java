@@ -4,7 +4,7 @@ import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
 import co.za.carolsBoutique.product.model.Product;
 import java.util.Map;
 
-public interface ReservedproductRepository {
+public interface IReservedproductRepository {
     String findReserveProduct(String customerEmail);
     boolean addReserveProduct(Reservedproduct reserveProduct, String id, int quantity);
     boolean deleteReserveProduct(String reserveProductid);

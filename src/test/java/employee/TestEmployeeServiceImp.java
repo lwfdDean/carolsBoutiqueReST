@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package employee;
-
+//basic tests passed, see comment above testRegester
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import co.za.carolsBoutique.employee.repository.EmployeeRepositoryImp;
@@ -124,6 +124,14 @@ public class TestEmployeeServiceImp {
     @Test//Passed the test
      public void testAddRole(){
          assertEquals("Success",employeeService.addRole(new Role("5","Sweeper",3)));
+     }
+     
+     @Test//Passed the test
+     public void testVerifyManagerCode(){
+         //boutique, code
+         Map<String,String> codeCheckInfo = new HashMap<>();
+         codeCheckInfo.put("1", "2");
+         assertEquals("Code valid",employeeService.verifyManagerCode(codeCheckInfo));
      }
      
 }
