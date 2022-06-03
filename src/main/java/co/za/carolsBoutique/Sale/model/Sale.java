@@ -20,6 +20,7 @@ public class Sale {
     private String boutique;
     private String cardNumber;
 
+
 	public Sale(String Id, String employee, boolean approved, Double totalPrice, List<Product> items, String boutique, String cardNumber) {
 		this.Id = Id;
 		this.employee = employee;
@@ -29,6 +30,4 @@ public class Sale {
 		this.boutique = boutique;
 		this.cardNumber = cardNumber;
 	}
-	
-	
 }

@@ -43,14 +43,14 @@ public class SaleRepositoryImp implements ISaleRepository {
         if (con != null) {
             try {
                 con.setAutoCommit(false);
-                ps = con.prepareStatement("INSERT INTO sale(id, customerEmail, approved, totalPrice, employee, boutique, cardNumber)"
-                        + " VALUES(?, ?, ?, ?, ?, ?, ?)");
+                ps = con.prepareStatement("INSERT INTO sale(id, approved, totalPrice, employee, boutique, cardNumber)"
+                        + " VALUES(?, ?, ?, ?, ?, ?)");
                 ps.setString(1, sale.getId());
-                ps.setString(2, sale.getCustomerEmail());
-                ps.setBoolean(3, sale.isApproved());
-                ps.setDouble(4, sale.getTotalPrice());
-                ps.setString(5, sale.getEmployee());
-                ps.setString(6, sale.getBoutique());
+                ps.setBoolean(2, sale.isApproved());
+                ps.setDouble(3, sale.getTotalPrice());
+                ps.setString(4, sale.getEmployee());
+                ps.setString(5, sale.getBoutique());
+                ps.setString(6, sale.getCardNumber());
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     removeFromStock(sale);
@@ -155,7 +155,6 @@ public class SaleRepositoryImp implements ISaleRepository {
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     sale = new Sale(rs.getString("id"),
-                            rs.getString("customerEmail"),
                             rs.getString("employee"),
                             rs.getBoolean("approved"),
                             rs.getDouble("totalPrice"),
