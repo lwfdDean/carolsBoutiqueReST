@@ -5,7 +5,6 @@ import co.za.carolsBoutique.ReserveProduct.repository.ReservedproductRepositoryI
 import co.za.carolsBoutique.ReserveProduct.service.IServiceReservedproduct;
 import co.za.carolsBoutique.ReserveProduct.service.ReservedproductIdGenerator;
 import co.za.carolsBoutique.ReserveProduct.service.ReservedproductServiceImp;
-import co.za.carolsBoutique.product.model.Product;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Path("/KeepAside")
 public class ReservedproductResource {
 //     Reservedproduct findReserveProduct(String reserveProductid);
 //    String makeReserveProduct(Reservedproduct reserveProduct);
@@ -25,14 +25,16 @@ public class ReservedproductResource {
     public ReservedproductResource() {
         service = new ReservedproductServiceImp(new ReservedproductRepositoryImp(),new ReservedproductIdGenerator());
     }
+    
     @DELETE
     @Path("/deleteProduct/{reservedproductId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteReservedproduct(@PathParam("reservedproductId") String reservedproductId){
         return Response.status(Response.Status.OK).entity(service.removeReserveProduct(reservedproductId)).build();
     }
+    
     @POST
-    @Path("/addProduct")
+    @Path("/addKeepAside")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addProduct(Reservedproduct reservedproduct){

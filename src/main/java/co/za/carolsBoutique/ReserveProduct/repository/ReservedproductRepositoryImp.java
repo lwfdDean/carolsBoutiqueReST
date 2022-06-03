@@ -5,13 +5,16 @@
 package co.za.carolsBoutique.ReserveProduct.repository;
 
 import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
+import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -174,7 +177,7 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
         if (con!=null) {
             try {
                 con.setAutoCommit(false);
-                ps = con.prepareStatement("select product,szie,quantity from stock where id =?");
+                ps = con.prepareStatement("select product,size,quantity from stock where id =?");
                 ps.setString(1, stockId);
                 rs = ps.executeQuery();
                 if (rs.next()) {
@@ -233,5 +236,50 @@ public class ReservedproductRepositoryImp implements ReservedproductRepository {
             }
         }
         return rows == 1;
+    }
+
+    @Override
+    public Product findProductByProductCode(String productId, String size) {
+        Product product = null;
+        if (con!=null) {
+            try {
+                ps = con.prepareStatement("select * from product inner join product_size on product_size.product = product.id"
+                        + " where product.id = ? and product_size.size = ?");
+                ps.setString(1, productId);
+                ps.setString(1, size);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    List<String> sizes = new ArrayList<>();
+                    sizes.add(size);
+                    product = new Product(
+                            rs.getString("id"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            sizes,
+                            rs.getString("color"),
+                            rs.getDouble("price"),
+                            new ArrayList<>()
+                    );
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return product;
     }
 }

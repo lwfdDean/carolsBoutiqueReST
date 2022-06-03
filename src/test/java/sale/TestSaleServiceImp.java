@@ -36,14 +36,14 @@ public class TestSaleServiceImp {
     public void setUp() {
         dao = new SaleRepositoryImp();
         gen = new SaleIdGenerator();
-        service = new SaleServiceImp(dao, gen, new PaymentGateway());
+        service = new SaleServiceImp(dao, gen,new PaymentGateway());
         List<Product> products = new ArrayList();
         List sizes = new ArrayList<String>();
         sizes.add("Large");
         List sCats = new ArrayList<String>();
         sCats.add("Shirts");
         products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,sCats));
-        saleTest = new Sale("2", "new@Test", "1", true, 200.00, products, "1");
+        saleTest = new Sale("2", "new@Test", "1", true, 200.00, products, "1","");
     }
     
     @After
