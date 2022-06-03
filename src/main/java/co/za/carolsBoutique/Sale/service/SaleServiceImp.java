@@ -1,53 +1,57 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package co.za.carolsBoutique.Sale.service;
 
-import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
-import co.za.carolsBoutique.employee.model.Employee;
+import co.za.carolsBoutique.paymentGateway.PaymentGateway;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
-public class SaleServiceImp implements IServiceSale{
-	private ISaleRepository dao;
-	private CodeGenerator gen;
-        private PaymentGateway pg;
+public class SaleServiceImp implements IServiceSale {
 
-	public SaleServiceImp(ISaleRepository dao, CodeGenerator gen, PaymentGateway pg) {
-		this.dao = dao;
-		this.gen = gen;
-                this.pg = pg;
-	}
-	
-	@Override//generating ID
-	public String checkout(Sale sale) {
-            sale.setId(gen.generateId(sale.getBoutique(), true));
-            sale.setApproved(pg.makePayment(sale));
-            return dao.addSale(sale)?"accepted":"declined";
-	}
+    private ISaleRepository dao;
+    private CodeGenerator gen;
+    private PaymentGateway pg;
 
-	@Override
-	public Sale findSale(String saleId) {
-		return dao.findSale(saleId);
-	}
-	
-	private boolean verfyManagersUniqueCode(Employee manager, String managerUniqueCode){
-		if(manager.getManagerCode().equals(managerUniqueCode)){
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public String updateTotalSalePrice(String saleId, Double totalPrice) {
-		return dao.updateSale(saleId, totalPrice)?"Sale total price has been updated":"Sale total price could not be updated";
-	}
+    public SaleServiceImp(ISaleRepository dao, CodeGenerator gen, PaymentGateway pg) {
+        this.dao = dao;
+        this.gen = gen;
+        this.pg = pg;
+    }
 
-	@Override
-	public String updateSaleLineItem(String oldProductId, String newProductId, String saleId) {
-		return dao.updateSaleLineItem(oldProductId, newProductId, saleId)?"The sale line item has been updated":"The sale line item could not be updated";
-	}
-	
+    @Override//generating ID
+    public String checkout(Sale sale) {
+        sale.setId(gen.generateId(sale.getBoutique(), true));
+        sale.setApproved(pg.makePayment(sale));
+        return dao.addSale(sale) ? "accepted" : "declined";
+    }
+
+    @Override
+    public Sale findSale(String saleId) {
+        return dao.findSaleDate(saleId).toLocalDateTime().compareTo(LocalDateTime.now().minusDays(10L))>=0?dao.findSale(saleId):null;
+    }
+    
+    @Override
+    public String refund(Map<String, String> refundInfo) {
+        String saleId = refundInfo.keySet().iterator().next();
+        Sale sale = dao.findSale(saleId);
+        double refundAmmount = 0;
+        sale.setTotalPrice(sale.getTotalPrice()-refundAmmount);
+        if (sale.getCardNumber()!=null) {
+            //send Email
+        }
+        String productId = refundInfo.get(saleId).split(" ")[0];
+        return dao.updateSale(sale.getId(), sale.getTotalPrice(),productId)?"refund sompleted":"couldnt complete refund";
+    }
+    
+    @Override
+    public String exchange(List<String> exchangeInfo) {
+        boolean b = dao.updateSaleLineItem(exchangeInfo.get(0), exchangeInfo.get(1), exchangeInfo.get(2));
+        if (b) {
+            //send email
+            return "Exchange Successful";
+        }
+        return "exchamge Failed";
+    }
 }
