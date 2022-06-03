@@ -510,7 +510,7 @@ public class ProductRepositoryImp implements IProductRepository {
         if (con != null) {
             try {
                 for (int i = 0; i < categoriesId.size(); i++) {
-                    ps = con.prepareStatement("select product from product_category where catogory = ?");
+                    ps = con.prepareStatement("select product from product_category where category = ?");
                     ps.setString(1, categoriesId.get(i));
                     rs = ps.executeQuery();
                     while (rs.next()) {
