@@ -16,6 +16,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+//http://localhost:8080/carolsBoutiqueRest/sale
+
 @Path("/sale")
 public class SaleResource {
     private IServiceSale service;
