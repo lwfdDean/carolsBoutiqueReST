@@ -13,5 +13,6 @@ public class Boutique {
     private String id;
     private String location;
     private Double dailyTarget;
+    private Double monthlyTarget;
     private String password;
 }
