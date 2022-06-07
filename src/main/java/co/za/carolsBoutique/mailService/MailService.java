@@ -23,7 +23,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class MailService extends Thread{
+public class MailService{
 	private String type;
 	private Object source;
 	private String recipient;
@@ -37,12 +37,8 @@ public class MailService extends Thread{
 		this.recipient = recipient;
 		this.properties = System.getProperties();
 	}
-	public static void main(String[] args) {
-		new MailService("stock", "Hello", "dean.swanepoel13@gmail.com").run();
-
-	}
-	@Override
-	public void run() {
+	
+	public void runMail() {
 		try {
 			Map<String, String> authenticationInfo = readInFromAuthentication();
 			String email = authenticationInfo.keySet().iterator().next();
@@ -92,14 +88,14 @@ public class MailService extends Thread{
 
 	private Map<String, String> readInFromAuthentication() {
 		Map<String, String> map = new HashMap<>();
-		map.put("carolsboutiquelwfd@yahoo.com", "fyrk rvgr oigx qvcn");
+		map.put("carolsboutiquelwfd@yahoo.com", "fyrk rvgr oigx qvcn");//fyrk rvgr oigx qvcn
 		return map;
 	}
 
 	private synchronized void configureEmail(String email, String password) {
 		properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.host", "smtp.mail.yahoo.com");
+		properties.put("mail.smtp.host", "smtp.mail.beatmax.co");
 		properties.put("mail.smtp.port", "587");
 		session = Session.getInstance(properties, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
