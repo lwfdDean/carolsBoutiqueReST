@@ -9,9 +9,16 @@ import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.product.model.Product;
 import java.util.Map;
 import co.za.carolsBoutique.ReserveProduct.repository.IReservedproductRepository;
+import co.za.carolsBoutique.mailService.MailService;
+import jakarta.mail.MessagingException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class ReservedproductServiceImp implements IServiceReservedproduct{
-     private IReservedproductRepository dao;
+public class ReservedproductServiceImp implements IServiceReservedproduct {
+
+    private IReservedproductRepository dao;
     private CodeGenerator gen;
 
     public ReservedproductServiceImp(IReservedproductRepository dao, CodeGenerator gen) {
@@ -22,27 +29,68 @@ public class ReservedproductServiceImp implements IServiceReservedproduct{
     @Override
     public String makeReserveProduct(Reservedproduct reserveProduct) {
         String[] productInfo = reserveProduct.getProductCode().split(" ");
-        Map<String,Integer> entry = dao.findStockEntry(productInfo[0], reserveProduct.getBoutiqueId(), productInfo[1]);
+        Map<String, Integer> entry = dao.findStockEntry(productInfo[0], reserveProduct.getBoutiqueId(), productInfo[1]);
         String id = entry.keySet().iterator().next();
-        return dao.addReserveProduct(reserveProduct,id,entry.get(id))?"product reserved":"error occured";
+        return dao.addReserveProduct(reserveProduct, id, entry.get(id)) ? "product reserved" : "error occured";
     }
 
     @Override
     public String removeReserveProduct(String reserveProductid) {
-        return dao.deleteReserveProduct(reserveProductid)?"Deteting item successful":"Deletion failed";
+        return dao.deleteReserveProduct(reserveProductid) ? "Deteting item successful" : "Deletion failed";
     }
-    
+
     @Override
     public Product collectKeepAside(String customerEmail) {
-        System.out.println("beginning of service");
         String stockId = dao.findReserveProduct(customerEmail);
-        Map<String,String> productInfo = dao.addStock(stockId); //this line returns null
+        Map<String, String> productInfo = dao.addStock(stockId); //this line returns null
         String productId = productInfo.keySet().iterator().next();
         String size = productInfo.get(productId);
         Product test = dao.findProductByProductCode(productId, size);
         System.out.println(test.getCategories().get(0));
         return dao.findProductByProductCode(productId, size);
     }//index out of bounds thrown
-    
-    
+
+    @Override
+    public void emailNotifyCustomers() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    List<Reservedproduct> prods = dao.getAllReservedproducts();
+                    for (Reservedproduct prod : prods) {
+                        String email = prod.getCustomerEmail();
+                        try {
+                            if (prod.getDate().plusHours(12L).isAfter(LocalDateTime.now())) {
+
+                                new MailService(email, "Carols Boutique keep-aside", "");
+
+                                continue;
+                            }
+                            if (prod.getDate().plusDays(1L).isAfter(LocalDateTime.now())) {
+
+                                new MailService(email, "Carols Boutique keep-aside", "");
+
+                                continue;
+                            }
+                            if (prod.getDate().plusDays(2L).isAfter(LocalDateTime.now())) {
+
+                                new MailService(email, "Carols Boutique keep-aside", "");
+                                dao.deleteReserveProduct(email);
+
+                                continue;
+                            }
+                            if (prod.getDate().plusHours(36L).isAfter(LocalDateTime.now())) {
+
+                                new MailService(email, "Carols Boutique keep-aside", "");
+
+                            }
+                        } catch (MessagingException ex) {
+                            Logger.getLogger(ReservedproductServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
 }

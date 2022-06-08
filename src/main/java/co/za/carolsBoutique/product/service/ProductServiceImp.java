@@ -79,7 +79,7 @@ public class ProductServiceImp implements IServiceProduct{
         StockEntry stockEntry = stockInfo.get(product);
         if (product.getId()!=null) {
             dao.addProduct(product);
-            dao.addStockEntry(stockEntry, generateStockIds(product), product);
+            dao.addStockEntry(stockEntry, generateStockIds(product,stockEntry.getBoutiqueId()), product);
         }
         String[] productEntry =stockEntry.getProductCode().split(" ");
         Map<String,Integer> entry = dao.findStockEntry(productEntry[0], stockEntry.getBoutiqueId(), productEntry[1]);
@@ -89,7 +89,7 @@ public class ProductServiceImp implements IServiceProduct{
                 "stock could not be loaded";
     }
    
-    private List<String> generateStockIds(Product product) {
+    private List<String> generateStockIds(Product product,String boutiqueId) {
         List<String> stockIds = new ArrayList<>();
         for (int i = 0; i < product.getSizes().size(); i++) {
             StringBuilder sb = new StringBuilder();

@@ -1,5 +1,7 @@
 package co.za.carolsBoutique.product.repository;
 
+import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
+import co.za.carolsBoutique.ReserveProduct.repository.ReservedproductRepositoryImp;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;

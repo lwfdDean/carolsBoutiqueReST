@@ -6,6 +6,7 @@ import co.za.carolsBoutique.ReserveProduct.repository.ReservedproductRepositoryI
 import co.za.carolsBoutique.ReserveProduct.service.ReservedproductIdGenerator;
 import co.za.carolsBoutique.ReserveProduct.service.ReservedproductServiceImp;
 import co.za.carolsBoutique.product.model.Product;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
@@ -36,7 +37,7 @@ public class TestReservedproductServiceImp {
         dao = new ReservedproductRepositoryImp();
         gen = new ReservedproductIdGenerator();
         service = new ReservedproductServiceImp(dao, gen);
-        reserveProduct = new Reservedproduct("1234567891 22", "gg@gg", "1");
+        reserveProduct = new Reservedproduct("1234567891 22", "gg@gg", "1",LocalDateTime.now());
     }
     
     @After
@@ -64,6 +65,6 @@ public class TestReservedproductServiceImp {
         sizes.add("22");
         List<String> categories = new ArrayList<>();
         categories.add("4");
-        assertEquals(new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00, categories),service.collectKeepAside("gg@gg"));
+        assertEquals(new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00,30.00, categories),service.collectKeepAside("gg@gg"));
      }
 }
