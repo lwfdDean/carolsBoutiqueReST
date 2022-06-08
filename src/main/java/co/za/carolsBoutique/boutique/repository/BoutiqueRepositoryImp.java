@@ -78,7 +78,7 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                 ps.setString(1, boutique.getId());
                 ps.setString(2, boutique.getLocation());
                 ps.setDouble(3, boutique.getDailyTarget());
-                ps.setDouble(3, boutique.getMonthlyTarget());
+                ps.setDouble(4, boutique.getMonthlyTarget());
                 ps.setString(5, boutique.getPassword());
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException e) {

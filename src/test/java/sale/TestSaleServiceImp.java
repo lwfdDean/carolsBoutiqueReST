@@ -68,6 +68,11 @@ public class TestSaleServiceImp {
      public void testCheckout() {
         assertEquals("accepted", service.checkout(saleTest));
      }
+	  @Test//Id generator is blocking the method for some reason
+     public void testCheckoutWithDiscount() {
+		 saleTest.setPromoCode("123");
+        assertEquals("accepted", service.checkout(saleTest));
+     }
      @Test//test passed(need to discuss the id or name return of cats and size)
      public void testFindSale() {
          List<Product> products = new ArrayList();

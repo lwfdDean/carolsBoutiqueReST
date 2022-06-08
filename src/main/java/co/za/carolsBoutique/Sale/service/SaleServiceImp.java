@@ -4,6 +4,7 @@ import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,10 @@ public class SaleServiceImp implements IServiceSale {
         String id = gen.generateId(sale.getBoutique(), true);
         sale.setId(id);
         sale.setApproved(pg.makePayment(sale));
-        return dao.addSale(sale) ? "accepted" : "declined";
+		if (sale.getPromoCode().isEmpty()) {
+			return dao.addSale(sale) ? "accepted" : "declined";
+		}
+        return dao.addSaleWithPromo(sale) ? "accepted" : "declined";
     }
 
     @Override
@@ -55,4 +59,9 @@ public class SaleServiceImp implements IServiceSale {
         }
         return "exchange Failed";
     }
+
+	@Override
+	public String addPromotionCode(String code, Double discount, String productId, Date ExpiryDate) {
+		return dao.addPromotionCode(code, discount, productId, ExpiryDate)?"promotion code added":"couldn't add promotion code";
+	}
 }
