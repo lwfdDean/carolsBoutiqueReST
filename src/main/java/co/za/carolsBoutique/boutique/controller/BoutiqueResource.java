@@ -6,14 +6,15 @@ import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.boutique.service.BoutiqueIdGenerator;
 import co.za.carolsBoutique.boutique.service.BoutiqueServiceImp;
 import co.za.carolsBoutique.boutique.service.IServiceBoutique;
+import co.za.carolsBoutique.mailService.MailService;
 import java.util.Map;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/boutique")
 public class BoutiqueResource {
@@ -43,12 +44,13 @@ public class BoutiqueResource {
     @Path("/getAllBoutiques")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBoutiques(){
+		new MailService("stock", "Hello", "willem0402@gmail.com").runMail();
         return Response.status(Response.Status.OK).entity(service.getAllBoutiques()).build();
     }
     
     @POST
     @Path("/changePassword")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)	
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePassword(Map<String,String> passwordDetails){
         return Response.status(Response.Status.OK).entity(service.changePassword(passwordDetails)).build();

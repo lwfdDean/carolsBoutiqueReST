@@ -2,8 +2,8 @@ package co.za.carolsBoutique.product.service;
 
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +25,7 @@ public interface IServiceProduct {
     String deleteCategory(String categoryId);
     
     String logStock(Map<Product,StockEntry> stockInfo);
+    
+    String addNewPromoCode(PromoCode promoCode);
+    PromoCode findPromoCode(String promoCode);
 }

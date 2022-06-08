@@ -50,7 +50,7 @@ public class TestSaleServiceImp {
         sCats = new ArrayList<String>();
         sCats.add("Shirts");
         products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,sCats));
-        saleTest = new Sale("3", "1", true, 200.00, products, "1","123");
+        saleTest = new Sale("3", "1", true, 200.00, products, "bteredsw3g5","123");
     }
     
     @After
@@ -68,11 +68,16 @@ public class TestSaleServiceImp {
      public void testCheckout() {
         assertEquals("accepted", service.checkout(saleTest));
      }
+	  @Test//Id generator is blocking the method for some reason
+     public void testCheckoutWithDiscount() {
+		 saleTest.setPromoCode("123");
+        assertEquals("accepted", service.checkout(saleTest));
+     }
      @Test//test passed(need to discuss the id or name return of cats and size)
      public void testFindSale() {
          List<Product> products = new ArrayList();
          products.add(new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2, sCats));
-        assertEquals(new Sale("1", "1", true, 200.00, products, "1", "123"), service.findSale("1"));
+        assertEquals(new Sale("1", "1", true, 200.00, products, "htfh", "123"), service.findSale("1"));
      }
      
      @Test//test passed

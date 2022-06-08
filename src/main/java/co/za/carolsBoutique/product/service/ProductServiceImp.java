@@ -1,21 +1,20 @@
 package co.za.carolsBoutique.product.service;
 
-import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
 import static java.lang.Math.random;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ProductServiceImp implements IServiceProduct{
     private IProductRepository dao;
-    private CodeGenerator gen;
-    public ProductServiceImp(IProductRepository dao,CodeGenerator gen){
+    public ProductServiceImp(IProductRepository dao){
         this.dao = dao;
-        this.gen = gen;
     }
 
     @Override
@@ -89,9 +88,7 @@ public class ProductServiceImp implements IServiceProduct{
                 "Stock loaded":
                 "stock could not be loaded";
     }
-    
-    
-
+   
     private List<String> generateStockIds(Product product,String boutiqueId) {
         List<String> stockIds = new ArrayList<>();
         for (int i = 0; i < product.getSizes().size(); i++) {
@@ -109,16 +106,31 @@ public class ProductServiceImp implements IServiceProduct{
     public Map<String, String> findStockOfProduct(String productId) {
         
         Product product = dao.findProduct(productId);
-        System.out.println("found product");
-        System.out.println(product.getName());
         return dao.findAvailabeStock(product.getId());
     }
 
-    @Override////////////////////////
+    @Override
     public Product findProduct(Map<String, String> productInfo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String productId = productInfo.keySet().iterator().next();
+        String size = productInfo.get(productId);
+        return dao.findProductBySize(productId, size);
     }
-    
-    
-    
+
+    @Override
+    public String addNewPromoCode(PromoCode promoCode) {
+        if (promoCode.getCode() == null || promoCode.getCode().isEmpty() || promoCode.getCode().length()<6) {
+            return "The promocode provided is invalid";
+        }
+        return dao.addPromo(promoCode)?"Promo added":"failed to add promo";
+    }
+
+    @Override
+    public PromoCode findPromoCode(String promoCode) {
+        PromoCode pc = dao.findPromo(promoCode);
+        if (LocalDate.now().isBefore(pc.getDate()) || LocalDate.now().isEqual(pc.getDate())) {
+            return pc;
+        }
+        return null;
+    }
+       
 }

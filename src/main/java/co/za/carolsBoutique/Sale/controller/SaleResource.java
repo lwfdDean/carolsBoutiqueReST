@@ -6,16 +6,17 @@ import co.za.carolsBoutique.Sale.service.IServiceSale;
 import co.za.carolsBoutique.Sale.service.SaleIdGenerator;
 import co.za.carolsBoutique.Sale.service.SaleServiceImp;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
-import jakarta.websocket.server.PathParam;
+import java.sql.Date;
+import java.util.List;
+import java.util.Map;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.util.List;
-import java.util.Map;
-
 
 //http://localhost:8080/carolsBoutiqueRest/sale
 
@@ -34,11 +35,19 @@ public class SaleResource {
     public Response checkout(Sale sale){
         return Response.status(Response.Status.OK).entity(service.checkout(sale)).build();
     }
-    
-    @Path("/findSale/{saleId}")
+	
+	@Path("/addPromotionCode")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkout(@PathParam("saleId")String saleId){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addPromotionCode(String code,Double discount,String productId, Date ExpiryDate){
+        return Response.status(Response.Status.OK).entity(service.addPromotionCode(code, discount, productId, ExpiryDate)).build();
+    }
+    
+    @Path("/findSale/{saleId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findSale(@PathParam("saleId")String saleId){
         return Response.status(Response.Status.OK).entity(service.findSale(saleId)).build();
     }
     
