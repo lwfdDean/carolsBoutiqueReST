@@ -42,7 +42,7 @@ public class ReservedproductServiceImp implements IServiceReservedproduct{
         Product test = dao.findProductByProductCode(productId, size);
         System.out.println(test.getCategories().get(0));
         return dao.findProductByProductCode(productId, size);
-    }
+    }//index out of bounds thrown
     
     
 }

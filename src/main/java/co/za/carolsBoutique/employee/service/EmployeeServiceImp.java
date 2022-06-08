@@ -27,7 +27,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
     }
     //(laurence) why are we checking if the password is == to 8? and then retruning false?
     private boolean verifyKey(String password, int length){
-        if (password == null || password.isEmpty() || password.length()==length) {
+        if (password == null || password.isEmpty() || password.length()!=length) {
             return false;
         }
         int nums = 0;
@@ -45,6 +45,7 @@ public class EmployeeServiceImp implements IServiceEmployee{
     
     @Override
     public String register(Employee employee) {
+        employee.setId(gen.generateId(employee.getEmailAddress(), employee.getSurname(), true));
         if (dao.findEmployee(employee.getId())==null) {
             if (verifyKey(employee.getPassword(),8)) {
                 return dao.addEmployee(employee)?"Employee added your employeeId = "+employee.getId():"Couldn't add employee";
