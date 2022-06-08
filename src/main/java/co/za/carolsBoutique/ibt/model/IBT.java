@@ -1,7 +1,5 @@
 package co.za.carolsBoutique.ibt.model;
 
-
-
 import co.za.carolsBoutique.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;

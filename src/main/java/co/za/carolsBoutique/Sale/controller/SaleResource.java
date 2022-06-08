@@ -9,6 +9,7 @@ import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -35,9 +36,9 @@ public class SaleResource {
     }
     
     @Path("/findSale/{saleId}")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkout(@PathParam("saleId")String saleId){
+    public Response findSale(@PathParam("saleId")String saleId){
         return Response.status(Response.Status.OK).entity(service.findSale(saleId)).build();
     }
     
