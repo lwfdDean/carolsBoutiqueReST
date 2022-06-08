@@ -1,6 +1,5 @@
 package co.za.carolsBoutique.product.service;
 
-import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.StockEntry;
@@ -12,10 +11,8 @@ import java.util.Map;
 
 public class ProductServiceImp implements IServiceProduct{
     private IProductRepository dao;
-    private CodeGenerator gen;
-    public ProductServiceImp(IProductRepository dao,CodeGenerator gen){
+    public ProductServiceImp(IProductRepository dao){
         this.dao = dao;
-        this.gen = gen;
     }
 
     @Override
@@ -89,9 +86,7 @@ public class ProductServiceImp implements IServiceProduct{
                 "Stock loaded":
                 "stock could not be loaded";
     }
-    
-    
-
+   
     private List<String> generateStockIds(Product product,String boutiqueId) {
         List<String> stockIds = new ArrayList<>();
         for (int i = 0; i < product.getSizes().size(); i++) {
@@ -109,16 +104,14 @@ public class ProductServiceImp implements IServiceProduct{
     public Map<String, String> findStockOfProduct(String productId) {
         
         Product product = dao.findProduct(productId);
-        System.out.println("found product");
-        System.out.println(product.getName());
         return dao.findAvailabeStock(product.getId());
     }
 
-    @Override////////////////////////
+    @Override
     public Product findProduct(Map<String, String> productInfo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String productId = productInfo.keySet().iterator().next();
+        String size = productInfo.get(productId);
+        return dao.findProductBySize(productId, size);
     }
-    
-    
-    
+       
 }

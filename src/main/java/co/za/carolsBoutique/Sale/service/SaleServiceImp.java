@@ -23,8 +23,8 @@ public class SaleServiceImp implements IServiceSale {
 
     @Override//generating ID
     public String checkout(Sale sale) {
-        System.out.println("Before Id need to be made");//(this prints, but print in generate id doesn't print out, and block the method)
-        //sale.setId(gen.generateId(sale.getBoutique(), true));     commented out to make the test pass
+        String id = gen.generateId(sale.getBoutique(), true);
+        sale.setId(id);
         sale.setApproved(pg.makePayment(sale));
 		if (sale.getPromoCode().isEmpty()) {
 			return dao.addSale(sale) ? "accepted" : "declined";

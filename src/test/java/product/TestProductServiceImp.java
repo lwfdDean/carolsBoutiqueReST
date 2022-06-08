@@ -45,7 +45,7 @@ public class TestProductServiceImp {
         allProducts = new ArrayList();
         dao = new ProductRepositoryImp();
         gen = new ProductIdGenerator();
-        service = new ProductServiceImp(dao, gen);
+        service = new ProductServiceImp(dao);
         sCats = new ArrayList<String>();
         sCats.add("Shirts");
         cats = new ArrayList<Category>();
