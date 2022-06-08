@@ -44,6 +44,7 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                     boutique = new Boutique(rs.getString("id"),
                             rs.getString("location"),
                             rs.getDouble("dailytarget"),
+                            rs.getDouble("monthlyTarget"),
                             rs.getString("password"));
                 }
             } catch (SQLException e) {
@@ -73,11 +74,12 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     public boolean addBoutique(Boutique boutique) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("Insert Into boutique(id, location, dailytarget, password) values(?, ?, ?, ?)");
+                ps = con.prepareStatement("Insert Into boutique(id, location, dailytarget, monthlyTarget, password) values(?, ?, ?, ?)");
                 ps.setString(1, boutique.getId());
                 ps.setString(2, boutique.getLocation());
                 ps.setDouble(3, boutique.getDailyTarget());
-                ps.setString(4, boutique.getPassword());
+                ps.setDouble(4, boutique.getMonthlyTarget());
+                ps.setString(5, boutique.getPassword());
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -179,6 +181,7 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                     boutiques.add(new Boutique(rs.getString("id"),
                             rs.getString("location"),
                             rs.getDouble("dailytarget"),
+                            rs.getDouble("monthlyTarget"),
                             rs.getString("password")));
                 }
             } catch (SQLException e) {
@@ -207,9 +210,9 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     public boolean subscribeToNewsletter(String contactMethod, String contactInfo) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("insert into subscriberlist(?) values(?)");
-                ps.setString(1, contactMethod);
-                ps.setString(2, contactInfo);
+                ps = con.prepareStatement("insert into subscriberlist(contactInfo,"+contactMethod+") values(?,?)");
+                ps.setString(1, contactInfo);
+                ps.setBoolean(2, true);
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);

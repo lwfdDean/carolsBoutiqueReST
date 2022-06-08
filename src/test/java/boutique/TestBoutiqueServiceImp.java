@@ -5,6 +5,7 @@
 package boutique;
 //basic tests passed
 import co.za.carolsBoutique.boutique.model.Boutique;
+import co.za.carolsBoutique.boutique.model.Review;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.boutique.repository.IBoutiqueRepository;
 import co.za.carolsBoutique.boutique.service.BoutiqueIdGenerator;
@@ -50,10 +51,10 @@ public class TestBoutiqueServiceImp {
             dao = new BoutiqueRepositoryImp();
             gen = new BoutiqueIdGenerator();
             service = new BoutiqueServiceImp(dao, gen);
-            bTest = new Boutique("3", "Pretoria", 500.0, "123456789aaa");
+            bTest = new Boutique("3", "Pretoria", 500.0,466.0, "123456789aaa");
             allBoutiques =  new ArrayList<Boutique>();
-            allBoutiques.add(new Boutique("1", "Johannesburg", 600.0, "123456789aaa") );
-            allBoutiques.add(new Boutique("2", "CapeTown", 300.0, "123") );
+            allBoutiques.add(new Boutique("1", "Johannesburg", 600.0,1000.00, "123456789aaa") );
+            allBoutiques.add(new Boutique("2", "CapeTown", 300.0,10000.00, "123") );
             loginDetails = new HashMap<String,String>();
             loginDetails.put("1", "123456789aaa");
             changeTarget = new HashMap<String,Double>();
@@ -79,7 +80,7 @@ public class TestBoutiqueServiceImp {
     
      @Test//Passed the test
      public void testLogin() {
-         assertEquals(new Boutique("1", "Johannesburg", 200.00, "123"), service.login(loginDetails));
+         assertEquals(new Boutique("1", "Johannesburg", 200.00,300.00, "123"), service.login(loginDetails));
      }
      
     @Test//Passed the test
@@ -90,6 +91,11 @@ public class TestBoutiqueServiceImp {
     @Test//Passed the test
     public void testChangeDailyTarget() {
         assertEquals("target updated", service.changeDailyTarget(changeTarget));
+     }
+    
+    @Test//Passed the test
+    public void testRateTheBoutique() {
+        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service", "emailAddress", "gg@gg", "1")));
      }
     
    
