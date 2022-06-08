@@ -24,7 +24,7 @@ import jakarta.ws.rs.core.Response;
 public class ProductResource {
     private IServiceProduct service;
     public ProductResource(){
-        this.service = new ProductServiceImp(new ProductRepositoryImp(),new ProductIdGenerator());
+        this.service = new ProductServiceImp(new ProductRepositoryImp());
     }
    
     @GET

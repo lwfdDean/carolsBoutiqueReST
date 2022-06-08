@@ -44,9 +44,9 @@ public class SaleResource {
     }
     
     @Path("/findSale/{saleId}")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkout(@PathParam("saleId")String saleId){
+    public Response findSale(@PathParam("saleId")String saleId){
         return Response.status(Response.Status.OK).entity(service.findSale(saleId)).build();
     }
     

@@ -69,7 +69,7 @@ public class SaleIdGenerator implements CodeGenerator{
 			int num = (int) (Math.random() * 9000 + 1000);
 			for (int i = 0; i < 6; i++) {
 				char a = source.charAt((int) (Math.random() * source.length()));
-				if (!Character.isLetter(a)) {
+				if (!(Character.isLetter(a))) {
 					i--;
 					continue;
 				}
