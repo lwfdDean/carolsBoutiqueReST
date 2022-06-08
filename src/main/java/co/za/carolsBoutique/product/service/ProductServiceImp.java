@@ -2,9 +2,11 @@ package co.za.carolsBoutique.product.service;
 
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
 import static java.lang.Math.random;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -112,6 +114,23 @@ public class ProductServiceImp implements IServiceProduct{
         String productId = productInfo.keySet().iterator().next();
         String size = productInfo.get(productId);
         return dao.findProductBySize(productId, size);
+    }
+
+    @Override
+    public String addNewPromoCode(PromoCode promoCode) {
+        if (promoCode.getCode() == null || promoCode.getCode().isEmpty() || promoCode.getCode().length()<6) {
+            return "The promocode provided is invalid";
+        }
+        return dao.addPromo(promoCode)?"Promo added":"failed to add promo";
+    }
+
+    @Override
+    public PromoCode findPromoCode(String promoCode) {
+        PromoCode pc = dao.findPromo(promoCode);
+        if (LocalDate.now().isBefore(pc.getDate()) || LocalDate.now().isEqual(pc.getDate())) {
+            return pc;
+        }
+        return null;
     }
        
 }

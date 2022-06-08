@@ -2,6 +2,7 @@ package co.za.carolsBoutique.product.repository;
 
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
 import java.util.List;
 import java.util.Map;
@@ -24,4 +25,8 @@ public interface IProductRepository {
     boolean addStockEntry(StockEntry stockEntry,List<String> stockId,Product product);
     boolean addNewStockLog(String employeeId,int quantityBefore,int quantityAdded,String stockId);
     Map<String,String> findAvailabeStock(String productId);
+    
+    PromoCode findPromo(String code);
+    boolean addPromo(PromoCode promoCode);
+
 }
