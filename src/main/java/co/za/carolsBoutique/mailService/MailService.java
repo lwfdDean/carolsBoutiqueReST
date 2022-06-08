@@ -2,17 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package co.za.carolsBoutique.mail.Service;
+package co.za.carolsBoutique.mailService;
 
-
-import jakarta.mail.Authenticator;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,12 +15,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class MailService{
 	private String type;
@@ -43,30 +35,22 @@ public class MailService{
 		this.type = type;
 		this.source = source;
 		this.recipient = recipient;
-		this.properties = new Properties();   
+		this.properties = System.getProperties();
 	}
 	
-//	public static void main(String[] args) {
-//		new MailService("stock", "Hello", "gouwsie46@yahoo.com").run();
-//		
-//	}
-
-	public void run() {
+	public void runMail() {
 		try {
-			Map<String,String> authenticationInfo = readInFromAuthentication();
+			Map<String, String> authenticationInfo = readInFromAuthentication();
 			String email = authenticationInfo.keySet().iterator().next();
-			configureEmail(email,authenticationInfo.get(email));
+			configureEmail(email, authenticationInfo.get(email));
 			message = new MimeMessage(session);
-                        System.out.println("checking for properties");
-			switch(type){
+			switch (type) {
 				case "stock":
-                                    
-					source = (String)source;
+					source = (String) source;
 					message.setFrom(new InternetAddress(email));
 					message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
 					message.setSubject(type + " Carol's Boutique");
-                                        
-					message.setText(buildMessage("C:\\Users\\27609\\Desktop\\LWFD showRoom\\enggg.txt"));
+					message.setText(buildMessage("C:\\Users\\wille\\OneDrive\\Desktop\\emailTemplateReceipt.txt"));
 					break;
 //				case "reciept":
 //					//cast to sale
@@ -101,46 +85,40 @@ public class MailService{
 		}
 		System.out.println("Sent message successfully....");
 	}
-	
-	private Map<String,String> readInFromAuthentication(){
-		Map<String,String> map =  new HashMap<>();
-		map.put("lggousie46@gmail.com", "gzasjejgcmiphitd");
+
+	private Map<String, String> readInFromAuthentication() {
+		Map<String, String> map = new HashMap<>();
+		map.put("carolsboutiquelwfd@yahoo.com", "fyrk rvgr oigx qvcn");//fyrk rvgr oigx qvcn
 		return map;
 	}
-	
-	private synchronized void configureEmail(String email, String password){
-            properties.put("mail.smtp.ssl.trust", "*");
-            properties.put("mail.smtp.starttls.enable", "true");
-            properties.put("mail.smtp.auth", "true");
-            properties.put("mail.smtp.host", "smtp.gmail.com");
-            properties.put("mail.smtp.port", "587");
-            properties.put("mail.smtp.user", "lggousie46@gmail.com");
-            properties.put("mail.smtp.socketFactory.port", "587");
-            properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            properties.put("mail.smtp.socketFactory.fallback", "false");
-            
-            session = Session.getInstance(properties, new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(email, password);
-                    }
-            });
-            session.setDebug(true);
+
+	private synchronized void configureEmail(String email, String password) {
+		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.host", "smtp.mail.beatmax.co");
+		properties.put("mail.smtp.port", "587");
+		session = Session.getInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(email, password);
+			}
+		});
+		session.setDebug(true);
 	}
-	
-	private synchronized String buildMessage(String fileLocation){
-		source = (String)source;
+
+	private synchronized String buildMessage(String fileLocation) {
+		source = (String) source;
 		StringBuilder sb = new StringBuilder();
 		File file = new File(fileLocation);
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			while (true) {				
+			while (true) {
 				String line = br.readLine();
 				if (line == null) {
 					sb.append("\n");
 					continue;
 				}
-				if (line.equals("@")){
+				if (line.equals("@")) {
 					break;
 				}
 				if (line.isEmpty()) {
@@ -150,13 +128,13 @@ public class MailService{
 				line = line + " " + source + "\n";
 				sb.append(line);
 			}
-			
+
 		} catch (FileNotFoundException ex) {
 			Logger.getLogger(MailService.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
 			Logger.getLogger(MailService.class.getName()).log(Level.SEVERE, null, ex);
-		}finally{
-			if(br!= null){
+		} finally {
+			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException ex) {
@@ -166,6 +144,6 @@ public class MailService{
 		}
 		return sb.toString();
 	}
-	
-	
+
+
 }

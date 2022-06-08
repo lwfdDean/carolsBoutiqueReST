@@ -260,6 +260,7 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                             sizes,
                             rs.getString("color"),
                             rs.getDouble("price"),
+                            rs.getDouble("discountedprice"),
                             new ArrayList<>()
                     );
                 }

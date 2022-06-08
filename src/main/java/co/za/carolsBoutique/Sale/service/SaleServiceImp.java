@@ -4,6 +4,7 @@ import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -55,4 +56,9 @@ public class SaleServiceImp implements IServiceSale {
         }
         return "exchange Failed";
     }
+
+	@Override
+	public String addPromotionCode(String code, Double discount, String productId, Date ExpiryDate) {
+		return dao.addPromotionCode(code, discount, productId, ExpiryDate)?"promotion code added":"couldn't add promotion code";
+	}
 }
