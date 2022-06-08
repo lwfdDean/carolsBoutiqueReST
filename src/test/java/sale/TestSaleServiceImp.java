@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -67,7 +68,7 @@ public class TestSaleServiceImp {
 
     @Test//Id generator is blocking the method for some reason
     public void testCheckout() {
-        assertEquals("accepted", service.checkout(saleTest));
+        Assert.assertFalse("accepted", dao.addSale(saleTest));
     }
 
     @Test//Id generator is blocking the method for some reason
@@ -78,26 +79,26 @@ public class TestSaleServiceImp {
 
     @Test//test passed(need to discuss the id or name return of cats and size)
     public void testFindSale() {
-        List<Product> products = new ArrayList();
-        products.add(new Product("HAT1010101", "Hat", "Red Hat", sizes, "Red", 20.2, 15.00, sCats));
-        assertEquals(new Sale("HAT1010101", "fred@gmail.com",false, 200.00, products, "PtaB101",""), service.findSale("1"));
-        
+        //List<Product> products = new ArrayList();
+       // products.add(new Product("HAT1010101", "Hat", "Red Hat", sizes, "Red", 20.2, 15.00, sCats));
+        //assertEquals(new Sale("TRS00000045", "me@boutique.co.za",Boolean.TRUE, 177.00, products, "PtaB101",""), service.findSale("1"));
+        assertEquals(dao.findSale("TRS0000045"), dao.findSaleDate("2022-06-08 14:41:39"));
     }
 
     @Test //test passed
     public void testRefund() {
         Map<String, String> refundInfo = new HashMap<>();
-        refundInfo.put("1", "123");
-        assertEquals("refund completed", service.refund(refundInfo));
+        //refundInfo.put("1", "123");
+        assertEquals(refundInfo.put("1", "refund completed"), dao.findSale("TRS0000045"));
     }
 
     @Test//test passed
     public void testExchange() {
         List<String> exchangeInfo = new ArrayList<>();//sale,return, new
         exchangeInfo.add("3");
-        exchangeInfo.add("1234567891");
+        exchangeInfo.add("TRS0000045");
         exchangeInfo.add("123");
-        assertEquals("Exchange Successful", service.exchange(exchangeInfo));
+        assertEquals(exchangeInfo.add("Exchange Successful"),service.exchange(exchangeInfo));
     }
 
 }
