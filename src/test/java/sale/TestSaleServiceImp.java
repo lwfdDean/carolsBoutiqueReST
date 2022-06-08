@@ -1,5 +1,6 @@
 package sale;
-//basic tests complete, need discussion tho
+//basic tests complete, need discussion though
+
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.Sale.repository.SaleRepositoryImp;
@@ -18,9 +19,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
-
 public class TestSaleServiceImp {
+
     ISaleRepository dao;
     SaleIdGenerator gen;
     SaleServiceImp service;
@@ -28,17 +28,18 @@ public class TestSaleServiceImp {
     List sizes;
     List sCats;
     List<Product> products;
+
     public TestSaleServiceImp() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
         dao = new SaleRepositoryImp();
@@ -49,10 +50,10 @@ public class TestSaleServiceImp {
         sizes.add("Large");
         sCats = new ArrayList<String>();
         sCats.add("Shirts");
-        products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,sCats));
-        saleTest = new Sale("3", "1", true, 200.00, products, "bteredsw3g5","123");
+        products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99, 15.00, sCats));
+        saleTest = new Sale("3", "1", true, 200.00, products, "bteredsw3g5", "123");
     }
-    
+
     @After
     public void tearDown() {
         dao = null;
@@ -64,35 +65,39 @@ public class TestSaleServiceImp {
         saleTest = null;
     }
 
-     @Test//Id generator is blocking the method for some reason
-     public void testCheckout() {
+    @Test//Id generator is blocking the method for some reason
+    public void testCheckout() {
         assertEquals("accepted", service.checkout(saleTest));
-     }
-	  @Test//Id generator is blocking the method for some reason
-     public void testCheckoutWithDiscount() {
-		 saleTest.setPromoCode("123");
+    }
+
+    @Test//Id generator is blocking the method for some reason
+    public void testCheckoutWithDiscount() {
+        saleTest.setPromoCode("123");
         assertEquals("accepted", service.checkout(saleTest));
-     }
-     @Test//test passed(need to discuss the id or name return of cats and size)
-     public void testFindSale() {
-         List<Product> products = new ArrayList();
-         products.add(new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2, sCats));
-        assertEquals(new Sale("1", "1", true, 200.00, products, "htfh", "123"), service.findSale("1"));
-     }
-     
-     @Test//test passed
-     public void testRefund() {
-         Map<String,String> refundInfo= new HashMap<>();
-         refundInfo.put("1", "123");
+    }
+
+    @Test//test passed(need to discuss the id or name return of cats and size)
+    public void testFindSale() {
+        List<Product> products = new ArrayList();
+        products.add(new Product("HAT1010101", "Hat", "Red Hat", sizes, "Red", 20.2, 15.00, sCats));
+        assertEquals(new Sale("HAT1010101", "fred@gmail.com",false, 200.00, products, "PtaB101",""), service.findSale("1"));
+        
+    }
+
+    @Test //test passed
+    public void testRefund() {
+        Map<String, String> refundInfo = new HashMap<>();
+        refundInfo.put("1", "123");
         assertEquals("refund completed", service.refund(refundInfo));
-     }
-     @Test//test passed
-     public void testExchange() {
-         List<String> exchangeInfo = new ArrayList<>();//sale,return, new
-         exchangeInfo.add("3");
-         exchangeInfo.add("1234567891");
-         exchangeInfo.add("123");
+    }
+
+    @Test//test passed
+    public void testExchange() {
+        List<String> exchangeInfo = new ArrayList<>();//sale,return, new
+        exchangeInfo.add("3");
+        exchangeInfo.add("1234567891");
+        exchangeInfo.add("123");
         assertEquals("Exchange Successful", service.exchange(exchangeInfo));
-     }
-     
+    }
+
 }

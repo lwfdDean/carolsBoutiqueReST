@@ -64,6 +64,6 @@ public class TestReservedproductServiceImp {
         sizes.add("22");
         List<String> categories = new ArrayList<>();
         categories.add("4");
-        assertEquals(new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00, categories),service.collectKeepAside("gg@gg"));
+        assertEquals(new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00,40.00, categories),service.collectKeepAside("gg@gg"));
      }
 }

@@ -10,10 +10,10 @@ public interface IServiceSale {
     String checkout(Sale sale);
 
     Sale findSale(String saleId);
-    
-    String refund(Map<String,String> refundInfo);
 
-    public String exchange(List<String> exchangeInfo);
-	
-	public String addPromotionCode(String code, Double discount, String productId, Date ExpiryDate);
+    String refund(Map<String, String> refundInfo);
+
+    String exchange(List<String> exchangeInfo);
+
+    String addPromotionCode(String code, Double discount, String productId, Date ExpiryDate);
 }
