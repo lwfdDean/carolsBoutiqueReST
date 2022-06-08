@@ -25,6 +25,7 @@ public interface IProductRepository {
     boolean addStockEntry(StockEntry stockEntry,List<String> stockId,Product product);
     boolean addNewStockLog(String employeeId,int quantityBefore,int quantityAdded,String stockId);
     Map<String,String> findAvailabeStock(String productId);
+    
     PromoCode findPromo(String code);
     boolean addPromo(PromoCode promoCode);
 

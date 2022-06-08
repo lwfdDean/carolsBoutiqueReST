@@ -6,6 +6,7 @@ import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -150,7 +151,7 @@ public class ProductRepositoryImp implements IProductRepository {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally {
+            } finally {
                 if (rs != null) {
                     try {
                         rs.close();
@@ -308,7 +309,7 @@ public class ProductRepositoryImp implements IProductRepository {
                     categoriesName.add(rs1.getString("name"));
                     rs1.close();
                     ps1.close();
-                
+
                 }
                 return categoriesName;
             } catch (SQLException se) {
@@ -481,14 +482,14 @@ public class ProductRepositoryImp implements IProductRepository {
                 ps = con.prepareStatement("DELETE FROM product_category WHERE category = ?");
                 ps.setString(1, categoryId);
                 rowsAffected = ps.executeUpdate();
-                if(rowsAffected==1){
+                if (rowsAffected == 1) {
                     ps = con.prepareStatement("DELETE FROM category WHERE id = ?");
                     ps.setString(1, categoryId);
                     rowsAffected = ps.executeUpdate();
-                }else{
+                } else {
                     return false;
                 }
-               
+
             } catch (SQLException se) {
                 se.printStackTrace();
             } finally {
@@ -697,13 +698,13 @@ public class ProductRepositoryImp implements IProductRepository {
     @Override//(Laurence)method retruns ID of boutique,size
     public Map<String, String> findAvailabeStock(String productId) {
         Map<String, String> available = new HashMap<>();
-        if (con!=null) {
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select boutique,size from stock where product = ?");
                 ps.setString(1, productId);
                 rs = ps.executeQuery();
-                while (rs.next()) {                    
-                    available.put(rs.getString("boutique"),rs.getString("size"));
+                while (rs.next()) {
+                    available.put(rs.getString("boutique"), rs.getString("size"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -726,47 +727,76 @@ public class ProductRepositoryImp implements IProductRepository {
         }
         return available;
     }
-    
+
     @Override
     public PromoCode findPromo(String code) {
         PromoCode promoCode = null;
-        if(con != null){
+        if (con != null) {
             try {
                 ps = con.prepareStatement("Select * from promotioncode where code = ?");
                 ps.setString(1, code);
                 rs = ps.executeQuery();
-                if(rs.next()){
+                if (rs.next()) {
                     promoCode = new PromoCode(code,
-                                    rs.getDouble("discount"),
-                                    rs.getInt("type"),
-                                    rs.getDate("expireDate").toLocalDate(),
-                                    rs.getString("category"));
+                            rs.getDouble("discount"),
+                            rs.getInt("type"),
+                            rs.getDate("expireDate").toLocalDate(),
+                            rs.getString("category"));
                 }
-                        } catch (SQLException ex) {
+            } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally {
-				if (rs != null) {
-					try {
-						rs.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-				if (ps != null) {
-					try {
-						rs.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return promoCode;
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
         }
+        return promoCode;
+    }
 
     @Override
     public boolean addPromo(PromoCode promoCode) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("insert into promotioncode(code,discount,type,expirydate,category) values(?,?,?,?,?)");
+                ps.setString(1, promoCode.getCode());
+                ps.setDouble(2,promoCode.getDiscount());
+                ps.setInt(3, promoCode.getType());
+                ps.setDate(4, Date.valueOf(promoCode.getDate()));
+                ps.setString(5,promoCode.getCategory());
+                rs = ps.executeQuery();
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rowsAffected==1;
     }
 
 }
