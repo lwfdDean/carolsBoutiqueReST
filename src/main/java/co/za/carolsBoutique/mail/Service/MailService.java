@@ -4,6 +4,7 @@
  */
 package co.za.carolsBoutique.mail.Service;
 
+
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -23,6 +24,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 public class MailService{
 	private String type;
@@ -53,6 +60,7 @@ public class MailService{
                         System.out.println("checking for properties");
 			switch(type){
 				case "stock":
+                                    
 					source = (String)source;
 					message.setFrom(new InternetAddress(email));
 					message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
