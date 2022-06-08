@@ -19,6 +19,7 @@ public class Sale {
     private String boutique;
     private String cardNumber;
     private String customerEmail;
+	private String promoCode;
 
     public Sale(String Id, String employee, boolean approved, Double totalPrice, List<Product> items, String boutique, String cardNumber) {
         this.Id = Id;
