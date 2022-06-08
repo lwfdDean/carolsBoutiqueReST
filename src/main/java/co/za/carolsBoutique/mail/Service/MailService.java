@@ -4,6 +4,14 @@
  */
 package co.za.carolsBoutique.mail.Service;
 
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,12 +23,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 public class MailService{
 	private String type;
@@ -109,7 +111,7 @@ public class MailService{
             properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             properties.put("mail.smtp.socketFactory.fallback", "false");
             
-            session = Session.getInstance(properties, new javax.mail.Authenticator() {
+            session = Session.getInstance(properties, new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                             return new PasswordAuthentication(email, password);
                     }

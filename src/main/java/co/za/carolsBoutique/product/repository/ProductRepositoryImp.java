@@ -187,6 +187,7 @@ public class ProductRepositoryImp implements IProductRepository {
                             getProductSizes(productId),
                             rs.getString("color"),
                             rs.getDouble("price"),
+                            rs.getDouble("discountedPrice"),
                             findProductCategories(productId));
                 }
             } catch (SQLException ex) {
@@ -262,6 +263,7 @@ public class ProductRepositoryImp implements IProductRepository {
                                     getProductSizes(productId),
                                     rs.getString("color"),
                                     rs.getDouble("price"),
+                                    rs.getDouble("discountedprice"),
                                     findProductCategories(productId)));
                 }
             } catch (SQLException se) {
@@ -566,6 +568,7 @@ public class ProductRepositoryImp implements IProductRepository {
                             sizes,
                             rs.getString("color"),
                             rs.getDouble("price"),
+                            rs.getDouble("discountedprice"),
                             findProductCategories(productId)
                     );
                 }

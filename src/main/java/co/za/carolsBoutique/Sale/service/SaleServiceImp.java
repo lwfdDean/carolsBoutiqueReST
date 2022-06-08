@@ -26,10 +26,7 @@ public class SaleServiceImp implements IServiceSale {
         String id = gen.generateId(sale.getBoutique(), true);
         sale.setId(id);
         sale.setApproved(pg.makePayment(sale));
-		if (sale.getPromoCode().isEmpty()) {
-			return dao.addSale(sale) ? "accepted" : "declined";
-		}
-        return dao.addSaleWithPromo(sale) ? "accepted" : "declined";
+        return dao.addSale(sale) ? "accepted" : "declined";
     }
 
     @Override
