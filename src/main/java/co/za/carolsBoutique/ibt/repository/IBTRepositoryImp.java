@@ -213,6 +213,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                             getProductSizes(productId),
                             rs1.getString("color"),
                             rs1.getDouble("price"),
+                            rs1.getDouble("discountedprice"),
                             findProductCategories(productId));
                 }
             } catch (SQLException ex) {

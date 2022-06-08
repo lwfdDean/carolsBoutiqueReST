@@ -50,7 +50,7 @@ public class SaleRepositoryImp implements ISaleRepository {
 				ps = con.prepareStatement("INSERT INTO sale(id, approved, totalPrice, employee, boutique, cardNumber)"
 						+ " VALUES(?, ?, ?, ?, ?, ?)");
 				ps.setString(1, sale.getId());
-				ps.setBoolean(2, sale.isApproved());
+				ps.setBoolean(2, sale.getApproved());
 				ps.setDouble(3, sale.getTotalPrice());
 				ps.setString(4, sale.getEmployee());
 				ps.setString(5, sale.getBoutique());
@@ -206,6 +206,7 @@ public class SaleRepositoryImp implements ISaleRepository {
 							getProductSizes(rs3.getString("id")),
 							rs3.getString("color"),
 							rs3.getDouble("price"),
+                                                rs3.getDouble("discountedprice"),
 							findProductCategories(rs3.getString("id"))
 					));
 				}
@@ -437,7 +438,7 @@ public class SaleRepositoryImp implements ISaleRepository {
 		if (con != null) {
 			try {
 				ps = con.prepareStatement("SELECT product, discount FROM promotion_code WHERE CODE = ?");
-				ps.setString(1, sale.getPromoCode());
+				ps.setString(1, "");
 				rs = ps.executeQuery();
 				if (rs.next()) {
 					productId = rs.getString("product");
