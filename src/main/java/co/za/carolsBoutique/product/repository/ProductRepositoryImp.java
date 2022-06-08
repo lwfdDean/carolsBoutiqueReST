@@ -3,6 +3,7 @@ package co.za.carolsBoutique.product.repository;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -725,7 +726,47 @@ public class ProductRepositoryImp implements IProductRepository {
         }
         return available;
     }
-
     
+    @Override
+    public PromoCode findPromo(String code) {
+        PromoCode promoCode = null;
+        if(con != null){
+            try {
+                ps = con.prepareStatement("Select * from promotioncode where code = ?");
+                ps.setString(1, code);
+                rs = ps.executeQuery();
+                if(rs.next()){
+                    promoCode = new PromoCode(code,
+                                    rs.getDouble("discount"),
+                                    rs.getInt("type"),
+                                    rs.getDate("expireDate").toLocalDate(),
+                                    rs.getString("category"));
+                }
+                        } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            }finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException ex) {
+						Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+				if (ps != null) {
+					try {
+						rs.close();
+					} catch (SQLException ex) {
+						Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			}
+		}
+		return promoCode;
+        }
+
+    @Override
+    public boolean addPromo(PromoCode promoCode) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
 }
