@@ -7,4 +7,5 @@ public interface IServiceReservedproduct {
     String makeReserveProduct(Reservedproduct reserveProduct);
     String removeReserveProduct(String reserveProductid);
     Product collectKeepAside(String customerEmail);
+    void emailNotifyCustomers();
 }

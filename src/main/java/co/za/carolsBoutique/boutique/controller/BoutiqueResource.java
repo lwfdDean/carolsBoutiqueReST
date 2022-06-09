@@ -6,7 +6,6 @@ import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.boutique.service.BoutiqueIdGenerator;
 import co.za.carolsBoutique.boutique.service.BoutiqueServiceImp;
 import co.za.carolsBoutique.boutique.service.IServiceBoutique;
-import co.za.carolsBoutique.mailService.MailService;
 import java.util.Map;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -44,7 +43,6 @@ public class BoutiqueResource {
     @Path("/getAllBoutiques")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBoutiques(){
-		new MailService("stock", "Hello", "willem0402@gmail.com").runMail();
         return Response.status(Response.Status.OK).entity(service.getAllBoutiques()).build();
     }
     

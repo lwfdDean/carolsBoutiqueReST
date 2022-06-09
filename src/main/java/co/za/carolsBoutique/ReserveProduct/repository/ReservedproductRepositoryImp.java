@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package co.za.carolsBoutique.ReserveProduct.repository;
 
 import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
@@ -19,10 +15,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author 27609
- */
 public class ReservedproductRepositoryImp implements IReservedproductRepository {
 
     private Connection con;
@@ -115,11 +107,13 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
     }
 
     @Override
-    public boolean deleteReserveProduct(String reserveProductid) {
+    public boolean deleteReserveProduct(String email) {
+        String stockId = findReserveProduct(email);
+        addStock(stockId);
         if (con != null) {
             try {
-                ps = con.prepareStatement("delete from reservedproduct where id=?");
-                ps.setString(1, reserveProductid);
+                ps = con.prepareStatement("delete from reservedproduct where customerEmail=?");
+                ps.setString(1, email);
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -285,4 +279,55 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
         }
         return product;
     }
+
+    @Override
+    public List<Reservedproduct> getAllReservedproducts() {
+        Connection con1 = null;
+        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
+        List<Reservedproduct> prods = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            con1 = DriverManager.getConnection(url, "root", "Root");
+        } catch (SQLException ex) {
+            Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        if (con1!=null) {
+            try {
+                ps1 = con1.prepareStatement("select customeraddress, date from reservedproduct expired = 0");
+                rs1 = ps1.executeQuery();
+                while (rs1.next()) {        
+                    Reservedproduct r = new Reservedproduct();
+                    r.setDate(rs1.getTimestamp("date").toLocalDateTime());
+                    r.setCustomerEmail(rs1.getString("customerEmail"));
+                    prods.add(r);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (rs1!=null) {
+                    try {
+                        rs1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return prods;
+    }
+    
+    
 }

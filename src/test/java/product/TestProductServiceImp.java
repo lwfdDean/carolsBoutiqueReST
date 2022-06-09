@@ -52,8 +52,8 @@ public class TestProductServiceImp {
         cats.add(new Category("2", "Shirts"));
         sizes = new ArrayList<String>();
         sizes.add("Universal");
-        product = new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2,sCats);
-        product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,sCats);
+        product = new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2,2.00,sCats);
+        product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,15.00,sCats);
         allProducts.add(product);
         stockEntry = new HashMap<>();
         stockEntry.put(new Product(), new StockEntry("1234567891 22", "1", 10, "1"));

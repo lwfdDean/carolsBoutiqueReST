@@ -59,9 +59,9 @@ public class Sale {
                 if (item.getSizes().get(0).equals(productInfo[1])) {
                     items.remove(item);
                     if (item.getDiscountedPrice()==null) {
-                        calculateTotalPrice(item.getPrice());
+                        calculateTotalPrice(-item.getPrice());
                     }else{
-                        calculateTotalPrice(item.getDiscountedPrice());
+                        calculateTotalPrice(-item.getDiscountedPrice());
                     }
                     break;
                 }
