@@ -299,7 +299,7 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
         ResultSet rs1 = null;
         if (con1!=null) {
             try {
-                ps1 = con1.prepareStatement("select customeraddress, date from reservedproduct expired = 0");
+                ps1 = con1.prepareStatement("select customeraddress, date from reservedproduct");
                 rs1 = ps1.executeQuery();
                 while (rs1.next()) {        
                     Reservedproduct r = new Reservedproduct();

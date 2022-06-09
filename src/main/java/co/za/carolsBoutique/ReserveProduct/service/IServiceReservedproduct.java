@@ -5,7 +5,7 @@ import co.za.carolsBoutique.product.model.Product;
 
 public interface IServiceReservedproduct {
     String makeReserveProduct(Reservedproduct reserveProduct);
-    String removeReserveProduct(String reserveProductid);
+    String removeReserveProduct(String email);
     Product collectKeepAside(String customerEmail);
     void emailNotifyCustomers();
 }
