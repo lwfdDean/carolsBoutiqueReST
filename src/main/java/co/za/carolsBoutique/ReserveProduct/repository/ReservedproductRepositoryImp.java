@@ -219,6 +219,7 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                 ps1.setInt(1, quantity);
                 ps1.setString(2, stockId);
                 rows = ps1.executeUpdate();
+                
             } catch (SQLException ex) {
                 Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
             } finally{
