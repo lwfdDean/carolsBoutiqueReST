@@ -35,8 +35,8 @@ public class ReservedproductServiceImp implements IServiceReservedproduct {
     }
 
     @Override
-    public String removeReserveProduct(String reserveProductid) {
-        return dao.deleteReserveProduct(reserveProductid) ? "Deteting item successful" : "Deletion failed";
+    public String removeReserveProduct(String email) {
+        return dao.deleteReserveProduct(email) ? "Deteting item successful" : "Deletion failed";
     }
 
     @Override
@@ -45,8 +45,6 @@ public class ReservedproductServiceImp implements IServiceReservedproduct {
         Map<String, String> productInfo = dao.addStock(stockId); //this line returns null
         String productId = productInfo.keySet().iterator().next();
         String size = productInfo.get(productId);
-        Product test = dao.findProductByProductCode(productId, size);
-        System.out.println(test.getCategories().get(0));
         return dao.findProductByProductCode(productId, size);
     }//index out of bounds thrown
 

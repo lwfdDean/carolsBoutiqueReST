@@ -27,10 +27,10 @@ public class ReservedproductResource {
     }
     
     @DELETE
-    @Path("/deleteProduct/{reservedproductId}")
+    @Path("/deleteProduct/{email}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteReservedproduct(@PathParam("reservedproductId") String reservedproductId){
-        return Response.status(Response.Status.OK).entity(service.removeReserveProduct(reservedproductId)).build();
+    public Response deleteReservedproduct(@PathParam("email") String email){
+        return Response.status(Response.Status.OK).entity(service.removeReserveProduct(email)).build();
     }
     
     @POST
