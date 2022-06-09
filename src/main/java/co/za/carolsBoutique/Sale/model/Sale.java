@@ -89,5 +89,6 @@ public class Sale {
         for (Product item : items) {
             totalPrice += item.getPrice();
         }
+        totalPrice *= (discount/100);
     }
 }
