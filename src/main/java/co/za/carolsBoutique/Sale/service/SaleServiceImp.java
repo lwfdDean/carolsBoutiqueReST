@@ -5,6 +5,7 @@ import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.mailService.MailService;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
+import co.za.carolsBoutique.product.model.PromoCode;
 import jakarta.mail.MessagingException;
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -77,7 +78,12 @@ public class SaleServiceImp implements IServiceSale {
     }
 
 	@Override
-	public String addPromotionCode(String code, Double discount, String productId, Date ExpiryDate) {
-		return dao.addPromotionCode(code, discount, productId, ExpiryDate)?"promotion code added":"couldn't add promotion code";
+	public String addPromotionCode(PromoCode promoCode) {
+		return dao.addPromotionCode(
+                        promoCode.getCode(), 
+                        promoCode.getDiscount(), 
+                        promoCode.getCategory(), 
+                        Date.valueOf(promoCode.getDate()))
+                        ?"promotion code added":"couldn't add promotion code";
 	}
 }

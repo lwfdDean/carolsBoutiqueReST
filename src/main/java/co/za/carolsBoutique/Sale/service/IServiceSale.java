@@ -1,7 +1,7 @@
 package co.za.carolsBoutique.Sale.service;
 
 import co.za.carolsBoutique.Sale.model.Sale;
-import java.sql.Date;
+import co.za.carolsBoutique.product.model.PromoCode;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +15,5 @@ public interface IServiceSale {
 
     public String exchange(List<String> exchangeInfo);
 	
-	public String addPromotionCode(String code, Double discount, String productId, Date ExpiryDate);
+    public String addPromotionCode(PromoCode promoCode);
 }

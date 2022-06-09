@@ -6,7 +6,7 @@ import co.za.carolsBoutique.Sale.service.IServiceSale;
 import co.za.carolsBoutique.Sale.service.SaleIdGenerator;
 import co.za.carolsBoutique.Sale.service.SaleServiceImp;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
-import java.sql.Date;
+import co.za.carolsBoutique.product.model.PromoCode;
 import java.util.List;
 import java.util.Map;
 import jakarta.ws.rs.Consumes;
@@ -36,12 +36,12 @@ public class SaleResource {
         return Response.status(Response.Status.OK).entity(service.checkout(sale)).build();
     }
 	
-	@Path("/addPromotionCode")
+    @Path("/addPromotionCode")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addPromotionCode(String code,Double discount,String productId, Date ExpiryDate){
-        return Response.status(Response.Status.OK).entity(service.addPromotionCode(code, discount, productId, ExpiryDate)).build();
+    public Response addPromotionCode(PromoCode promoCode){
+        return Response.status(Response.Status.OK).entity(service.addPromotionCode(promoCode)).build();
     }
     
     @Path("/findSale/{saleId}")

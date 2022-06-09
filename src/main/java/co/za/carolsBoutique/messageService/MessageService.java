@@ -5,6 +5,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,7 +19,7 @@ public class MessageService {
         String req = buildMessage(cellPhoneNumber, message);
         Client client = ClientBuilder.newClient();
         WebTarget webT = client.target(uri);
-        webT.request(MediaType.APPLICATION_XML).post(Entity.xml(req));
+        Response rep = webT.request(MediaType.APPLICATION_XML).post(Entity.xml(req));
     }
     
     private static String buildMessage(String cellPhoneNumber, String message){
