@@ -68,7 +68,7 @@ public class TestEmployeeServiceImp {
 
      @Test//Test passed, left a comment about password verification location (EmployeeServiceImp line 28)
      public void testRegister() {
-        assertEquals("Employee added your employeeId = 2",employeeService.register(new Employee("3", "2", "2", "2", "a222222", "2", new Role("1", "Manager", 2), "1")));
+        assertEquals("Employee added your employeeId = 2",employeeService.register(new Employee("hfseiu123", "dddddddddddddd", "ffff", "asasas", "a222222", "dfefsdfsd", new Role("1", "Manager", 2), "1")));
      }
      
      @Test//Passed the test

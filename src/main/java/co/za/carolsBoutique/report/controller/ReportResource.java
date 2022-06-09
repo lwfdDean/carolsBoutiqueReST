@@ -6,6 +6,7 @@ import co.za.carolsBoutique.report.service.IServiceReport;
 import co.za.carolsBoutique.report.service.ReportServiceImp;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -19,7 +20,7 @@ public class ReportResource {
         this.service = new ReportServiceImp(new ReportRepositoryImp());
     }
     
-    @GET
+    @POST
     @Path("/findTopStoresInTermsOfSales")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -27,7 +28,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findTopStoresInTermsOfSales(rc)).build();
     }
     
-    @GET
+    @POST
     @Path("/findHighestRatedStores")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,7 +36,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findHighestRatedStores(rc)).build();
     }
     
-    @GET
+    @POST
     @Path("/findStoreMonthlySales")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,7 +44,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findStoreMonthlySales(rc)).build();
     }
     
-    @GET
+    @POST
     @Path("/findTopSellingEmployees")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,7 +52,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findTopSellingEmployees(rc)).build();
     }
     
-    @GET
+    @POST
     @Path("/findStoreThatAchievedMonthlyTarget")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -59,14 +60,14 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findStoreThatAchievedMonthlyTarget(rc)).build();
     }
     
-    @GET
+    @POST
     @Path("/findTop40Products")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTop40Products(){
         return Response.status(Response.Status.OK).entity(service.findTop40Products()).build();
     }
     
-    @GET
+    @POST
     @Path("/findUnderPerformingStores")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -74,7 +75,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findUnderPerformingStores(rc)).build();
     }
     
-    @GET
+    @POST
     @Path("/findTopSalepersonForAProduct")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -82,7 +83,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findTopSalepersonForAProduct(rc)).build();
     }
     
-    @GET
+    @POST
     @Path("/findCurrentDailySales")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
