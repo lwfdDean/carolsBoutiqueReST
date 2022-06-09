@@ -100,7 +100,7 @@ public class ReportRepositoryImp implements IReportRepository{
                 for (String store : stores) {
                     int numberOfRatings = 0;
                     int totalRating = 0;
-                    ps = con.prepareStatement("select rating from review where boutique = ?");
+                    ps = con.prepareStatement("select rating,date from review where boutique = ?");
                     ps.setString(1, store);
                     rs = ps.executeQuery();
                     while (rs.next()) {
@@ -109,7 +109,9 @@ public class ReportRepositoryImp implements IReportRepository{
                             totalRating += rs.getDouble("rating");
                         }
                     }
-                    results.add(new Report(store, totalRating/numberOfRatings));
+                    if (numberOfRatings!=0) {
+                        results.add(new Report(store, totalRating/numberOfRatings));
+                    }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);

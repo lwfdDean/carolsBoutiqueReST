@@ -28,9 +28,13 @@ public class ReportServiceImp implements IServiceReport{
     @Override
     public List<Report> findHighestRatedStores(ReportCriteria rc) {
         List<Report> reports = dao.findHighestRatedStores(rc.getMonth());
+        System.out.println(reports.size()+" $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         for (int i = 0; i < reports.size()-1; i++) {
             Report r = reports.get(i);
-            if (r.getAmount()>reports.get(i+1).getAmount()) {
+            if (r == null) {
+                continue;
+            }
+            if (r.getRating()>reports.get(i+1).getRating()) {
                 Report r2 = reports.get(i+1);
                 reports.set(i+1, r);
                 reports.set(i, r2);
@@ -38,8 +42,10 @@ public class ReportServiceImp implements IServiceReport{
             }
         }
         List<Report> results = new ArrayList<>();
-        for (int i = reports.size()-1; i > reports.size()-rc.getResults()-1 ; i--) {
-            results.add(reports.get(i));
+        for (int i = 0; i < reports.size() ; i--) {
+            if (i>=reports.size()-rc.getResults()) {
+                results.add(reports.get(i));
+            }
         }
         return results;
     }
