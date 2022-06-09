@@ -1,12 +1,14 @@
 package co.za.carolsBoutique.Sale.service;
 
 import co.za.carolsBoutique.Sale.model.Sale;
+import co.za.carolsBoutique.Sale.model.SaleLineItem;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.mailService.MailService;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.product.model.PromoCode;
 import jakarta.mail.MessagingException;
+import static java.nio.file.Files.size;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +52,10 @@ public class SaleServiceImp implements IServiceSale {
     public String refund(Map<String, String> refundInfo) {
         String saleId = refundInfo.keySet().iterator().next();
         Sale sale = dao.findSale(saleId);
-        double refundAmmount = 0;
+        String[] pInfo = refundInfo.get(saleId).split(" ");
+        //pass in two Strings i.e Barcode (two part code )
+        
+        double refundAmmount = dao.findSale(saleId).getTotalPrice();
         sale.setTotalPrice(sale.getTotalPrice()-refundAmmount);
         if (sale.getCardNumber()!=null) {
             try {
