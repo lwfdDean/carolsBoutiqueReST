@@ -13,7 +13,7 @@ public interface IServiceProduct {
     Product findProduct(Map<String,String> productInfo);
     String addProduct(Product product);
     String deleteProduct(String productId);
-    String updateProductPrice(Map<String,Double>newPrice);
+    String putProductOnSale(Map<String,Double>newPrice);
     
     Map<String,String> findStockOfProduct(String productId);
     
@@ -28,4 +28,5 @@ public interface IServiceProduct {
     
     String addNewPromoCode(PromoCode promoCode);
     PromoCode findPromoCode(String promoCode);
+    
 }

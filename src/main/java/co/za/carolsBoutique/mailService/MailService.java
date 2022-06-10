@@ -25,11 +25,13 @@ public class MailService{
     String emailSubject;
     String emailBody;
 
-    public MailService(String receiverEmail, String emailSubject, String emailBody) throws AddressException, MessagingException {
+    public MailService(String receiverEmail, String emailSubject, String emailBody) {
         this.receiverEmail = receiverEmail;
         this.emailSubject = emailSubject;
         this.emailBody = emailBody;
-        
+    }
+    
+    public synchronized void sendMail() throws AddressException, MessagingException{
         Properties props = new Properties();
         props.put("mail.smtp.from", senderEmailId);
         props.put("mail.smtp.user", senderEmailId);

@@ -370,7 +370,7 @@ public class ProductRepositoryImp implements IProductRepository {
         }
         if (con != null) {
             try {
-                ps = con.prepareStatement("UPDATE product SET price = ? WHERE id = ?");
+                ps = con.prepareStatement("UPDATE product SET discountedprice = ? WHERE id = ?");
                 ps.setDouble(1, price);
                 ps.setString(2, productId);
                 rowsAffected = ps.executeUpdate();

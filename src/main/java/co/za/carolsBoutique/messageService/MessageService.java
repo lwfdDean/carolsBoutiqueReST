@@ -10,19 +10,34 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class MessageService {
-    private static String user = "Group1";
-    private static String password = "group1";
-    
-    public static void sendMessage(String cellPhoneNumber, String message){
+public class MessageService extends Thread{
+    private String user;
+    private String password;
+    private String cellPhoneNumber;
+    private String message;
+
+    public MessageService(String cellPhoneNumber, String message) {
+        this.cellPhoneNumber = cellPhoneNumber;
+        this.message = message;
+        this.user = "Group1";
+        this.password = "group1";
+    }
+
+    @Override
+    public void run() {
+        sendMessage();
+    }
+
+    private synchronized void sendMessage(){
         String uri = "http://196.41.180.157:8080/sms/sms_request";
-        String req = buildMessage(cellPhoneNumber, message);
+        String req = buildMessage();
         Client client = ClientBuilder.newClient();
         WebTarget webT = client.target(uri);
         Response rep = webT.request(MediaType.APPLICATION_XML).post(Entity.xml(req));
+        System.out.println(rep.readEntity(String.class));
     }
     
-    private static String buildMessage(String cellPhoneNumber, String message){
+    private synchronized String buildMessage(){
         StringBuilder sb = new StringBuilder();
         List<String> tags = List.of(
                 "<smsreq>",
@@ -55,4 +70,5 @@ public class MessageService {
         }
         return sb.toString();
     }
+    
 }

@@ -4,7 +4,6 @@ import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,477 +19,433 @@ import java.util.logging.Logger;
 
 public class SaleRepositoryImp implements ISaleRepository {
 
-	private ProductRepositoryImp productDao;
-	private Connection con;
-	private PreparedStatement ps;
-	private ResultSet rs;
-	private int rowsAffected;
+    private Connection con;
+    private PreparedStatement ps;
+    private ResultSet rs;
+    private int rowsAffected;
 
-	public SaleRepositoryImp() {
-		String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException ex) {
-			Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		try {
-			con = DriverManager.getConnection(url, "root", "Root");
-		} catch (SQLException ex) {
-			Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		productDao = new ProductRepositoryImp();
-	}
+    public SaleRepositoryImp() {
+        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            con = DriverManager.getConnection(url, "root", "Root");
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-	@Override
-	public boolean addSale(Sale sale) {
-		boolean success = false;
-		if (con != null) {
-			try {
-				con.setAutoCommit(false);
-				ps = con.prepareStatement("INSERT INTO sale(id, approved, totalPrice, employee, boutique, cardNumber)"
-						+ " VALUES(?, ?, ?, ?, ?, ?)");
-				ps.setString(1, sale.getId());
-				ps.setBoolean(2, sale.getApproved());
-				ps.setDouble(3, sale.getTotalPrice());
-				ps.setString(4, sale.getEmployee());
-				ps.setString(5, sale.getBoutique());
-				ps.setString(6, sale.getCardNumber());
-				rowsAffected = ps.executeUpdate();
-				if (rowsAffected == 1) {
-					removeFromStock(sale);
-					int total = 0;
-					for (Product p : sale.getItems()) {
-						if (addSaleLineItem(sale.getId(), p.getId())) {
-							total++;
-						}
-					}
-					if (total == sale.getItems().size()) {
-						con.commit();
-						success = true;
-					} else {
-						con.rollback();
-					}
-				} else {
-					con.rollback();
-				}
-				con.setAutoCommit(true);
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps != null) {
-					try {
-						ps.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return success;
-	}
+    @Override
+    public boolean addSale(Sale sale) {
+        boolean success = false;
+        if (con != null) {
+            try {
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("INSERT INTO sale(id, approved, totalPrice, employee, boutique, cardNumber)"
+                        + " VALUES(?, ?, ?, ?, ?, ?)");
+                ps.setString(1, sale.getId());
+                ps.setBoolean(2, sale.getApproved());
+                ps.setDouble(3, sale.getTotalPrice());
+                ps.setString(4, sale.getEmployee());
+                ps.setString(5, sale.getBoutique());
+                ps.setString(6, sale.getCardNumber());
+                rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 1) {
+                    int total = 0;
+                    for (Product p : sale.getItems()) {
+                        if (p.getDiscountedPrice()!=null) {
+                            if (addSaleLineItem(sale.getId(), p.getId(),p.getDiscountedPrice())) {
+                                total++;
+                            }
+                        }else{
+                            if (addSaleLineItem(sale.getId(), p.getId(),p.getPrice())) {
+                                total++;
+                            }
+                        }
+                    }
+                    if (total == sale.getItems().size()) {
+                        if (removeFromStock(sale)) {
+                            con.commit();
+                            success = true;
+                        } else {
+                            con.rollback();
+                        }
+                    } else {
+                        con.rollback();
+                    }
+                } else {
+                    con.rollback();
+                }
+                con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return success;
+    }
 
-	private boolean removeFromStock(Sale sale) {
-		String bId = sale.getBoutique();
-		Map<String, String> productCodes = new HashMap<>();
-		for (Product product : sale.getItems()) {
-			productCodes.put(product.getId(), product.getSizes().get(0));
-		}
-		int rows = 0;
-		PreparedStatement ps1 = null;
-		if (con != null) {
-			for (Iterator<String> it = productCodes.keySet().iterator(); it.hasNext();) {
-				String prodId = it.next();
-				try {
-					ps1 = con.prepareStatement("update stock set quantity = quantity - 1 where boutique = ? and product = ? and size = ?");
-					ps1.setString(1, bId);
-					ps1.setString(2, prodId);
-					ps1.setString(3, productCodes.get(prodId));
-					rows += ps1.executeUpdate();
-					ps1.close();
-				} catch (SQLException ex) {
-					Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-				} finally {
-					if (ps1 != null) {
-						try {
-							ps1.close();
-						} catch (SQLException ex) {
-							Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-						}
-					}
-				}
-			}
-		}
-		return rows == productCodes.size();
-	}
+    private boolean removeFromStock(Sale sale) {
+        String bId = sale.getBoutique();
+        Map<String, String> productCodes = new HashMap<>();
+        for (Product product : sale.getItems()) {
+            productCodes.put(product.getId(), product.getSizes().get(0));
+        }
+        int rows = 0;
+        PreparedStatement ps1 = null;
+        if (con != null) {
+            for (Iterator<String> it = productCodes.keySet().iterator(); it.hasNext();) {
+                String prodId = it.next();
+                try {
+                    ps1 = con.prepareStatement("update stock set quantity = quantity - 1 where boutique = ? and product = ? and size = ?");
+                    ps1.setString(1, bId);
+                    ps1.setString(2, prodId);
+                    ps1.setString(3, productCodes.get(prodId));
+                    rows += ps1.executeUpdate();
+                    ps1.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    if (ps1 != null) {
+                        try {
+                            ps1.close();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }
+        return rows == productCodes.size();
+    }
 
-	private boolean addSaleLineItem(String saleId, String productId) {
-		PreparedStatement ps1 = null;
-		int rows = 0;
-		if (con != null) {
-			try {
-				ps1 = con.prepareStatement("insert into sale_line_item(sale, product,returned) values(?,?,?)");
-				ps1.setString(1, saleId);
-				ps1.setString(2, productId);
-				ps1.setBoolean(3, false);
-				rows = ps1.executeUpdate();
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps1 != null) {
-					try {
-						ps1.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
+    private boolean addSaleLineItem(String saleId, String productId,double price) {
+        PreparedStatement ps1 = null;
+        int rows = 0;
+        if (con != null) {
+            try {
+                ps1 = con.prepareStatement("insert into sale_line_item(sale, product,returned,price)"
+                        + " values(?,?,?,?)");//add price to sale line item table
+                ps1.setString(1, saleId);
+                ps1.setString(2, productId);
+                ps1.setBoolean(3, false);
+                ps1.setDouble(4, price);
+                rows = ps1.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return rows == 1;
+    }
 
-		}
-		return rows == 1;
-	}
+    @Override
+    public Sale findSale(String saleId) {
+        Sale sale = null;
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("SELECT * FROM sale WHERE id = ?");
+                ps.setString(1, saleId);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    sale = new Sale(rs.getString("id"),
+                            rs.getString("employee"),
+                            rs.getBoolean("approved"),
+                            rs.getDouble("totalPrice"),
+                            getSaleLineItems(saleId),
+                            rs.getString("boutique"),
+                            rs.getString("cardNumber"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
 
-	@Override
-	public Sale findSale(String saleId) {
-		Sale sale = null;
-		if (con != null) {
-			try {
-				ps = con.prepareStatement("SELECT * FROM sale WHERE id = ?");
-				ps.setString(1, saleId);
-				rs = ps.executeQuery();
-				if (rs.next()) {
-					sale = new Sale(rs.getString("id"),
-							rs.getString("employee"),
-							rs.getBoolean("approved"),
-							rs.getDouble("totalPrice"),
-							getSaleLineItems(saleId),
-							rs.getString("boutique"),
-							rs.getString("cardNumber"));
-				}
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps != null) {
-					try {
-						ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return sale;
+    }
 
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-				if (rs != null) {
-					try {
-						rs.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return sale;
-	}
+    private List<Product> getSaleLineItems(String saleId) {
+        PreparedStatement ps3 = null;
+        ResultSet rs3 = null;
+        List<Product> products = new ArrayList<>();
+        if (con != null) {
+            try {
+                ps3 = con.prepareStatement("SELECT * FROM product INNER JOIN sale_line_item ON sale_line_item.product = product.id WHERE sale_line_item.sale = ?");
+                ps3.setString(1, saleId);
+                rs3 = ps3.executeQuery();
+                while (rs3.next()) {
+                    products.add(new Product(rs3.getString("id"),
+                            rs3.getString("name"),
+                            rs3.getString("description"),
+                            getProductSizes(rs3.getString("id")),
+                            rs3.getString("color"),
+                            rs3.getDouble("price"),
+                            rs3.getDouble("discountedprice"),
+                            findProductCategories(rs3.getString("id"))
+                    ));
+                }
+                ps3.close();
+                rs3.close();
+                ps3 = con.prepareStatement("select price,product from sale_line_item where sale = ?");
+                ps3.setString(1, saleId);
+                rs3 = ps3.executeQuery();
+                while (rs3.next()) {                    
+                    String productId = rs.getString("product");
+                    for (Product product : products) {
+                        if (product.getId().equals(productId)) {
+                            product.setDiscountedPrice(rs.getDouble("price"));
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (ps3 != null) {
+                    try {
+                        ps3.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (rs3 != null) {
+                    try {
+                        rs3.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return products;
+    }
 
-	private List<Product> getSaleLineItems(String saleId) {
-		PreparedStatement ps3 = null;
-		ResultSet rs3 = null;
-		List<String> categories = new ArrayList<>();
-		List<Product> products = new ArrayList<>();
-		if (con != null) {
-			try {
-				ps3 = con.prepareStatement("SELECT * FROM product INNER JOIN sale_line_item ON sale_line_item.product = product.id WHERE sale_line_item.sale = ?");
-				ps3.setString(1, saleId);
-				rs3 = ps3.executeQuery();
-				while (rs3.next()) {
-					products.add(new Product(rs3.getString("id"),
-							rs3.getString("name"),
-							rs3.getString("description"),
-							getProductSizes(rs3.getString("id")),
-							rs3.getString("color"),
-							rs3.getDouble("price"),
-                                                rs3.getDouble("discountedprice"),
-							findProductCategories(rs3.getString("id"))
-					));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (ps3 != null) {
-					try {
-						ps3.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-				if (rs3 != null) {
-					try {
-						rs3.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		return products;
-	}
+    private List<String> getProductSizes(String productId) {
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        List<String> sizes = new ArrayList<>();
+        if (con != null) {
+            try {
+                ps1 = con.prepareStatement("SELECT id FROM size INNER JOIN product_size ON product_size.size = size.id WHERE product_size.product=?");
+                ps1.setString(1, productId);
+                rs1 = ps1.executeQuery();
+                while (rs1.next()) {
+                    sizes.add(rs1.getString("id"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (rs1 != null) {
+                    try {
+                        rs1.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return sizes;
+    }
 
-	private List<String> getProductSizes(String productId) {
-		PreparedStatement ps1 = null;
-		ResultSet rs1 = null;
-		List<String> sizes = new ArrayList<>();
-		if (con != null) {
-			try {
-				ps1 = con.prepareStatement("SELECT id FROM size INNER JOIN product_size ON product_size.size = size.id WHERE product_size.product=?");
-				ps1.setString(1, productId);
-				rs1 = ps1.executeQuery();
-				while (rs1.next()) {
-					sizes.add(rs1.getString("id"));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (ps1 != null) {
-					try {
-						ps1.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-				if (rs1 != null) {
-					try {
-						rs1.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		return sizes;
-	}
+    private List<String> findProductCategories(String productId) {
+        PreparedStatement ps2 = null;
+        ResultSet rs2 = null;
+        List<String> categories = new ArrayList<>();
+        if (con != null) {
+            try {
+                ps2 = con.prepareStatement("SELECT category FROM product_category WHERE product = ?");
+                ps2.setString(1, productId);
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+                    categories.add(rs2.getString("category"));
+                }
+                return categories;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (ps2 != null) {
+                    try {
+                        ps2.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (rs2 != null) {
+                    try {
+                        rs2.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
-	private List<String> findProductCategories(String productId) {
-		PreparedStatement ps2 = null;
-		ResultSet rs2 = null;
-		List<String> categories = new ArrayList<>();
-		if (con != null) {
-			try {
-				ps2 = con.prepareStatement("SELECT category FROM product_category WHERE product = ?");
-				ps2.setString(1, productId);
-				rs2 = ps2.executeQuery();
-				while (rs2.next()) {
-					categories.add(rs2.getString("category"));
-				}
-				return categories;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (ps2 != null) {
-					try {
-						ps2.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-				if (rs2 != null) {
-					try {
-						rs2.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		return null;
-	}
+    @Override
+    public boolean updateSale(String saleId, Double totalPrice, String productId) {
+        boolean success = false;
+        if (con != null) {
+            try {
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("update sale set totalPrice = ? where id = ?");
+                ps.setDouble(1, totalPrice);
+                ps.setString(2, saleId);
+                rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 1) {
+                    if (updateSaleLineItem(saleId, productId)) {
+                        con.commit();
+                        success = true;
+                    }
+                } else {
+                    con.rollback();
+                }
+                con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return success;
+    }
 
-	@Override
-	public boolean updateSale(String saleId, Double totalPrice, String productId) {
-		boolean success = false;
-		if (con != null) {
-			try {
-				con.setAutoCommit(false);
-				ps = con.prepareStatement("update sale set totalPrice = ? where id = ?");
-				ps.setDouble(1, totalPrice);
-				ps.setString(2, saleId);
-				rowsAffected = ps.executeUpdate();
-				if (rowsAffected == 1) {
-					if (updateSaleLineItem(saleId, productId)) {
-						con.commit();
-						success = true;
-					}
-				} else {
-					con.rollback();
-				}
-				con.setAutoCommit(true);
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps != null) {
-					try {
-						ps.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return success;
-	}
+    private boolean updateSaleLineItem(String saleId, String productId) {
+        PreparedStatement ps1 = null;
+        int rows = 0;
+        if (con != null) {
+            try {
+                ps1 = con.prepareStatement("update sale_line_item set returned = true where sale = ? and product =?");
+                ps1.setString(1, saleId);
+                ps1.setString(2, productId);
+                rows = ps1.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return rows == 1;
+    }
 
-	private boolean updateSaleLineItem(String saleId, String productId) {
-		PreparedStatement ps1 = null;
-		int rows = 0;
-		if (con != null) {
-			try {
-				ps1 = con.prepareStatement("update sale_line_item set returned = true where sale = ? and product =?");
-				ps1.setString(1, saleId);
-				ps1.setString(2, productId);
-				rows = ps1.executeUpdate();
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps1 != null) {
-					try {
-						ps1.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		return rows == 1;
-	}
+    @Override
+    public Timestamp findSaleDate(String saleId) {
+        Timestamp timestamp = null;
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("select date from sale where id = ?");
+                ps.setString(1, saleId);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    timestamp = rs.getTimestamp("date");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
 
-	@Override
-	public Timestamp findSaleDate(String saleId) {
-		Timestamp timestamp = null;
-		if (con != null) {
-			try {
-				ps = con.prepareStatement("select date from sale where id = ?");
-				ps.setString(1, saleId);
-				rs = ps.executeQuery();
-				if (rs.next()) {
-					timestamp = rs.getTimestamp("date");
-				}
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps != null) {
-					try {
-						ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return timestamp;
+    }
 
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-				if (rs != null) {
-					try {
-						rs.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return timestamp;
-	}
+    @Override
+    public boolean updateSaleLineItem(String saleId, String returnedProductId, String newProductId,double productPrice) {
+        boolean success = false;
+        if (con != null) {
+            try {
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("UPDATE sale_line_item SET returned = true where product = ? and sale = ?");
+                ps.setString(1, returnedProductId);
+                ps.setString(2, saleId);
+                rowsAffected = ps.executeUpdate();
+                if (rowsAffected == 1) {
+                    if (addSaleLineItem(saleId, newProductId,productPrice)) {
+                        con.commit();
+                        success = true;
+                    } else {
+                        con.rollback();
+                    }
+                } else {
+                    con.rollback();
+                }
+                con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return success;
+    }
 
-	@Override
-	public boolean updateSaleLineItem(String saleId, String returnedProductId, String newProductId) {
-		boolean success = false;
-		if (con != null) {
-			try {
-				con.setAutoCommit(false);
-				ps = con.prepareStatement("UPDATE sale_line_item SET returned = true where product = ? and sale = ?");
-				ps.setString(1, returnedProductId);
-				ps.setString(2, saleId);
-				rowsAffected = ps.executeUpdate();
-				if (rowsAffected == 1) {
-					if (addSaleLineItem(saleId, newProductId)) {
-						con.commit();
-						success = true;
-					} else {
-						con.rollback();
-					}
-				} else {
-					con.rollback();
-				}
-				con.setAutoCommit(true);
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps != null) {
-					try {
-						ps.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return success;
-	}
-
-	@Override//the expirey date of the promocodes where code = ? and expirey date >current time
-	public boolean addSaleWithPromo(Sale sale) {
-		boolean success = false;
-		String productId = "";
-		Double discount = 0.0;
-		Product productOnDiscount;
-		if (con != null) {
-			try {
-				ps = con.prepareStatement("SELECT product, discount FROM promotion_code WHERE CODE = ?");
-				ps.setString(1, "");
-				rs = ps.executeQuery();
-				if (rs.next()) {
-					productId = rs.getString("product");
-					discount = rs.getDouble("discount");
-				}
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps != null) {
-					try {
-						ps.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		productOnDiscount = productDao.findProduct(productId);
-		Double newPrice = productOnDiscount.getPrice() * (discount / 100);
-		sale.setTotalPrice(sale.getTotalPrice() - newPrice);
-		addSale(sale);
-		return success;
-	}
-
-	@Override
-	public boolean addPromotionCode(String code, Double discount, String productId, Date ExpiryDate) {
-		boolean success = false;
-		if (con != null) {
-			try {
-				con.setAutoCommit(false);
-				ps = con.prepareStatement("INSERT INTO promotion_code(code, discount, product, ExpDate)"
-						+ " VALUES(?, ?, ?, ?)");
-				ps.setString(1, code);
-				ps.setDouble(2, discount);
-				ps.setString(3, productId);
-				ps.setDate(4, ExpiryDate);
-				rowsAffected = ps.executeUpdate();
-				if(rowsAffected==1){
-					success=true;
-				}
-			} catch (SQLException ex) {
-				Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-			} finally {
-				if (ps != null) {
-					try {
-						ps.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-		}
-		return success;
-	}
 }

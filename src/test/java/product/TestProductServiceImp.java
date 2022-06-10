@@ -89,7 +89,7 @@ public class TestProductServiceImp {
      public void testUpdateProductPrice() {
          Map<String,Double> newPrice = new HashMap();
          newPrice.put(product.getId(),20.2);
-         assertEquals("Successfully updated product price", service.updateProductPrice(newPrice));
+         assertEquals("Successfully updated product price", service.putProductOnSale(newPrice));
      }
      
       @Test//Passed the test

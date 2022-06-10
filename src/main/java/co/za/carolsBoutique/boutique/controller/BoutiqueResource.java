@@ -44,7 +44,6 @@ public class BoutiqueResource {
     @Path("/getAllBoutiques")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBoutiques(){
-        MessageService.sendMessage("0722751563", "Wussupp Bro");
         return Response.status(Response.Status.OK).entity(service.getAllBoutiques()).build();
     }
     
