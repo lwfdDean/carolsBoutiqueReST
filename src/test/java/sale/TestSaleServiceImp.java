@@ -1,5 +1,6 @@
 package sale;
 //basic tests complete, need discussion tho
+import co.za.carolsBoutique.Sale.model.ExchangeInfo;
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.Sale.repository.SaleRepositoryImp;
@@ -46,11 +47,12 @@ public class TestSaleServiceImp {
         service = new SaleServiceImp(dao, gen, new PaymentGateway());
         products = new ArrayList();
         sizes = new ArrayList<String>();
-        sizes.add("Large");
+        sizes.add("1");
         sCats = new ArrayList<String>();
-        sCats.add("Shirts");
-        products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,12.00,sCats));
-        saleTest = new Sale("3", "1", true, 200.00, products, "bteredsw3g5","123");
+        sCats.add("2");
+        products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,null,sCats));
+        saleTest = new Sale("asdew12311", "12werw23", false, 19.99, products, "ao8154bb","123");
+        saleTest.setCustomerEmail("dean.swanepoel13@gmail.com");
     }
     
     @After
@@ -82,16 +84,17 @@ public class TestSaleServiceImp {
      @Test//test passed
      public void testRefund() {
          Map<String,String> refundInfo= new HashMap<>();
-         refundInfo.put("1", "123");
+         refundInfo.put("asdew12343", "12343456");
         assertEquals("refund completed", service.refund(refundInfo));
      }
      @Test//test passed
      public void testExchange() {
-         List<String> exchangeInfo = new ArrayList<>();//sale,return, new
-         exchangeInfo.add("asdew12343");
-         exchangeInfo.add("1234567891");
-         exchangeInfo.add("1321321321");
-        assertEquals("Exchange Successful", service.exchange(exchangeInfo));
+//         List<String> exchangeInfo = new ArrayList<>();//sale,return, new
+//         exchangeInfo.add("asdew12343");
+//         exchangeInfo.add("1234567891");
+//         exchangeInfo.add("1321321321");
+         ExchangeInfo ei = new ExchangeInfo();
+        assertEquals("Exchange Successful", service.exchange(ei));
      }
      
 }

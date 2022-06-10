@@ -21,7 +21,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findTopStoresInTermsOfSales")
+    @Path("/findTopStoresInTermsOfSales")////////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTopStoresInTermsOfSales(ReportCriteria rc){

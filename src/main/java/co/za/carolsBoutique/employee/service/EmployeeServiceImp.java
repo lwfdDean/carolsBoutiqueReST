@@ -1,11 +1,16 @@
 package co.za.carolsBoutique.employee.service;
 
+import co.za.carolsBoutique.Sale.service.SaleServiceImp;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import co.za.carolsBoutique.employee.repository.IEmployeeRepository;
+import co.za.carolsBoutique.mailService.MailService;
+import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EmployeeServiceImp implements IServiceEmployee{
     private IEmployeeRepository dao;
@@ -48,7 +53,11 @@ public class EmployeeServiceImp implements IServiceEmployee{
         employee.setId(gen.generateId(employee.getEmailAddress(), employee.getSurname(), true));
         if (dao.findEmployee(employee.getId())==null) {
             if (verifyKey(employee.getPassword(),8)) {
-                return dao.addEmployee(employee)?"Employee added your employeeId = "+employee.getId():"Couldn't add employee";
+                if (dao.addEmployee(employee)) {
+                    prepareMail(employee.getEmailAddress(), "emp id", "");
+                    return "Employee added";
+                }
+                return "Couldn't add employee";
             }
             return "invalid password";
         }
@@ -116,5 +125,19 @@ public class EmployeeServiceImp implements IServiceEmployee{
                     return "Code valid";
             }
             return "Code invalid";
+    }
+    
+    private void prepareMail(String emailAddress, String subject, String body) {
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new MailService(emailAddress, subject, body).sendMail();
+                } catch (MessagingException ex) {
+                    Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        t1.start();
     }
 }

@@ -1,6 +1,7 @@
 package product;
 //done with basic tests, need to test overloaded method of find product
 import co.za.carolsBoutique.product.model.Category;
+import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
@@ -19,7 +20,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TestProductServiceImp {
-     Map<Product,StockEntry>stockEntry;
+     StockEntry stockEntry;
     List<String> sCats;
     List<Category> cats;
     List sizes;
@@ -55,8 +56,7 @@ public class TestProductServiceImp {
         product = new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2,2.00,sCats);
         product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,15.00,sCats);
         allProducts.add(product);
-        stockEntry = new HashMap<>();
-        stockEntry.put(new Product(), new StockEntry("1234567891 22", "1", 10, "1"));
+        stockEntry =new StockEntry("1234567891 22", "1", 10, "1");
         //10 diget id and space and 2 diget code for size
     }
     
@@ -119,7 +119,7 @@ public class TestProductServiceImp {
      
        @Test//Test passed
      public void testLogStock() {
-         assertEquals("Stock loaded", service.logStock(stockEntry));
+         assertEquals("Stock loaded", service.logStock(new NewProduct(stockEntry, product)));
      }
             
         @Test//(Laurence)Returns boutique,size id, think it would be better to retrun names 
