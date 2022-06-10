@@ -41,7 +41,7 @@ public class ProductServiceImp implements IServiceProduct{
     }
 
     @Override 
-    public String updateProductPrice(Map<String, Double> newPrice) {
+    public String putProductOnSale(Map<String, Double> newPrice) {
         return dao.updateProduct(newPrice)?"Successfully updated product price":"Updateding product price failed";
     }
     
@@ -131,6 +131,5 @@ public class ProductServiceImp implements IServiceProduct{
             return pc;
         }
         return null;
-    }
-       
+    }   
 }

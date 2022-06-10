@@ -60,26 +60,26 @@ public class ReservedproductServiceImp implements IServiceReservedproduct {
                         try {
                             if (prod.getDate().plusHours(12L).isAfter(LocalDateTime.now())) {
 
-                                new MailService(email, "Carols Boutique keep-aside", "");
+                                new MailService(email, "Carols Boutique keep-aside", "").sendMail();
 
                                 continue;
                             }
                             if (prod.getDate().plusDays(1L).isAfter(LocalDateTime.now())) {
 
-                                new MailService(email, "Carols Boutique keep-aside", "");
+                                new MailService(email, "Carols Boutique keep-aside", "").sendMail();
 
                                 continue;
                             }
                             if (prod.getDate().plusDays(2L).isAfter(LocalDateTime.now())) {
 
-                                new MailService(email, "Carols Boutique keep-aside", "");
+                                new MailService(email, "Carols Boutique keep-aside", "").sendMail();
                                 dao.deleteReserveProduct(email);
 
                                 continue;
                             }
                             if (prod.getDate().plusHours(36L).isAfter(LocalDateTime.now())) {
 
-                                new MailService(email, "Carols Boutique keep-aside", "");
+                                new MailService(email, "Carols Boutique keep-aside", "").sendMail();
 
                             }
                         } catch (MessagingException ex) {

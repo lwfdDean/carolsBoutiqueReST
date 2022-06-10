@@ -35,14 +35,6 @@ public class SaleResource {
     public Response checkout(Sale sale){
         return Response.status(Response.Status.OK).entity(service.checkout(sale)).build();
     }
-	
-    @Path("/addPromotionCode")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addPromotionCode(PromoCode promoCode){
-        return Response.status(Response.Status.OK).entity(service.addPromotionCode(promoCode)).build();
-    }
     
     @Path("/findSale/{saleId}")
     @GET

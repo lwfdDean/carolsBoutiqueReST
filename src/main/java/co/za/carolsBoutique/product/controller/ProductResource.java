@@ -60,8 +60,8 @@ public class ProductResource {
     @Path("/updateProductPrice")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateProductPrice(Map<String, Double> productNameNewPrice){
-        return Response.status(Response.Status.OK).entity(service.updateProductPrice(productNameNewPrice)).build();
+    public Response putProductOnSale(Map<String, Double> productNameNewPrice){
+        return Response.status(Response.Status.OK).entity(service.putProductOnSale(productNameNewPrice)).build();
     }
     
     @POST
