@@ -27,14 +27,14 @@ public class ReservedproductResource {
     }
     
     @DELETE
-    @Path("/deleteProduct/{email}")
+    @Path("/deleteProduct/{email}")////
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteReservedproduct(@PathParam("email") String email){
         return Response.status(Response.Status.OK).entity(service.removeReserveProduct(email)).build();
     }
     
     @POST
-    @Path("/addKeepAside")
+    @Path("/addKeepAside")////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addProduct(Reservedproduct reservedproduct){
@@ -42,7 +42,7 @@ public class ReservedproductResource {
     }
     
     @GET
-    @Path("/findKeepAside/{email}")
+    @Path("/findKeepAside/{email}")///
     @Produces(MediaType.APPLICATION_JSON)
     public Response findKeepAside(@PathParam("email")String customerEmail){
         return Response.status(Response.Status.OK).entity(service.collectKeepAside(customerEmail)).build();

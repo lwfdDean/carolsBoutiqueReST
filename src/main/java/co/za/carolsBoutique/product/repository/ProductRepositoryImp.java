@@ -253,7 +253,7 @@ public class ProductRepositoryImp implements IProductRepository {
         List<Product> products = new ArrayList<>();
         if (con != null) {
             try {                         //(Laurence) fixed statement (products to product)(removed size)
-                ps = con.prepareStatement("select id,name,description,color,price from product");
+                ps = con.prepareStatement("select id,name,description,color,price,discountedprice from product");
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     String productId = rs.getString("id");
@@ -520,12 +520,13 @@ public class ProductRepositoryImp implements IProductRepository {
                     ps.setString(1, categoriesId.get(i));
                     rs = ps.executeQuery();
                     while (rs.next()) {
-                        String product = rs.getString("product");
-                        if (!productIds.contains(product)) {
-                            productIds.add(product);
-                            products.add(findProduct(product));
+                        String productId = rs.getString("product");
+                        if (!(products.stream().anyMatch(product -> product.getId().equals(productId)))) {
+                           products.add(findProduct2(productId));
                         }
                     }
+                    rs.close();
+                    ps.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -548,6 +549,48 @@ public class ProductRepositoryImp implements IProductRepository {
         }
 
         return products;
+    }
+    
+    private Product findProduct2(String productId) {
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        Product product = null;
+        if (con != null) {
+            try {
+                ps1 = con.prepareStatement("select * from product where id = ?");
+                ps1.setString(1, productId);
+                rs1 = ps1.executeQuery();
+                if (rs1.next()) {
+                    product = new Product(
+                            productId,
+                            rs1.getString("name"),
+                            rs1.getString("description"),
+                            getProductSizes(productId),
+                            rs1.getString("color"),
+                            rs1.getDouble("price"),
+                            rs1.getDouble("discountedPrice"),
+                            findProductCategories(productId));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs1 != null) {
+                    try {
+                        rs1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return product;
     }
 
     @Override
@@ -760,7 +803,7 @@ public class ProductRepositoryImp implements IProductRepository {
                 }
                 if (ps != null) {
                     try {
-                        rs.close();
+                        ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -774,34 +817,26 @@ public class ProductRepositoryImp implements IProductRepository {
     public boolean addPromo(PromoCode promoCode) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("insert into promotioncode(code,discount,type,expirydate,category) values(?,?,?,?,?)");
+                ps = con.prepareStatement("insert into promotion_code(code,discount,type,expiryDate,category) values(?,?,?,?,?)");
                 ps.setString(1, promoCode.getCode());
-                ps.setDouble(2,promoCode.getDiscount());
+                ps.setDouble(2, promoCode.getDiscount());
                 ps.setInt(3, promoCode.getType());
                 ps.setDate(4, Date.valueOf(promoCode.getDate()));
-                ps.setString(5,promoCode.getCategory());
-                rs = ps.executeQuery();
+                ps.setString(5, promoCode.getCategory());
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                if (rs != null) {
-                    try {
-                        rs.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
                 if (ps != null) {
                     try {
-                        rs.close();
+                        ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
         }
-        return rowsAffected==1;
+        return rowsAffected == 1;
     }
 
 }

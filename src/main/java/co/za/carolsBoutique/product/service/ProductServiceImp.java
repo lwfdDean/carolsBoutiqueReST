@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.product.service;
 
 import co.za.carolsBoutique.product.model.Category;
+import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
@@ -73,10 +74,10 @@ public class ProductServiceImp implements IServiceProduct{
 
     }
 
-    @Override
-    public String logStock(Map<Product,StockEntry> stockInfo) {
-        Product product = stockInfo.keySet().iterator().next();
-        StockEntry stockEntry = stockInfo.get(product);
+    @Override//(changes needed to fulfil http://localhost:8080/carolsBoutiqueRest/CarolsBoutique/product/logStock)
+    public String logStock(NewProduct newProduct) {
+        Product product = newProduct.getProduct();
+        StockEntry stockEntry = newProduct.getStockEntry();
         if (product.getId()!=null) {
             dao.addProduct(product);
             dao.addStockEntry(stockEntry, generateStockIds(product,stockEntry.getBoutiqueId()), product);

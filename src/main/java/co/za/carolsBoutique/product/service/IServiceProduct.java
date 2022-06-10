@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.product.service;
 
 import co.za.carolsBoutique.product.model.Category;
+import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.StockEntry;
@@ -24,7 +25,7 @@ public interface IServiceProduct {
     String addCategory(Category category);
     String deleteCategory(String categoryId);
     
-    String logStock(Map<Product,StockEntry> stockInfo);
+    String logStock(NewProduct newProduct);
     
     String addNewPromoCode(PromoCode promoCode);
     PromoCode findPromoCode(String promoCode);

@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.Sale.service;
 
+import co.za.carolsBoutique.Sale.model.ExchangeInfo;
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
@@ -31,12 +32,13 @@ public class SaleServiceImp implements IServiceSale {
         sale.setId(id);
         sale.setApproved(pg.makePayment(sale));
         if (sale.getApproved()) {
-            try {
-                new MailService(sale.getCustomerEmail(), "Receipt", "").sendMail();
-            } catch (MessagingException ex) {
-                Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }else{
+
+            prepareMail(sale.getCustomerEmail(), "Receipt", "bruh");
+
+        } else {
+
+            prepareMail(sale.getCustomerEmail(), "Payment declined", "not epic bruh");
+
             return "Payment declined";
         }
         return dao.addSale(sale) ? "accepted" : "An error occured";
@@ -46,48 +48,57 @@ public class SaleServiceImp implements IServiceSale {
     public Sale findSale(String saleId) {
         return dao.findSale(saleId);
     }
-    
+
     @Override
     public String refund(Map<String, String> refundInfo) {
         String saleId = refundInfo.keySet().iterator().next();
-        if (dao.findSaleDate(saleId).toLocalDateTime().compareTo(LocalDateTime.now().minusDays(10L))>=0) {
+        if (dao.findSaleDate(saleId).toLocalDateTime().getDayOfYear() + 10 <= LocalDateTime.now().getDayOfYear()) {
             return "10 day return policy has exceeded";
         }
         Sale sale = dao.findSale(saleId);
         String[] pInfo = refundInfo.get(saleId).split(" ");
         double refundAmmount = 0.0;
-        for (Product p: sale.getItems()) {
+        for (Product p : sale.getItems()) {
             if (p.getId().equals(pInfo[0])) {
                 refundAmmount = p.getDiscountedPrice();
             }
         }
-        sale.setTotalPrice(sale.getTotalPrice()-refundAmmount);
-        if (sale.getCardNumber()!=null) {
+        sale.setTotalPrice(sale.getTotalPrice() - refundAmmount);
+        if (sale.getCardNumber() != null) {
             try {
                 new MailService("", "Refund", "").sendMail();
             } catch (MessagingException ex) {
                 Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return dao.updateSale(sale.getId(), sale.getTotalPrice(),pInfo[0])?"refund completed":"couldnt complete refund";
+        return dao.updateSale(sale.getId(), sale.getTotalPrice(), pInfo[0]) ? "refund completed" : "couldnt complete refund";
     }
-    
+
     @Override
-    public String exchange(List<String> exchangeInfo) {
-        String saleId = exchangeInfo.get(0);
-        if (dao.findSaleDate(saleId).toLocalDateTime().compareTo(LocalDateTime.now().minusDays(10L))>=0) {
+    public String exchange(ExchangeInfo exchangeInfo) {
+        if (dao.findSaleDate(exchangeInfo.getSaleId()).toLocalDateTime().getDayOfYear() + 10 <= LocalDateTime.now().getDayOfYear()) {
             return "10 day return policy has exceeded";
         }
-        boolean b = dao.updateSaleLineItem(saleId, exchangeInfo.get(1),
-                exchangeInfo.get(2),Double.parseDouble(exchangeInfo.get(3)));
+        boolean b = dao.updateSaleLineItem(exchangeInfo.getSaleId(), exchangeInfo.getReturnedProductId(),
+                exchangeInfo.getNewProductId(), exchangeInfo.getPrice());
         if (b) {
-            try {
-                new MailService(exchangeInfo.get(3), "Ammended Receipt", "").sendMail();
-                return "Exchange Successful";
-            } catch (MessagingException ex) {
-                Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            prepareMail(exchangeInfo.getCustomerEmail(), "Exchange", "");
+            return "Exchange Successful";
         }
         return "exchange Failed";
+    }
+
+    private void prepareMail(String emailAddress, String subject, String body) {
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new MailService(emailAddress, subject, body).sendMail();
+                } catch (MessagingException ex) {
+                    Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        t1.start();
     }
 }

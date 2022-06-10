@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.Sale.controller;
 
+import co.za.carolsBoutique.Sale.model.ExchangeInfo;
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.SaleRepositoryImp;
 import co.za.carolsBoutique.Sale.service.IServiceSale;
@@ -28,7 +29,7 @@ public class SaleResource {
         service = new SaleServiceImp(new SaleRepositoryImp(), new SaleIdGenerator(), new PaymentGateway());
     }
      
-    @Path("/checkout")
+    @Path("/checkout")///
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -36,14 +37,14 @@ public class SaleResource {
         return Response.status(Response.Status.OK).entity(service.checkout(sale)).build();
     }
     
-    @Path("/findSale/{saleId}")
+    @Path("/findSale/{saleId}")////
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findSale(@PathParam("saleId")String saleId){
         return Response.status(Response.Status.OK).entity(service.findSale(saleId)).build();
     }
     
-    @Path("/refund")
+    @Path("/refund")////
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,11 +52,11 @@ public class SaleResource {
         return Response.status(Response.Status.OK).entity(service.refund(refundProduct)).build();
     }
     
-    @Path("/exchange")
+    @Path("/exchange")////
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response exchange(List<String> exchangeInfo){
+    public Response exchange(ExchangeInfo exchangeInfo){
         return Response.status(Response.Status.OK).entity(service.exchange(exchangeInfo)).build();
     }
 }

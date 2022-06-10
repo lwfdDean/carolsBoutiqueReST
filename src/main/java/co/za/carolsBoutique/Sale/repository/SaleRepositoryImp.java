@@ -334,6 +334,8 @@ public class SaleRepositoryImp implements ISaleRepository {
                     if (updateSaleLineItem(saleId, productId)) {
                         con.commit();
                         success = true;
+                    }else{
+                        con.rollback();
                     }
                 } else {
                     con.rollback();
@@ -418,7 +420,7 @@ public class SaleRepositoryImp implements ISaleRepository {
         if (con != null) {
             try {
                 con.setAutoCommit(false);
-                ps = con.prepareStatement("UPDATE sale_line_item SET returned = true where product = ? and sale = ?");
+                ps = con.prepareStatement("UPDATE sale_line_item SET returned = 1 where product = ? and sale = ?");
                 ps.setString(1, returnedProductId);
                 ps.setString(2, saleId);
                 rowsAffected = ps.executeUpdate();

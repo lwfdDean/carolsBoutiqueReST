@@ -25,7 +25,7 @@ public class BoutiqueResource {
     }
     
     @POST
-    @Path("/register")
+    @Path("/register")/////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(Boutique boutique){
@@ -33,7 +33,7 @@ public class BoutiqueResource {
     }
     
     @POST
-    @Path("/login")
+    @Path("/login")/////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(Map<String, String> loginDetails){
@@ -41,14 +41,14 @@ public class BoutiqueResource {
     }
     
     @GET
-    @Path("/getAllBoutiques")
+    @Path("/getAllBoutiques")/////
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBoutiques(){
         return Response.status(Response.Status.OK).entity(service.getAllBoutiques()).build();
     }
     
     @POST
-    @Path("/changePassword")
+    @Path("/changePassword")/////
     @Consumes(MediaType.APPLICATION_JSON)	
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePassword(Map<String,String> passwordDetails){
@@ -56,14 +56,14 @@ public class BoutiqueResource {
     }
     
     @POST
-    @Path("/changeDailyTarget")
+    @Path("/changeDailyTarget")/////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response changeDailyTarget(Map<String,Double> newTaeget){
         return Response.status(Response.Status.OK).entity(service.changeDailyTarget(newTaeget)).build();
     }
     
-    @Path("/rateUs")
+    @Path("/rateUs")////
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

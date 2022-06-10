@@ -25,7 +25,7 @@ public class EmployeeResource {
         service = new EmployeeServiceImp(new EmployeeRepositoryImp(), new EmployeeIdGenerator());
     }
 
-    @Path("/register")
+    @Path("/register")////////////
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -33,7 +33,7 @@ public class EmployeeResource {
         return Response.status(Response.Status.OK).entity(service.register(employee)).build();
     }
 
-    @Path("/login")
+    @Path("/login")/////////
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -41,21 +41,21 @@ public class EmployeeResource {
         return Response.status(Response.Status.OK).entity(service.login(loginDetails)).build();
     }
 
-    @Path("/getAllEmployees/{boutiqueId}")
+    @Path("/getAllEmployees/{boutiqueId}")///////////
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllEmployees(@PathParam("boutiqueId") String boutiqueId) {
         return Response.status(Response.Status.OK).entity(service.getAllEmployees(boutiqueId)).build();
     }
 
-    @Path("/getAllByRole/{roleId}/{boutiqueId}")
+    @Path("/getAllByRole/{roleId}/{boutiqueId}")////////////
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllByRole(@PathParam("roleId") String roleId, @PathParam("boutiqueId") String boutiqueId) {
         return Response.status(Response.Status.OK).entity(service.getAllByRole(roleId, boutiqueId)).build();
     }
 
-    @Path("/promoteToTeller")
+    @Path("/promoteToTeller")//////////
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -63,21 +63,21 @@ public class EmployeeResource {
         return Response.status(Response.Status.OK).entity(service.promoteToTeller(employeeDetails)).build();
     }
 
-    @Path("/getRole/{roleId}")
+    @Path("/getRole/{roleId}")////////////
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRole(@PathParam("roleId") String roleId) {
         return Response.status(Response.Status.OK).entity(service.getRole(roleId)).build();
     }
 
-    @Path("/getAllRoles")
+    @Path("/getAllRoles")///////////////
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoles() {
         return Response.status(Response.Status.OK).entity(service.getAllRoles()).build();
     }
 
-    @Path("/verifyManagerCode")
+    @Path("/verifyManagerCode")/////////////
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
