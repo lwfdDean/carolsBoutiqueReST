@@ -88,9 +88,9 @@ public class TestSaleServiceImp {
      @Test//test passed
      public void testExchange() {
          List<String> exchangeInfo = new ArrayList<>();//sale,return, new
-         exchangeInfo.add("3");
+         exchangeInfo.add("asdew12343");
          exchangeInfo.add("1234567891");
-         exchangeInfo.add("123");
+         exchangeInfo.add("1321321321");
         assertEquals("Exchange Successful", service.exchange(exchangeInfo));
      }
      

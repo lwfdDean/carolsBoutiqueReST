@@ -74,7 +74,7 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     public boolean addBoutique(Boutique boutique) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("Insert Into boutique(id, location, dailytarget, monthlyTarget, password) values(?, ?, ?, ?)");
+                ps = con.prepareStatement("Insert Into boutique(id, location, dailytarget, monthlyTarget, password) values(?, ?, ?, ?, ?)");
                 ps.setString(1, boutique.getId());
                 ps.setString(2, boutique.getLocation());
                 ps.setDouble(3, boutique.getDailyTarget());
