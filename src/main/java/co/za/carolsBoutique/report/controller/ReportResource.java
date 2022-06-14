@@ -60,7 +60,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findStoreThatAchievedMonthlyTarget(rc)).build();
     }
     
-    @POST
+    @GET
     @Path("/findTop40Products")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTop40Products(){
