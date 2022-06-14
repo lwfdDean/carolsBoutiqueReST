@@ -61,7 +61,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findTop40Products")
+    @Path("/findTop40Products")/////////////
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTop40Products(){
         return Response.status(Response.Status.OK).entity(service.findTop40Products()).build();
@@ -75,7 +75,7 @@ public class ReportResource {
         return Response.status(Response.Status.OK).entity(service.findUnderPerformingStores(rc)).build();
     }
     
-    @POST
+    @POST////////////////////////
     @Path("/findTopSalepersonForAProduct")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -84,7 +84,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findCurrentDailySales")
+    @Path("/findCurrentDailySales")/////////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findCurrentDailySales(ReportCriteria rc){
