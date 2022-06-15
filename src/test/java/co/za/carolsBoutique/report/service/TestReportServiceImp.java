@@ -65,11 +65,12 @@ public class TestReportServiceImp {
     @Test
     public void testFindHighestRatedStores() {
         System.out.println("findHighestRatedStores");
-        ReportCriteria rc = null;
+        ReportCriteria rc = new ReportCriteria(null, null, 6, 2);
         ReportServiceImp instance = null;
-        List<Report> expResult = null;
-        List<Report> result = instance.findHighestRatedStores(rc);
-        assertEquals(expResult, result);
+        List<Report> expResult = new ArrayList<>();
+        expResult.add(new Report("1", 6));
+        //List<Report> result = instance.findHighestRatedStores(rc);
+        assertEquals(expResult, service.findHighestRatedStores(rc));
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -95,10 +96,12 @@ public class TestReportServiceImp {
     @Test
     public void testFindTopSellingEmployees() {
         System.out.println("findTopSellingEmployees");
-        ReportCriteria rc = null;
+        ReportCriteria rc = new ReportCriteria("ao8154bb", null, 6, null);
         ReportServiceImp instance = null;
-        List<Report> expResult = null;
-        List<Report> result = instance.findTopSellingEmployees(rc);
+        List<Report> topEmp = new ArrayList<>();
+        topEmp.add(new Report("12werw23", "ao8154bb"));
+        List<Report> expResult = topEmp;
+        List<Report> result = service.findTopSellingEmployees(rc);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -110,10 +113,11 @@ public class TestReportServiceImp {
     @Test
     public void testFindStoreThatAchievedMonthlyTarget() {
         System.out.println("findStoreThatAchievedMonthlyTarget");
-        ReportCriteria rc = null;
+        ReportCriteria rc = new ReportCriteria(null, null, 6, null);
         ReportServiceImp instance = null;
-        List<Report> expResult = null;
-        List<Report> result = instance.findStoreThatAchievedMonthlyTarget(rc);
+        List<Report> expResult = new ArrayList<>();
+        expResult.add(new Report("ao8154bb", 279.86));
+        List<Report> result = service.findStoreThatAchievedMonthlyTarget(rc);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

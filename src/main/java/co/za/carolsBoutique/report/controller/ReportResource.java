@@ -37,7 +37,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findStoreMonthlySales")
+    @Path("/findStoreMonthlySales")////////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findStoreMonthlySales(ReportCriteria rc){
