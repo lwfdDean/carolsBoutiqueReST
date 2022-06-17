@@ -4,14 +4,13 @@ import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
-import co.za.carolsBoutique.product.model.StockEntry;
 import java.util.List;
 import java.util.Map;
 
 public interface IServiceProduct {
     List<Product> findAllProducts();
     Product findProduct(String productId);
-    Product findProduct(Map<String,String> productInfo);
+    Product findProductBySize(String productCode);
     String addProduct(Product product);
     String deleteProduct(String productId);
     String putProductOnSale(Map<String,Double>newPrice);
