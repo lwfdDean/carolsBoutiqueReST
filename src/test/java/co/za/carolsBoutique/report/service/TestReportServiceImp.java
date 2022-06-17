@@ -96,7 +96,7 @@ public class TestReportServiceImp {
     @Test
     public void testFindTopSellingEmployees() {
         System.out.println("findTopSellingEmployees");
-        ReportCriteria rc = new ReportCriteria("ao8154bb", null, 6, null);
+        ReportCriteria rc = new ReportCriteria("ao8154bb", null, 6, 1);
         ReportServiceImp instance = null;
         List<Report> topEmp = new ArrayList<>();
         topEmp.add(new Report("12werw23", "ao8154bb"));

@@ -186,8 +186,9 @@ public class ReportRepositoryImp implements IReportRepository{
                 }
                 ps.close();
                 rs.close();
+                
                 for (int i = 0; i < employees.size(); i++) {
-                    ps = con.prepareStatement("select totalPrice, date fom sale where employee = ?");
+                    ps = con.prepareStatement("select totalPrice, date from sale where employee = ?");
                     ps.setString(1, employees.get(i));
                     rs = ps.executeQuery();
                     double totalSales = 0.0;

@@ -114,7 +114,7 @@ public class ReportServiceImp implements IServiceReport{
         List<Report> reports = dao.findUnderPerformingStores(rc.getMonth());
         Collections.sort(reports);
         List<Report> results = new ArrayList<>();
-        for (int i = 0; i < rc.getResults() ; i--) {    //this line breaks code, decrementing 0 results in nullpointer
+        for (int i = 0; i < rc.getResults() ; i++) {    //this line breaks code, decrementing 0 results in nullpointer
             results.add(reports.get(i));
         }
         return results;
