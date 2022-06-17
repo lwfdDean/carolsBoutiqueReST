@@ -42,7 +42,7 @@ public class ReportServiceImp implements IServiceReport{
             }
         }
         List<Report> results = new ArrayList<>();
-        for (int i = 0; i < reports.size() ; i--) {
+        for (int i = 0; i < reports.size() ; i++) {
             if (i>=reports.size()-rc.getResults()) {
                 results.add(reports.get(i));//nothing is added
             }
