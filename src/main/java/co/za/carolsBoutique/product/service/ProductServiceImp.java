@@ -111,10 +111,9 @@ public class ProductServiceImp implements IServiceProduct{
     }
 
     @Override
-    public Product findProduct(Map<String, String> productInfo) {
-        String productId = productInfo.keySet().iterator().next();
-        String size = productInfo.get(productId);
-        return dao.findProductBySize(productId, size);
+    public Product findProductBySize(String productCode) {
+        String[] prodInfo = productCode.split(" ");
+        return dao.findProductBySize(prodInfo[0], prodInfo[1]);
     }
 
     @Override
