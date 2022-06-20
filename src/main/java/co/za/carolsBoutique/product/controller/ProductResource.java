@@ -1,11 +1,8 @@
 package co.za.carolsBoutique.product.controller;
 
-
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.NewProduct;
-import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
-import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import co.za.carolsBoutique.product.service.IServiceProduct;
 import co.za.carolsBoutique.product.service.ProductServiceImp;
@@ -41,6 +38,13 @@ public class ProductResource {
     public Response findProduct(@PathParam("productId")String productId){
         return Response.status(Response.Status.OK).entity(service.findProduct(productId)).build();
     }
+    
+    @GET
+    @Path("/findProductBySize/{productCode}")//////////////
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findProductBySize(@PathParam("productCode")String productCode){
+        return Response.status(Response.Status.OK).entity(service.findProductBySize(productCode)).build();
+    }
      
     @POST
     @Path("/logStock")
@@ -58,7 +62,7 @@ public class ProductResource {
     }
     
     @POST
-    @Path("/updateProductPrice")///////
+    @Path("/putProductOnSale")///////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response putProductOnSale(Map<String, Double> productNameNewPrice){
@@ -118,10 +122,10 @@ public class ProductResource {
         return Response.status(Response.Status.OK).entity(service.addNewPromoCode(promocode)).build();
     }
     
-//    @GET
-//    @Path("/findPromoCode/{promocode}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response addNewPromoCode(@PathParam("promocode")String promocode){
-//        return Response.status(Response.Status.OK).entity(service.findPromoCode(promocode)).build();
-//    }
+    @GET
+    @Path("/findPromoCode/{promocode}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findPromoCode(@PathParam("promocode")String promocode){
+        return Response.status(Response.Status.OK).entity(service.findPromoCode(promocode)).build();
+    }
 }
