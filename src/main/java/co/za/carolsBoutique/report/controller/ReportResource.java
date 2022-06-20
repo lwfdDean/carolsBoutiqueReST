@@ -29,7 +29,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findHighestRatedStores")
+    @Path("/findHighestRatedStores")//////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findHighestRatedStores(ReportCriteria rc){
@@ -37,7 +37,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findStoreMonthlySales")
+    @Path("/findStoreMonthlySales")////////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findStoreMonthlySales(ReportCriteria rc){
@@ -45,7 +45,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findTopSellingEmployees")
+    @Path("/findTopSellingEmployees")////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTopSellingEmployees(ReportCriteria rc){
@@ -53,7 +53,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findStoreThatAchievedMonthlyTarget")
+    @Path("/findStoreThatAchievedMonthlyTarget")////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findStoreThatAchievedMonthlyTarget(ReportCriteria rc){
@@ -68,14 +68,14 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findUnderPerformingStores")
+    @Path("/findUnderPerformingStores")//////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findUnderPerformingStores(ReportCriteria rc){
         return Response.status(Response.Status.OK).entity(service.findUnderPerformingStores(rc)).build();
     }
     
-    @POST
+    @POST////////////////////////
     @Path("/findTopSalepersonForAProduct")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -84,7 +84,7 @@ public class ReportResource {
     }
     
     @POST
-    @Path("/findCurrentDailySales")
+    @Path("/findCurrentDailySales")/////////////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findCurrentDailySales(ReportCriteria rc){
