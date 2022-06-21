@@ -47,7 +47,7 @@ public class TestIBTServiceImp {
         List sizes = new ArrayList<String>();
         sizes.add("Universal");
         product2 = new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00,20.0,sCats);
-        ibtTest = new IBT("1", "new@Test", false, product2, "22", "1", "2");
+        ibtTest = new IBT("1", "new@Test", false,"ahd32j3idq 09", "1", "2");
         ibts = new ArrayList();
         ibts.add(ibtTest);
     }

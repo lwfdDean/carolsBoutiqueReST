@@ -3,8 +3,12 @@ package co.za.carolsBoutique.ibt.service;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.ibt.model.IBT;
 import co.za.carolsBoutique.ibt.repository.IIBTRepository;
+import co.za.carolsBoutique.mailService.MailService;
+import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IBTServiceImp implements IServiceIBT{
     private IIBTRepository dao;
@@ -16,6 +20,8 @@ public class IBTServiceImp implements IServiceIBT{
 
     @Override
     public String requestIBT(IBT ibt) {
+        ibt.setId(gen.generateId(ibt.getCustomerEmail(), ibt.getRequestingBoutique(), true));
+        prepareMail(dao.getManagerEmail(ibt.getApprovingBoutique()), "New IBT Request Received", "");
         return dao.addIBT(ibt)?"IBT has been requested":"IBT request failed";
     }
 
@@ -33,15 +39,26 @@ public class IBTServiceImp implements IServiceIBT{
     public String approveIBT(Map<String, Boolean> details) {
         String id = details.keySet().iterator().next();
         boolean value = details.get(id);
+        String managerEmail = dao.getManagerEmail(getIBT(id).getRequestingBoutique());
             if(value){
-                return dao.updateIBT(id, value)?"IBT was approved":"IBT approval failed";
+                prepareMail(managerEmail, "IBT Approved", "");
             }else{
-                return dao.updateIBT(id, value)?"IBT was rejected":"IBT rejection failed";
+                prepareMail(managerEmail, "IBT Rejected", "");
             }
+        return dao.updateIBT(id, value)?"Successfully Updated":"Error has Occured";
     }
 
-  
-
-   
-    
+   private void prepareMail(String emailAddress, String subject, String body) {
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new MailService(emailAddress, subject, body).sendMail();
+                } catch (MessagingException ex) {
+                    Logger.getLogger(IBTServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        t1.start();
+    }
 }

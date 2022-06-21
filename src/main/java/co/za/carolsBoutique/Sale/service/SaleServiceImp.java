@@ -9,7 +9,6 @@ import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.product.model.Product;
 import jakarta.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
