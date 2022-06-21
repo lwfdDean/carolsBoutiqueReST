@@ -10,4 +10,5 @@ public interface IIBTRepository {
     List<IBT> findStoreIBTRequests(String storeId);
     boolean updateIBT(String ibtId, boolean approved);
     boolean deleteIBT(String ibtId);
+    String getManagerEmail(String boutiqueId);
 }

@@ -188,8 +188,9 @@ public class ReportRepositoryImp implements IReportRepository{
                 }
                 ps.close();
                 rs.close();
+                
                 for (int i = 0; i < employees.size(); i++) {
-                    ps = con.prepareStatement("select totalPrice, date fom sale where employee = ?");
+                    ps = con.prepareStatement("select totalPrice, date from sale where employee = ?");
                     ps.setString(1, employees.get(i));
                     rs = ps.executeQuery();
                     double totalSales = 0.0;
@@ -351,13 +352,13 @@ public class ReportRepositoryImp implements IReportRepository{
                 for (String boutique : boutiques) {
                     for (String product : products) {
                         int totalNumberOfSales = 0;
-                        ps = con.prepareStatement("select 'count(sale)' from sale_line_item inner join sale on sale.id = sale_line_item.sale"
+                        ps = con.prepareStatement("select count(sale_line_item.sale) AS total from sale_line_item inner join sale on sale.id = sale_line_item.sale"
                                 + " where sale.boutique = ? and sale_line_item.product = ?");
                         ps.setString(1, boutique);
                         ps.setString(2, product);
                         rs = ps.executeQuery();
                         if (rs.next()) {                            
-                            totalNumberOfSales = rs.getInt("count");
+                            totalNumberOfSales = rs.getInt("total");
                         }
                         results.add(new Report(product,boutique,totalNumberOfSales));
                     }
@@ -453,13 +454,13 @@ public class ReportRepositoryImp implements IReportRepository{
                 int empTotal = 0;
                 String topEmp = null;
                 for (String employee : employees) {
-                    ps = con.prepareStatement("select count(id) from sale inner join sale_line_item on sale.id = sale_line_item.sale"
+                    ps = con.prepareStatement("select count(sale.id) AS total from sale inner join sale_line_item on sale.id = sale_line_item.sale"
                             + " where sale_line_item.product = ? and sale.employee = ?");
                     ps.setString(1, product);
                     ps.setString(2, employee);
                     rs = ps.executeQuery();
                     if (rs.next()) {
-                        int count = rs.getInt("count");
+                        int count = rs.getInt("total");
                         if (count>empTotal) {
                             empTotal = count;
                             topEmp = employee;
@@ -501,9 +502,12 @@ public class ReportRepositoryImp implements IReportRepository{
                 ps.setString(1, store);
                 rs =ps.executeQuery();
                 double todaysSale = 0.0;
+                int i = 0;
                 while (rs.next()) {                    
                     if (rs.getTimestamp("date").toLocalDateTime().getDayOfYear()==LocalDateTime.now().getDayOfYear()) {
-                        todaysSale += rs.getDouble("totalPrice");
+                        double holder = rs.getDouble("totalPrice");
+                        System.out.println(i +"th" + holder);
+                        todaysSale += holder;
                     }
                 }
                 report = new Report(store, todaysSale);
