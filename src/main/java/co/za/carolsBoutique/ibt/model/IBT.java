@@ -13,8 +13,7 @@ public class IBT {
     private String id;
     private String customerEmail;
     private Boolean approved;
-    private Product product;
-    private String size;
+    private String productCode;
     private String approvingBoutique;
     private String requestingBoutique;
 }
