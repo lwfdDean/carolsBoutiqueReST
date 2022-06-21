@@ -171,7 +171,9 @@ public class ReportRepositoryImp implements IReportRepository{
         }
         return results;
     }
-
+    
+    //this method is going to return the total sales and employee id per entry, eg. (kuhzdbgaer35246, R400)
+    //should we not also get the emp. name eg. (john,kuhzdbgaer35246, R400)
     @Override
     public List<Report> findTopSellingEmployees(String store, int month) {
         List<String> employees = new ArrayList<>();
