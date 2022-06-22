@@ -3,6 +3,7 @@ package product;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
 import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
@@ -23,7 +24,7 @@ public class TestProductServiceImp {
      StockEntry stockEntry;
     List<String> sCats;
     List<Category> cats;
-    List sizes;
+    List<Size> sizes;
     Product product = null;
     Product product2 = null;
     List<Product> allProducts;
@@ -47,14 +48,14 @@ public class TestProductServiceImp {
         dao = new ProductRepositoryImp();
         gen = new ProductIdGenerator();
         service = new ProductServiceImp(dao);
-        sCats = new ArrayList<String>();
-        sCats.add("Shirts");
-        cats = new ArrayList<Category>();
+        sCats = new ArrayList<>();
+        sCats.add("");
+        cats = new ArrayList<>();
         cats.add(new Category("2", "Shirts"));
-        sizes = new ArrayList<String>();
-        sizes.add("Universal");
-        product = new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2,2.00,sCats);
-        product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,15.00,sCats);
+        sizes = new ArrayList<>();
+        sizes.add(new Size());
+        product = new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2,2.00,cats);
+        product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,15.00,cats);
         allProducts.add(product);
         stockEntry =new StockEntry("1234567891 22", "1", 10, "1");
         //10 diget id and space and 2 diget code for size

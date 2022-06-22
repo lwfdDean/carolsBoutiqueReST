@@ -5,7 +5,6 @@ import co.za.carolsBoutique.boutique.model.Review;
 import co.za.carolsBoutique.boutique.repository.IBoutiqueRepository;
 import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import java.util.List;
-import java.util.Map;
 
 public class BoutiqueServiceImp implements IServiceBoutique{
     private IBoutiqueRepository dao;
@@ -32,34 +31,7 @@ public class BoutiqueServiceImp implements IServiceBoutique{
         }
         return "Boutique already exists";
     }
-    
-    @Override
-    public Boutique login(Map<String, String> loginDetails) {
-        String id = loginDetails.keySet().iterator().next();
-        Boutique boutique = dao.findBoutique(id);
-        if (boutique!=null) {
-            if(boutique.getPassword().equals(loginDetails.get(id))){
-                return boutique;
-            }
-        }
-        return null;
-    }
 
-    @Override
-    public String changePassword(Map<String, String> passwordDetails) {
-        String id = passwordDetails.keySet().iterator().next();
-        if (verifyPassword(passwordDetails.get(id))) {
-            return dao.updateBoutique(id,passwordDetails.get(id))?"password Updated":"could not update the password";
-        }
-        return "invalid password supplied";
-    }
-
-    @Override
-    public String changeDailyTarget(Map<String, Double> newTarget) {
-        String id = newTarget.keySet().iterator().next();
-        return dao.updateBoutique(id, newTarget.get(id))?"target updated":"could not update target";
-    }
-    
     private boolean verifyPassword(String password){
         if (password == null || password.isEmpty() || password.length()!=12) {
             return false;
@@ -84,6 +56,16 @@ public class BoutiqueServiceImp implements IServiceBoutique{
         }
         return dao.addReview(Integer.parseInt(review.getRating()),review.getComment(),review.getBoutique())?
                 "Thank you for rating our store":"an error occured";
+    }
+
+    @Override
+    public Boutique findBoutique(String boutiqueId) {
+        return dao.findBoutique(boutiqueId);
+    }
+
+    @Override
+    public String updateBoutique(Boutique boutique) {
+        return dao.updateBoutique(boutique)?"Successfully updated":"could not update boutique";
     }
 
 }

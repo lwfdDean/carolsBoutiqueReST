@@ -5,7 +5,9 @@ import co.za.carolsBoutique.ReserveProduct.repository.IReservedproductRepository
 import co.za.carolsBoutique.ReserveProduct.repository.ReservedproductRepositoryImp;
 import co.za.carolsBoutique.ReserveProduct.service.ReservedproductIdGenerator;
 import co.za.carolsBoutique.ReserveProduct.service.ReservedproductServiceImp;
+import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +63,10 @@ public class TestReservedproductServiceImp {
      
     @Test//Passed the test
     public void testCollectKeepAside() {
-        List<String> sizes = new ArrayList<>();
-        sizes.add("22");
-        List<String> categories = new ArrayList<>();
-        categories.add("4");
+        List<Size> sizes = new ArrayList<>();
+        sizes.add(new Size());
+        List<Category> categories = new ArrayList<>();
+        categories.add(new Category());
         assertEquals(new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00,30.00, categories),service.collectKeepAside("test@gmail.com"));
      }
 }

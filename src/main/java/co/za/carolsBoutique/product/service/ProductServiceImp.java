@@ -4,6 +4,7 @@ import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
+import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
 import static java.lang.Math.random;
@@ -94,7 +95,7 @@ public class ProductServiceImp implements IServiceProduct{
         List<String> stockIds = new ArrayList<>();
         for (int i = 0; i < product.getSizes().size(); i++) {
             StringBuilder sb = new StringBuilder();
-            String cat = product.getCategories().get((int)(Math.random()*product.getCategories().size()));
+            String cat = product.getCategories().get((int)(Math.random()*product.getCategories().size())).getId();
             sb.append((int)(random()*100000+1000));
             sb.append(product.getSizes().get((int)(Math.random()*product.getSizes().size())));
             sb.append(cat.charAt((int)(Math.random()*cat.length())));
@@ -132,4 +133,9 @@ public class ProductServiceImp implements IServiceProduct{
         }
         return null;
     }   
+
+    @Override
+    public List<Size> findAllSizes() {
+        return dao.findAllSizes();
+    }
 }

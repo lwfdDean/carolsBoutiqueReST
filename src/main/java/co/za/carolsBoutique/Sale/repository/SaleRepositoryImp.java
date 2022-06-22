@@ -1,8 +1,9 @@
 package co.za.carolsBoutique.Sale.repository;
 
 import co.za.carolsBoutique.Sale.model.Sale;
+import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
-import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
+import co.za.carolsBoutique.product.model.Size;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -99,7 +100,7 @@ public class SaleRepositoryImp implements ISaleRepository {
         String bId = sale.getBoutique();
         Map<String, String> productCodes = new HashMap<>();
         for (Product product : sale.getItems()) {
-            productCodes.put(product.getId(), product.getSizes().get(0));
+            productCodes.put(product.getId(), product.getSizes().get(0).getId());
         }
         int rows = 0;
         PreparedStatement ps1 = null;
@@ -251,17 +252,17 @@ public class SaleRepositoryImp implements ISaleRepository {
         return products;
     }
 
-    private List<String> getProductSizes(String productId) {
+    private List<Size> getProductSizes(String productId) {
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
-        List<String> sizes = new ArrayList<>();
+        List<Size> sizes = new ArrayList<>();
         if (con != null) {
             try {
-                ps1 = con.prepareStatement("SELECT id FROM size INNER JOIN product_size ON product_size.size = size.id WHERE product_size.product=?");
+                ps1 = con.prepareStatement("SELECT id,name FROM size INNER JOIN product_size ON product_size.size = size.id WHERE product_size.product=?");
                 ps1.setString(1, productId);
                 rs1 = ps1.executeQuery();
                 while (rs1.next()) {
-                    sizes.add(rs1.getString("id"));
+                    sizes.add(new Size(rs1.getString("id"),rs1.getString("name")));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -285,17 +286,18 @@ public class SaleRepositoryImp implements ISaleRepository {
         return sizes;
     }
 
-    private List<String> findProductCategories(String productId) {
+    private List<Category> findProductCategories(String productId) {
         PreparedStatement ps2 = null;
         ResultSet rs2 = null;
-        List<String> categories = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
         if (con != null) {
             try {
-                ps2 = con.prepareStatement("SELECT category FROM product_category WHERE product = ?");
+                ps2 = con.prepareStatement("SELECT id,name FROM category INNER JOIN product_category ON product_category.size = category.id"
+                        + " WHERE product_category.product=?");
                 ps2.setString(1, productId);
                 rs2 = ps2.executeQuery();
                 while (rs2.next()) {
-                    categories.add(rs2.getString("category"));
+                    categories.add(new Category(rs2.getString("id"),rs2.getString("name")));
                 }
                 return categories;
             } catch (SQLException e) {
@@ -317,7 +319,7 @@ public class SaleRepositoryImp implements ISaleRepository {
                 }
             }
         }
-        return null;
+        return categories;
     }
 
     @Override

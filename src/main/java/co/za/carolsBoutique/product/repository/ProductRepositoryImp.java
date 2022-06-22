@@ -1,11 +1,10 @@
 package co.za.carolsBoutique.product.repository;
 
-import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
-import co.za.carolsBoutique.ReserveProduct.repository.ReservedproductRepositoryImp;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
+import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
 import java.sql.Connection;
 import java.sql.Date;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ProductRepositoryImp implements IProductRepository {
 
@@ -86,11 +86,11 @@ public class ProductRepositoryImp implements IProductRepository {
         int rows = 0;
         if (con != null) {
             try {
-                List<String> sizes = product.getSizes();
+                List<Size> sizes = product.getSizes();
                 for (int i = 0; i < sizes.size(); i++) {
                     ps1 = con.prepareStatement("INSERT INTO product_size(product,size) VALUES(?,?)");
                     ps1.setString(1, product.getId());
-                    ps1.setString(2, sizes.get(i));
+                    ps1.setString(2, sizes.get(i).getId());
                     rows += ps1.executeUpdate();
                     ps1.close();
                 }
@@ -114,11 +114,11 @@ public class ProductRepositoryImp implements IProductRepository {
         int roles = 0;
         if (con != null) {
             try {
-                List<String> catagories = product.getCategories();
+                List<Category> catagories = product.getCategories();
                 for (int i = 0; i < catagories.size(); i++) {
                     ps1 = con.prepareStatement("INSERT INTO product_category(product,category) VALUES(?,?)");
                     ps1.setString(1, product.getId());
-                    ps1.setString(2, catagories.get(i));
+                    ps1.setString(2, catagories.get(i).getId());
                     roles += ps1.executeUpdate();
                 }
             } catch (SQLException se) {
@@ -146,7 +146,7 @@ public class ProductRepositoryImp implements IProductRepository {
                     ps.setString(2, product.getId());
                     ps.setString(3, stockEntry.getBoutiqueId());
                     ps.setInt(4, stockEntry.getQuantity());
-                    ps.setString(5, product.getSizes().get(i));
+                    ps.setString(5, product.getSizes().get(i).getId());
                     rowsAffected += ps.executeUpdate();
                     ps.close();
                     rs.close();
@@ -214,17 +214,17 @@ public class ProductRepositoryImp implements IProductRepository {
         return product;
     }
 
-    private List<String> getProductSizes(String productId) {//(Laurence) changed quarie(from id to name)
+    private List<Size> getProductSizes(String productId) {//(Laurence) changed quarie(from id to name)
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
-        List<String> sizes = new ArrayList<>();
+        List<Size> sizes = new ArrayList<>();
         if (con != null) {
             try {
-                ps1 = con.prepareStatement("select name from size inner join product_size on product_size.size = size.id where product_size.product=?");
+                ps1 = con.prepareStatement("select id,name from size inner join product_size on product_size.size = size.id where product_size.product=?");
                 ps1.setString(1, productId);
                 rs1 = ps1.executeQuery();
                 while (rs1.next()) {
-                    sizes.add(rs1.getString("name"));
+                    sizes.add(new Size(rs1.getString("id"),rs1.getString("name")));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
@@ -290,32 +290,19 @@ public class ProductRepositoryImp implements IProductRepository {
         return products;
     }
 
-    private List<String> findProductCategories(String productId) {
+    private List<Category> findProductCategories(String productId) {
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
-        List<String> categories = new ArrayList<>();
-        List<String> categoriesName = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
         if (con != null) {
             try {
-                ps1 = con.prepareStatement("select category from product_category where product=?");
+                ps1 = con.prepareStatement("select id,name from category inner join product_category on product_category.category = category.id"
+                        + " where product_category.product=?");
                 ps1.setString(1, productId);
                 rs1 = ps1.executeQuery();
                 while (rs1.next()) {
-                    categories.add(rs1.getString("category"));
+                    categories.add(new Category(rs1.getString("id"),rs1.getString("name")));
                 }
-                rs1.close();
-                ps1.close();
-                for (int i = 0; i < categories.size(); i++) {
-                    ps1 = con.prepareStatement("select name from category where id=?");
-                    ps1.setString(1, categories.get(i));
-                    rs1 = ps1.executeQuery();
-                    rs1.next();
-                    categoriesName.add(rs1.getString("name"));
-                    rs1.close();
-                    ps1.close();
-
-                }
-                return categoriesName;
             } catch (SQLException se) {
                 se.printStackTrace();
             } finally {
@@ -335,7 +322,7 @@ public class ProductRepositoryImp implements IProductRepository {
                 }
             }
         }
-        return null;
+        return categories;
     }
 
     @Override
@@ -596,6 +583,7 @@ public class ProductRepositoryImp implements IProductRepository {
     @Override
     public Product findProductBySize(String productId, String size) {
         Product product = null;
+        List<Size> sizes = getProductSizes(productId);
         if (con != null) {
             try {
                 ps = con.prepareStatement("select * from product inner join product_size on product_size.product = product.id where product.id = ?"
@@ -604,13 +592,12 @@ public class ProductRepositoryImp implements IProductRepository {
                 ps.setString(2, size);
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    List<String> sizes = new ArrayList<>();
-                    sizes.add(size);
+                    List<Size> prodSize = sizes.stream().filter(s -> s.getId().equals(size)).collect(Collectors.toList());
                     product = new Product(
                             productId,
                             rs.getString("name"),
                             rs.getString("description"),
-                            sizes,
+                            prodSize,
                             rs.getString("color"),
                             rs.getDouble("price"),
                             rs.getDouble("discountedprice"),
@@ -837,6 +824,38 @@ public class ProductRepositoryImp implements IProductRepository {
             }
         }
         return rowsAffected == 1;
+    }
+
+    @Override
+    public List<Size> findAllSizes() {
+        List<Size> sizes = new ArrayList<>();
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("select id,name from size");
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    sizes.add(new Size(rs.getString("id"), rs.getString("name")));
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return sizes;
     }
 
 }

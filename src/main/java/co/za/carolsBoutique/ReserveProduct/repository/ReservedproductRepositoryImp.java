@@ -2,6 +2,7 @@ package co.za.carolsBoutique.ReserveProduct.repository;
 
 import co.za.carolsBoutique.ReserveProduct.model.Reservedproduct;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.repository.ProductRepositoryImp;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ReservedproductRepositoryImp implements IReservedproductRepository {
 
@@ -246,13 +248,14 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                 ps.setString(2, size);
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    List<String> sizes = new ArrayList<>();
-                    sizes.add(size);
+                    List<Size> prodSize = getProductSizes(productId).stream()
+                            .filter(s -> s.getId().equalsIgnoreCase(size))
+                            .collect(Collectors.toList());
                     product = new Product(
                             rs.getString("id"),
                             rs.getString("name"),
                             rs.getString("description"),
-                            sizes,
+                            prodSize,
                             rs.getString("color"),
                             rs.getDouble("price"),
                             rs.getDouble("discountedprice"),
@@ -281,6 +284,40 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
         return product;
     }
 
+     private List<Size> getProductSizes(String productId) {
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
+        List<Size> sizes = new ArrayList<>();
+        if (con != null) {
+            try {
+                ps1 = con.prepareStatement("SELECT id,name FROM size INNER JOIN product_size ON product_size.size = size.id WHERE product_size.product=?");
+                ps1.setString(1, productId);
+                rs1 = ps1.executeQuery();
+                while (rs1.next()) {
+                    sizes.add(new Size(rs1.getString("id"),rs1.getString("name")));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (ps1 != null) {
+                    try {
+                        ps1.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (rs1 != null) {
+                    try {
+                        rs1.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return sizes;
+    }
+    
     @Override
     public List<Reservedproduct> getAllReservedproducts() {
         Connection con1 = null;

@@ -77,22 +77,6 @@ public class TestBoutiqueServiceImp {
         assertEquals("Boutique added, boutique location =Pretoria", service.registerNewBoutique(boutique));
     }
     
-     @Test//this will fail on your pc's, because the id will be generated randomly
-     //passed
-     public void testLogin() {
-         assertEquals(boutique, service.login(loginDetails));
-     }
-     
-    @Test//passed the test
-    public void testChangePassword() {
-        assertEquals("password Updated", service.changePassword(loginDetails));
-     }
-
-    @Test//
-    public void testChangeDailyTarget() {
-        assertEquals("target updated", service.changeDailyTarget(changeTarget));
-     }
-    
     @Test//
     public void testRateTheBoutique() {
         assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service", "emailAddress", "gg@gg", "1")));
