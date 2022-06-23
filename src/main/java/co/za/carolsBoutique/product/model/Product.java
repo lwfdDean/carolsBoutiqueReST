@@ -13,9 +13,60 @@ public class Product {
     private String id;
     private String name;
     private String description;
-    private List<String> sizes;
+    private List<Size> sizes;
     private String color;
     private Double price;
     private Double discountedPrice; 
-    private List<String> categories;
+    private List<Category> categories;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

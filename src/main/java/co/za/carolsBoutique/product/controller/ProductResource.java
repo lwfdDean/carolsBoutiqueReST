@@ -92,6 +92,13 @@ public class ProductResource {
     }
     
     @GET
+    @Path("/findAllSizes")////////
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findAllSizes(){
+        return Response.status(Response.Status.OK).entity(service.findAllSizes()).build();
+    }
+    
+    @GET
     @Path("/findCategory/{categoryId}")/////////
     @Produces(MediaType.APPLICATION_JSON)
     public Response findCategory(@PathParam("categoryId")String categoryId){

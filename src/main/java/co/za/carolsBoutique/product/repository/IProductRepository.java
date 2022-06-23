@@ -3,6 +3,7 @@ package co.za.carolsBoutique.product.repository;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
+import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
 import java.util.List;
 import java.util.Map;
@@ -28,5 +29,5 @@ public interface IProductRepository {
     
     PromoCode findPromo(String code);
     boolean addPromo(PromoCode promoCode);
-
+    List<Size> findAllSizes();
 }
