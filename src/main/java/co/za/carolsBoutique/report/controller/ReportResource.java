@@ -28,7 +28,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTopStoresInTermsOfSales(ReportCriteria rc){
-        pdfBuilder.findTopStoresInTermsOfSales(service.findTopStoresInTermsOfSales(rc));
+//        pdfBuilder.findTopStoresInTermsOfSales(service.findTopStoresInTermsOfSales(rc));
         return Response.status(Response.Status.OK).entity(service.findTopStoresInTermsOfSales(rc)).build();
     }
     
@@ -37,7 +37,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findHighestRatedStores(ReportCriteria rc){
-        pdfBuilder.findHighestRatedStores(service.findHighestRatedStores(rc));
+//        pdfBuilder.findHighestRatedStores(service.findHighestRatedStores(rc));
         return Response.status(Response.Status.OK).entity(service.findHighestRatedStores(rc)).build();
     }
     
@@ -46,7 +46,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findStoreMonthlySales(ReportCriteria rc){
-        pdfBuilder.findStoreMonthlySales(service.findStoreMonthlySales(rc));
+//        pdfBuilder.findStoreMonthlySales(service.findStoreMonthlySales(rc));
         return Response.status(Response.Status.OK).entity(service.findStoreMonthlySales(rc)).build();
     }
     
@@ -55,7 +55,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTopSellingEmployees(ReportCriteria rc){
-        pdfBuilder.findTopSellingEmployees(service.findTopSellingEmployees(rc));
+//        pdfBuilder.findTopSellingEmployees(service.findTopSellingEmployees(rc));
         return Response.status(Response.Status.OK).entity(service.findTopSellingEmployees(rc)).build();
     }
     
@@ -64,7 +64,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findStoreThatAchievedMonthlyTarget(ReportCriteria rc){
-        pdfBuilder.findStoreThatAchievedMonthlyTarget(service.findStoreThatAchievedMonthlyTarget(rc));
+//        pdfBuilder.findStoreThatAchievedMonthlyTarget(service.findStoreThatAchievedMonthlyTarget(rc));
         return Response.status(Response.Status.OK).entity(service.findStoreThatAchievedMonthlyTarget(rc)).build();
     }
     
@@ -72,7 +72,7 @@ public class ReportResource {
     @Path("/findTop40Products")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTop40Products(){
-        pdfBuilder.findTop40Products(service.findTop40Products());
+//        pdfBuilder.findTop40Products(service.findTop40Products());
         return Response.status(Response.Status.OK).entity(service.findTop40Products()).build();
     }
     
@@ -81,7 +81,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findUnderPerformingStores(ReportCriteria rc){
-        pdfBuilder.findUnderPerformingStores(service.findUnderPerformingStores(rc));
+//        pdfBuilder.findUnderPerformingStores(service.findUnderPerformingStores(rc));
         return Response.status(Response.Status.OK).entity(service.findUnderPerformingStores(rc)).build();
     }
     
@@ -90,7 +90,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTopSalepersonForAProduct(ReportCriteria rc){
-        pdfBuilder.findTopSalepersonForAProduct(service.findTopSalepersonForAProduct(rc));
+//        pdfBuilder.findTopSalepersonForAProduct(service.findTopSalepersonForAProduct(rc));
         return Response.status(Response.Status.OK).entity(service.findTopSalepersonForAProduct(rc)).build();
     }
     
@@ -99,7 +99,7 @@ public class ReportResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response findCurrentDailySales(ReportCriteria rc){
-        pdfBuilder.findCurrentDailySales(service.findCurrentDailySales(rc));
+//        pdfBuilder.findCurrentDailySales(service.findCurrentDailySales(rc));
         return Response.status(Response.Status.OK).entity(service.findCurrentDailySales(rc)).build();
     }
 }
