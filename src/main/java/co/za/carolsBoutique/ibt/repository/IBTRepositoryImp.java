@@ -111,7 +111,7 @@ public class IBTRepositoryImp implements IIBTRepository {
                     ibtRequests.add(new IBT(rs.getString("id"),
                             rs.getString("customerEmail"),
                             rs.getBoolean("approved"),
-                            rs.getString("productCode"),
+                            rs.getString("productcode"),
                             rs.getString("approvingBoutique"),
                             rs.getString("requestingBoutique")
                     ));
