@@ -56,8 +56,18 @@ public class TestProductServiceImp {
         sizes.add(new Size());
         product = new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2,2.00,cats);
         product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,15.00,cats);
+        sizes = new ArrayList<String>();
+        sizes.add("1");
+        sizes.add("2");
+        sizes.add("3");
+        sizes.add("4");
+        sizes.add("5");
+        sizes.add("6");
+        sizes.add("7");
+        product = new Product("thuyr45321", "Denim", "Denim Pants", sizes, "Blue", 100.90,0.00,sCats);
+        product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,15.00,sCats);
         allProducts.add(product);
-        stockEntry =new StockEntry("1234567891 22", "1", 10, "1");
+        stockEntry =new StockEntry("blden1212 32", "ao8154bb", 10, "Dl3983nl");
         //10 diget id and space and 2 diget code for size
     }
     
