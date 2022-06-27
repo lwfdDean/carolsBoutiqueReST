@@ -48,12 +48,13 @@ public class ProductRepositoryImp implements IProductRepository {
         if (con != null) {
             try {/*TODO: add a category/product*/
                 con.setAutoCommit(false);
-                ps = con.prepareStatement("INSERT INTO product(id,name,description,color,price) VALUES(?,?,?,?,?);");
+                ps = con.prepareStatement("INSERT INTO product(id,name,description,color,price,discountedPrice) VALUES(?,?,?,?,?,?)");
                 ps.setString(1, product.getId());
                 ps.setString(2, product.getName());
                 ps.setString(3, product.getDescription());
                 ps.setString(4, product.getColor());
                 ps.setDouble(5, product.getPrice());
+                ps.setDouble(6, product.getDiscountedPrice());
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     if (addProductCategory(product) && addProductSizes(product)) {
@@ -149,18 +150,10 @@ public class ProductRepositoryImp implements IProductRepository {
                     ps.setString(5, product.getSizes().get(i).getId());
                     rowsAffected += ps.executeUpdate();
                     ps.close();
-                    rs.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                if (rs != null) {
-                    try {
-                        rs.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
                 if (ps != null) {
                     try {
                         ps.close();

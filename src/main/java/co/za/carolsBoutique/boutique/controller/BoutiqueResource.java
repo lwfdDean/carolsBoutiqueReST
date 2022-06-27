@@ -14,6 +14,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/boutique")
 public class BoutiqueResource {
@@ -55,7 +56,7 @@ public class BoutiqueResource {
     }
     
     @GET
-    @Path("/findBoutqiue/{boutiqueId}")/////
+    @Path("/findBoutique/{boutiqueId}")/////
     @Produces(MediaType.APPLICATION_JSON)
     public Response findBoutique(@PathParam("boutiqueId")String boutiqueId){
         return Response.status(Response.Status.OK).entity(service.findBoutique(boutiqueId)).build();

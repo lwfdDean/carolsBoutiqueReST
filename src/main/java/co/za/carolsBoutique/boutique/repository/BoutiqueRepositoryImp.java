@@ -207,7 +207,7 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     public boolean updateBoutique(Boutique boutique) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("update boutique set dailytarget = ? & monthlytarget = ? where id = ?");
+                ps = con.prepareStatement("update boutique set dailytarget = ?, monthlytarget = ? where id = ?");
                 ps.setDouble(1, boutique.getDailyTarget());
                 ps.setDouble(2, boutique.getMonthlyTarget());
                 ps.setString(3, boutique.getId());

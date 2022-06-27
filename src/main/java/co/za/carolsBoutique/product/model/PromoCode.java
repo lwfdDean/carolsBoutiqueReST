@@ -12,7 +12,7 @@ import lombok.ToString;
 public class PromoCode {
     private String code;
     private Double discount;
-    private int type;
+    private Integer type;
     private LocalDate date;
     private String category;
 

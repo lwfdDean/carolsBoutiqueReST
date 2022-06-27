@@ -11,4 +11,5 @@ import lombok.ToString;
 public class NewProduct {
     private StockEntry stockEntry;
     private Product product;
+    private Boolean newProduct;
 }
