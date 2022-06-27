@@ -9,7 +9,6 @@ import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.product.model.Product;
 import jakarta.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +49,7 @@ public class SaleServiceImp implements IServiceSale {
     }
 
     @Override
-    public String refund(Map<String, String> refundInfo) {
+    public String refund(Map<String, String> refundInfo) {//create vrefund obj bcoz cardNum was removed + products is null
         String saleId = refundInfo.keySet().iterator().next();
         if (dao.findSaleDate(saleId).toLocalDateTime().getDayOfYear() + 10 <= LocalDateTime.now().getDayOfYear()) {
             return "10 day return policy has exceeded";

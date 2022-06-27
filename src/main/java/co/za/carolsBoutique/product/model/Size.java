@@ -8,8 +8,7 @@ import lombok.ToString;
 @Data @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewProduct {
-    private StockEntry stockEntry;
-    private Product product;
-    private Boolean newProduct;
+public class Size {
+    private String id;
+    private String name;
 }

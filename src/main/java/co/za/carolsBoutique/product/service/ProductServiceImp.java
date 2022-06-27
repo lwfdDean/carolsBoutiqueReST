@@ -4,6 +4,7 @@ import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
+import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
 import static java.lang.Math.random;
@@ -76,11 +77,11 @@ public class ProductServiceImp implements IServiceProduct{
 
     @Override//(changes needed to fulfil http://localhost:8080/carolsBoutiqueRest/CarolsBoutique/product/logStock)
     public String logStock(NewProduct newProduct) {
-        Product product = newProduct.getProduct();
         StockEntry stockEntry = newProduct.getStockEntry();
-        if (product.getId()!=null) {
+        if (newProduct.getNewProduct()) {
+            Product product = newProduct.getProduct();
             dao.addProduct(product);
-            dao.addStockEntry(stockEntry, generateStockIds(product,stockEntry.getBoutiqueId()), product);
+            dao.addStockEntry(stockEntry, generateStockIds(product), product);
         }
         String[] productEntry =stockEntry.getProductCode().split(" ");
         Map<String,Integer> entry = dao.findStockEntry(productEntry[0], stockEntry.getBoutiqueId(), productEntry[1]);
@@ -90,13 +91,13 @@ public class ProductServiceImp implements IServiceProduct{
                 "stock could not be loaded";
     }
    
-    private List<String> generateStockIds(Product product,String boutiqueId) {
+    private List<String> generateStockIds(Product product) {
         List<String> stockIds = new ArrayList<>();
         for (int i = 0; i < product.getSizes().size(); i++) {
             StringBuilder sb = new StringBuilder();
-            String cat = product.getCategories().get((int)(Math.random()*product.getCategories().size()));
+            String cat = product.getCategories().get((int)(Math.random()*product.getCategories().size())).getId();
             sb.append((int)(random()*100000+1000));
-            sb.append(product.getSizes().get((int)(Math.random()*product.getSizes().size())));
+            sb.append(product.getSizes().get((int)(Math.random()*product.getSizes().size())).getId());
             sb.append(cat.charAt((int)(Math.random()*cat.length())));
             stockIds.add(sb.toString());
         }
@@ -132,4 +133,9 @@ public class ProductServiceImp implements IServiceProduct{
         }
         return null;
     }   
+
+    @Override
+    public List<Size> findAllSizes() {
+        return dao.findAllSizes();
+    }
 }

@@ -7,8 +7,6 @@ import co.za.carolsBoutique.Sale.service.IServiceSale;
 import co.za.carolsBoutique.Sale.service.SaleIdGenerator;
 import co.za.carolsBoutique.Sale.service.SaleServiceImp;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
-import co.za.carolsBoutique.product.model.PromoCode;
-import java.util.List;
 import java.util.Map;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;

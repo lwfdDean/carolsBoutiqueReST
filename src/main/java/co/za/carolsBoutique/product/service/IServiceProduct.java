@@ -4,6 +4,7 @@ import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
+import co.za.carolsBoutique.product.model.Size;
 import java.util.List;
 import java.util.Map;
 
@@ -28,5 +29,5 @@ public interface IServiceProduct {
     
     String addNewPromoCode(PromoCode promoCode);
     PromoCode findPromoCode(String promoCode);
-    
+    List<Size> findAllSizes();
 }

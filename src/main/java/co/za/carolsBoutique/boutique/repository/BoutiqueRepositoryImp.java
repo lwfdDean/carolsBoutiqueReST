@@ -97,56 +97,6 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     }
 
     @Override
-    public boolean updateBoutique(String boutiqueId, Double dailyTarget) {
-        if (con != null) {
-            try {
-                ps = con.prepareStatement("Update boutique Set dailytarget = ? Where id = ?");
-                ps.setDouble(1, dailyTarget);
-                ps.setString(2, boutiqueId);
-
-                rowsAffected = ps.executeUpdate();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                if (ps != null) {
-                    try {
-                        ps.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return rowsAffected == 1;
-    }
-
-    @Override
-    public boolean updateBoutique(String boutiqueid, String password) {
-        if (con != null) {
-            try {
-                ps = con.prepareStatement("Update boutique Set password = ? Where id = ?");
-                ps.setString(1, password);
-                ps.setString(2, boutiqueid);
-
-                rowsAffected = ps.executeUpdate();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                if (ps != null) {
-                    try {
-                        ps.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return rowsAffected == 1;
-    }
-
-    @Override
     public boolean deleteBoutique(String boutiqueId) {
         if (con != null) {
             try {
@@ -240,6 +190,30 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return rowsAffected == 1;
+    }
+
+    @Override
+    public boolean updateBoutique(Boutique boutique) {
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("update boutique set dailytarget = ?, monthlytarget = ? where id = ?");
+                ps.setDouble(1, boutique.getDailyTarget());
+                ps.setDouble(2, boutique.getMonthlyTarget());
+                ps.setString(3, boutique.getId());
+                rowsAffected = ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
             } finally {
                 if (ps != null) {
                     try {

@@ -36,6 +36,7 @@ public class ProductResource {
     @Path("/findProduct/{productId}")//////////////
     @Produces(MediaType.APPLICATION_JSON)
     public Response findProduct(@PathParam("productId")String productId){
+        System.out.println(service.findProduct(productId).toString());
         return Response.status(Response.Status.OK).entity(service.findProduct(productId)).build();
     }
     
@@ -89,6 +90,13 @@ public class ProductResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAllCategories(){
         return Response.status(Response.Status.OK).entity(service.findAllCategories()).build();
+    }
+    
+    @GET
+    @Path("/findAllSizes")////////
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findAllSizes(){
+        return Response.status(Response.Status.OK).entity(service.findAllSizes()).build();
     }
     
     @GET
