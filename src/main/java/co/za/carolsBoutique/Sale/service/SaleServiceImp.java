@@ -49,7 +49,7 @@ public class SaleServiceImp implements IServiceSale {
     }
 
     @Override
-    public String refund(Map<String, String> refundInfo) {
+    public String refund(Map<String, String> refundInfo) {//create vrefund obj bcoz cardNum was removed + products is null
         String saleId = refundInfo.keySet().iterator().next();
         if (dao.findSaleDate(saleId).toLocalDateTime().getDayOfYear() + 10 <= LocalDateTime.now().getDayOfYear()) {
             return "10 day return policy has exceeded";
