@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.Sale.service;
 
+import co.za.carolsBoutique.EmailTemplate.EmailReader;
 import co.za.carolsBoutique.Sale.model.ExchangeInfo;
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.Sale.repository.ISaleRepository;
@@ -8,6 +9,7 @@ import co.za.carolsBoutique.mailService.MailService;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.product.model.Product;
 import jakarta.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.logging.Level;
@@ -18,8 +20,10 @@ public class SaleServiceImp implements IServiceSale {
     private ISaleRepository dao;
     private CodeGenerator gen;
     private PaymentGateway pg;
+    private EmailReader er;
 
     public SaleServiceImp(ISaleRepository dao, CodeGenerator gen, PaymentGateway pg) {
+        this.er = new EmailReader();
         this.dao = dao;
         this.gen = gen;
         this.pg = pg;
@@ -31,8 +35,11 @@ public class SaleServiceImp implements IServiceSale {
         sale.setId(id);
         sale.setApproved(pg.makePayment(sale));
         if (sale.getApproved()) {
-
-            prepareMail(sale.getCustomerEmail(), "Receipt", "bruh");
+            try {
+                prepareMail(sale.getCustomerEmail(), "Receipt", er.readInEmail("PurchaseReceipt", sale));
+            } catch (IOException ex) {
+                Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         } else {
 
