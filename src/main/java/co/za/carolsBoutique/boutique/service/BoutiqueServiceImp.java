@@ -51,8 +51,8 @@ public class BoutiqueServiceImp implements IServiceBoutique{
 
     @Override
     public String rateTheBoutique(Review review) {
-        if (review.getContactMethod()!=null && review.getContactInfo()!=null) {
-            dao.subscribeToNewsletter(review.getContactMethod(),review.getContactInfo());
+        if (review.getContactInfo()!=null) {
+            dao.subscribeToNewsletter(review.getContactInfo());
         }
         return dao.addReview(Integer.parseInt(review.getRating()),review.getComment(),review.getBoutique())?
                 "Thank you for rating our store":"an error occured";

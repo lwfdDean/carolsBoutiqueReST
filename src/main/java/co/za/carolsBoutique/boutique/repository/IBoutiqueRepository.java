@@ -9,7 +9,7 @@ public interface IBoutiqueRepository {
     boolean addBoutique(Boutique boutique);
     boolean deleteBoutique(String boutiqueId);
     boolean updateBoutique(Boutique boutique);
-    public boolean subscribeToNewsletter(String contactMethod, String contactInfo);
+    public boolean subscribeToNewsletter(String contactInfo);
 
     public boolean addReview(int rating, String comment, String boutique);
 }
