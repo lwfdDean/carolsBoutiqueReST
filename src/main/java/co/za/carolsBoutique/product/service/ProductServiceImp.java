@@ -107,8 +107,8 @@ public class ProductServiceImp implements IServiceProduct{
 
     @Override
     public Map<String, String> findStockOfProduct(String productId) {
-        
-        Product product = dao.findProduct(productId);
+        String [] prodInfo = productId.split(" ");
+        Product product = dao.findProduct(prodInfo[0]);
         return dao.findAvailabeStock(product.getId());
     }
 
