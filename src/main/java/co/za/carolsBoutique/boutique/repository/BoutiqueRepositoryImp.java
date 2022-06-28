@@ -157,12 +157,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     }
 
     @Override
-    public boolean subscribeToNewsletter(String contactMethod, String contactInfo) {
+    public boolean subscribeToNewsletter(String contactInfo) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("insert into subscriberlist(contactInfo,"+contactMethod+") values(?,?)");
+                ps = con.prepareStatement("insert into subscriberlist(contactInfo) values(?)");
                 ps.setString(1, contactInfo);
-                ps.setBoolean(2, true);
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);

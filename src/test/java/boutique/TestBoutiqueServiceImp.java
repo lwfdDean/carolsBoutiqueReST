@@ -79,7 +79,7 @@ public class TestBoutiqueServiceImp {
     
     @Test//
     public void testRateTheBoutique() {
-        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service", "emailAddress", "gg@gg","0105555555", "1")));
+        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service","gg@gg", "1")));
      }
      @Test//
     public void testUpdateBoutique() {
