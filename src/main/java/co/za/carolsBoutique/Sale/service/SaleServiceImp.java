@@ -40,7 +40,6 @@ public class SaleServiceImp implements IServiceSale {
             } catch (IOException ex) {
                 Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         } else {
 
             prepareMail(sale.getCustomerEmail(), "Payment declined", "not epic bruh");

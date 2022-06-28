@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -768,7 +769,7 @@ public class ProductRepositoryImp implements IProductRepository {
                     promoCode = new PromoCode(code,
                             rs.getDouble("discount"),
                             rs.getInt("type"),
-                            rs.getDate("expireDate").toLocalDate(),
+                            rs.getDate("expireDate").toLocalDate().toString(),
                             rs.getString("category"));
                 }
             } catch (SQLException ex) {
@@ -794,14 +795,14 @@ public class ProductRepositoryImp implements IProductRepository {
     }
 
     @Override
-    public boolean addPromo(PromoCode promoCode) {
+    public boolean addPromo(PromoCode promoCode, LocalDate expiry) {
         if (con != null) {
             try {
                 ps = con.prepareStatement("insert into promotion_code(code,discount,type,expiryDate,category) values(?,?,?,?,?)");
                 ps.setString(1, promoCode.getCode());
                 ps.setDouble(2, promoCode.getDiscount());
                 ps.setInt(3, promoCode.getType());
-                ps.setDate(4, Date.valueOf(promoCode.getDate()));
+                ps.setDate(4, Date.valueOf(expiry));
                 ps.setString(5, promoCode.getCategory());
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {

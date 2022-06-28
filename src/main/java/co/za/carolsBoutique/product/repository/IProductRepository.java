@@ -5,6 +5,7 @@ import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,6 @@ public interface IProductRepository {
     Map<String,String> findAvailabeStock(String productId);
     
     PromoCode findPromo(String code);
-    boolean addPromo(PromoCode promoCode);
+    boolean addPromo(PromoCode promoCode, LocalDate dt);
     List<Size> findAllSizes();
 }
