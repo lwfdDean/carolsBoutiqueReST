@@ -39,7 +39,7 @@ public class TestReservedproductServiceImp {
         dao = new ReservedproductRepositoryImp();
         gen = new ReservedproductIdGenerator();
         service = new ReservedproductServiceImp(dao, gen);
-        reserveProduct = new Reservedproduct("1234567891 22", "test@gmail.com", "1",LocalDateTime.now());
+        reserveProduct = new Reservedproduct("1234567891 1", "test@gmail.com", "1",LocalDateTime.now());
     }
     
     @After
@@ -52,21 +52,21 @@ public class TestReservedproductServiceImp {
 
      @Test//test passed, changed the Id in db to auto inc.
      public void testMakeReserveProduct() {
-        assertEquals("product reserved",service.makeReserveProduct(reserveProduct));
+        assertEquals("There is no stock of the product",service.makeReserveProduct(reserveProduct));
      }
      
-     @Test//Passed the test
+     @Test//Dean please help
      public void testRemoveReserveProduct() {
-        assertEquals("Deteting item successful",service.removeReserveProduct("2"));
+        assertEquals("Deteting item successful",service.removeReserveProduct("test@gmail.com"));
      }
      
      
     @Test//Passed the test
     public void testCollectKeepAside() {
         List<Size> sizes = new ArrayList<>();
-        sizes.add(new Size());
+        sizes.add(new Size("1","XXXL"));
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category());
-        assertEquals(new Product("1234567891", "PAnts", "Long pants", sizes, "Green", 50.00,30.00, categories),service.collectKeepAside("test@gmail.com"));
+        //categories.add(new Category());
+        assertEquals(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,20.2, categories),service.collectKeepAside("lol@gmail.com"));
      }
 }

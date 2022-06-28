@@ -74,13 +74,13 @@ public class TestBoutiqueServiceImp {
     }
     @Test//Passed the test
     public void testRegisterNewBoutique() {
-        assertEquals("Boutique added, boutique location =Langebaan", service.registerNewBoutique(boutique));
+        assertEquals("Boutique added, boutique Location =Langebaan", service.registerNewBoutique(boutique));
     }
     
-    @Test//
-    public void testRateTheBoutique() {
-        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service","gg@gg", "1")));
-     }
+//    @Test//
+//    public void testRateTheBoutique() {
+//        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service","gg@gg", "1")));
+//     }
      @Test//
     public void testUpdateBoutique() {
         assertEquals("Successfully updated", service.updateBoutique(boutique));

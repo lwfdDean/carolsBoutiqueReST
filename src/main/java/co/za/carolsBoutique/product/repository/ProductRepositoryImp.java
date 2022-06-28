@@ -323,7 +323,29 @@ public class ProductRepositoryImp implements IProductRepository {
     public boolean deleteProduct(String productId) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("DELETE FROM product WHERE  name=?");
+                ps = con.prepareStatement("DELETE FROM product_size WHERE  product=?");
+                ps.setString(1, productId);
+                rowsAffected = ps.executeUpdate();
+                ps.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        if (con != null) {
+            try {
+             
+                
+                ps = con.prepareStatement("DELETE FROM product_category WHERE  product=?");
+                ps.setString(1, productId);
+                rowsAffected = ps.executeUpdate();
+                ps.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        if (con != null) {
+            try {
+                ps = con.prepareStatement("DELETE FROM product WHERE id=?");
                 ps.setString(1, productId);
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException se) {
@@ -467,13 +489,11 @@ public class ProductRepositoryImp implements IProductRepository {
                 ps = con.prepareStatement("DELETE FROM product_category WHERE category = ?");
                 ps.setString(1, categoryId);
                 rowsAffected = ps.executeUpdate();
-                if (rowsAffected == 1) {
-                    ps = con.prepareStatement("DELETE FROM category WHERE id = ?");
-                    ps.setString(1, categoryId);
-                    rowsAffected = ps.executeUpdate();
-                } else {
-                    return false;
-                }
+                ps.close();
+                ps = con.prepareStatement("DELETE FROM category WHERE id = ?");
+                ps.setString(1, categoryId);
+                rowsAffected = ps.executeUpdate();
+                
 
             } catch (SQLException se) {
                 se.printStackTrace();

@@ -39,7 +39,8 @@ public class IBTServiceImp implements IServiceIBT{
     public String approveIBT(Map<String, Boolean> details) {
         String id = details.keySet().iterator().next();
         boolean value = details.get(id);
-        String managerEmail = dao.getManagerEmail(getIBT(id).getRequestingBoutique());
+        String requestingBoutique = getIBT(id).getRequestingBoutique();
+        String managerEmail = dao.getManagerEmail(requestingBoutique);
             if(value){
                 prepareMail(managerEmail, "IBT Approved", "");
             }else{
