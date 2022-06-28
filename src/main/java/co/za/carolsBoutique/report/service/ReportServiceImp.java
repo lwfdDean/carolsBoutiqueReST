@@ -14,14 +14,17 @@ public class ReportServiceImp implements IServiceReport{
         this.dao = dao;
     }
 
-    @Override
+    @Override//why do we have 2 lists? both of type report
     public List<Report> findTopStoresInTermsOfSales(ReportCriteria rc) {
         List<Report> reports = dao.findTopStoresInTermsOfSales(rc.getMonth());
+        
         Collections.sort(reports);
+        
         List<Report> results = new ArrayList<>();
         for (int i = reports.size()-1; i > reports.size()-rc.getResults()-1 ; i--) {
             results.add(reports.get(i));
         }
+        System.out.println("checking if execution reaches find to stores");
         return results;
     }
     

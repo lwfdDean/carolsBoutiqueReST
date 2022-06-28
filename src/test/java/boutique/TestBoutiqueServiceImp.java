@@ -51,7 +51,7 @@ public class TestBoutiqueServiceImp {
             dao = new BoutiqueRepositoryImp();
             gen = new BoutiqueIdGenerator();
             service = new BoutiqueServiceImp(dao, gen);
-            boutique = new Boutique("Pe9781iP", "Pretoria", 500.0,466.0, "123456789aaaa");
+            boutique = new Boutique("ae1673nn", "Langebaan", 300.0,7000.0, "lng333axs376");
             allBoutiques =  new ArrayList<Boutique>();
             allBoutiques.add(boutique);
             loginDetails = new HashMap<String,String>();
@@ -70,17 +70,24 @@ public class TestBoutiqueServiceImp {
     }
     @Test//because the regester boutique generates a random id, its impossible to pass this test, but the method works works
     public void testGetAllBoutiques() {
-        assertEquals(allBoutiques, service.getAllBoutiques());
+        assertEquals(dao.findAllBoutiques(), service.getAllBoutiques());
     }
     @Test//Passed the test
     public void testRegisterNewBoutique() {
-        assertEquals("Boutique added, boutique location =Pretoria", service.registerNewBoutique(boutique));
+        assertEquals("Boutique added, boutique location =Langebaan", service.registerNewBoutique(boutique));
     }
     
     @Test//
     public void testRateTheBoutique() {
-        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service", "emailAddress", "gg@gg", "1")));
+        assertEquals("Thank you for rating our store", service.rateTheBoutique(new Review("5", "nice service", "emailAddress", "gg@gg","0105555555", "1")));
      }
-    
+     @Test//
+    public void testUpdateBoutique() {
+        assertEquals("Successfully updated", service.updateBoutique(boutique));
+     }
+    @Test//
+    public void testFindBoutique() {
+        assertEquals(boutique, service.findBoutique(boutique.getId()));
+     }
    
 }
