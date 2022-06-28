@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.EmailTemplate;
 
+import co.za.carolsBoutique.Sale.model.ExchangeInfo;
 import co.za.carolsBoutique.Sale.model.Sale;
 import co.za.carolsBoutique.ibt.model.IBT;
 import co.za.carolsBoutique.product.model.Product;
@@ -125,7 +126,7 @@ public class EmailReader {
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"AmmendedReceiptExchange":
-                sale = (Sale)source;
+                ExchangeInfo exchangeInfo = (ExchangeInfo)source;
                 try{
                     content = new StringBuilder();
                     file = new File("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
@@ -145,19 +146,17 @@ public class EmailReader {
                             dis.readLine();
                             dis.readLine();
                             holder+="\n";
-                            for (int i = 0; i < sale.getItems().size(); i++) {
-                                holder+="                                                        <td>"+sale.getItems().get(i).getName() +"</td>\n";
-                                holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getPrice() +"</td>\n";
-                                if(sale.getItems().get(i).getDiscountedPrice()!=null){
-                                    holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getDiscountedPrice() +"</td>\n";
-                                }else{
-                                    holder+="                                                        <td class=\"text-center\">"+0 +"</td>\n";
-                                }
-                                holder+="                                                    </tr>\n";
-                                if(i!=sale.getItems().size()){
-                                    holder+="                                                    <tr height=\"35px\">\n";
-                                }
-                            }  
+                            holder+="                                                        <td>"+exchangeInfo.getNewProductId()+" *new Item"+"</td>\n";
+                            holder+="                                                        <td class=\"text-center\">"+exchangeInfo.getPrice() +"</td>\n";
+                            holder+="                                                        <td class=\"text-center\">"+0 +"</td>\n";
+                            holder+="                                                    </tr>\n";
+                            holder+="                                                    <tr height=\"35px\">\n";holder+="                                                        <td>"+exchangeInfo.getNewProductId()+" *new Item"+"</td>\n";
+                            holder+="                                                        <td>"+exchangeInfo.getReturnedProductId()+" *exchanged Item"+"</td>\n";
+
+                            holder+="                                                        <td class=\"text-center\">"+exchangeInfo.getPrice() +"</td>\n";
+                            holder+="                                                        <td class=\"text-center\">"+0 +"</td>\n";
+                            holder+="                                                    </tr>\n";
+                            
                         }
                         if(holder.contains("*")){
                             String firstHalf = "";
@@ -167,33 +166,27 @@ public class EmailReader {
                                 if(holder.charAt(i)=='*'){
                                     if(holder.charAt(i+1)=='1'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getId();
+                                        middle = exchangeInfo.getSaleId();
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='2'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getEmployee();
+                                        middle = "";
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='3'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getBoutique();
+                                        middle = "";
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='8'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getTotalPrice().toString();
+                                        middle = exchangeInfo.getPrice().toString();
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='9'){
-                                        List<Product> items = sale.getItems();
-                                        for (int j = 0; j < items.size(); j++) {
-                                            if(items.get(j)!=null){
-                                                discount += items.get(j).getDiscountedPrice();
-                                            }   
-                                        }
                                         firstHalf = holder.substring(0, i);
-                                        middle = discount+"";
+                                        middle = "";
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='1'){
@@ -207,7 +200,7 @@ public class EmailReader {
                                         if(holder.charAt(i+2)=='1'){
                                             System.out.println("Discount = " +discount);
                                             firstHalf = holder.substring(0, i);
-                                            Double d = sale.getTotalPrice()+(sale.getTotalPrice()*0.15)-discount;
+                                            Double d = 0.0;
                                             middle = d.toString();
                                             secondHalf = holder.substring(i+3);
                                         }

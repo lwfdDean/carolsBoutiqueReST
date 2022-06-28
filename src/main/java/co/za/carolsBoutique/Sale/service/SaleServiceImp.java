@@ -87,7 +87,11 @@ public class SaleServiceImp implements IServiceSale {
         boolean b = dao.updateSaleLineItem(exchangeInfo.getSaleId(), exchangeInfo.getReturnedProductId(),
                 exchangeInfo.getNewProductId(), exchangeInfo.getPrice());
         if (b) {
-            prepareMail(exchangeInfo.getCustomerEmail(), "Exchange", "");
+            try {
+                prepareMail(exchangeInfo.getCustomerEmail(), "Exchange", er.readInEmail("AmmendedReceiptExchange", exchangeInfo));
+            } catch (IOException ex) {
+                Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return "Exchange Successful";
         }
         return "exchange Failed";
