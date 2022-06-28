@@ -77,11 +77,11 @@ public class EmployeeResource {
         return Response.status(Response.Status.OK).entity(service.getAllRoles()).build();
     }
 
-    @Path("/verifyManagerCode")/////////////
-    @POST
+    @Path("/verifyManagerCode/{code}")/////////////
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response verifyManagerCode(Map<String, String> managerCode) {
+    public Response verifyManagerCode(@PathParam("code")String managerCode) {
         return Response.status(Response.Status.OK)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Credentials", "true")

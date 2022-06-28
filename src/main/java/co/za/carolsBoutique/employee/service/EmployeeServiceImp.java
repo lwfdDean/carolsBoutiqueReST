@@ -120,8 +120,9 @@ public class EmployeeServiceImp implements IServiceEmployee{
     }    
 
     @Override
-    public String verifyManagerCode(Map<String, String> managerCode) {
-            if(dao.verifyManagerCode(managerCode)){
+    public String verifyManagerCode(String managerCode) {
+        String[] info = managerCode.split("@");
+            if(dao.verifyManagerCode(info[0],info[1])){
                     return "Code valid";
             }
             return "Code invalid";

@@ -19,5 +19,5 @@ public interface IEmployeeRepository {
     boolean addRole(Role role);
     boolean deleteRole(String roleId);
 	
-	boolean verifyManagerCode(Map<String, String> managerInformation);
+	boolean verifyManagerCode(String store,String managerCode);
 }

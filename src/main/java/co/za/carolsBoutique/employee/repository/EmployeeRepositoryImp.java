@@ -414,10 +414,8 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
     }
 
     @Override
-    public boolean verifyManagerCode(Map<String, String> managerInformation) {
+    public boolean verifyManagerCode(String boutiqueId,String managersUniqueCode) {
         boolean verified = false;
-        String boutiqueId = managerInformation.keySet().iterator().next();
-        String managersUniqueCode = managerInformation.get(boutiqueId);
         if (con != null) {
             try {
                 ps = con.prepareStatement("SELECT id FROM employee WHERE boutique = ? AND managerUniqueCode = ?");
