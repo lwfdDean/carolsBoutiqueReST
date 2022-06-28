@@ -1,9 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package co.za.carolsBoutique.mailService;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -12,7 +11,9 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 
@@ -55,10 +56,17 @@ public class MailService{
         session.setDebug(true);
         
         Message message = new MimeMessage(session);
+        MimeMultipart mmp = new MimeMultipart();
+        DataSource ds = new FileDataSource("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\images\\carolsboutique.png");
         message.setFrom(new InternetAddress(senderEmailId));
         message.setSubject(this.emailSubject);
         message.setText(emailBody);
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.receiverEmail));
+        MimeBodyPart content = new MimeBodyPart();
+        content.setText(emailBody,"utf-8","html");
+        mmp.addBodyPart(content);
+        content.setDataHandler(new DataHandler(ds));
+        message.setContent(mmp);
         
         Transport.send(message);
     }

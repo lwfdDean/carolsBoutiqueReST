@@ -20,119 +20,140 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/product")
 public class ProductResource {
+
     private IServiceProduct service;
-    public ProductResource(){
+
+    public ProductResource() {
         this.service = new ProductServiceImp(new ProductRepositoryImp());
     }
-   
+
     @GET
     @Path("/findAllProducts")////////////////
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllProducts(){
+    public Response findAllProducts() {
         return Response.status(Response.Status.OK).entity(service.findAllProducts()).build();
     }
-    
+
     @GET
     @Path("/findProduct/{productId}")//////////////
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findProduct(@PathParam("productId")String productId){
-        return Response.status(Response.Status.OK).entity(service.findProduct(productId)).build();
+    public Response findProduct(@PathParam("productId") String productId) {
+        System.out.println(service.findProduct(productId).toString());
+        return Response.status(Response.Status.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Headers",
+                        "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Methods",
+                        "GET, POST, PUT, DELETE, OPTIONS, HEAD").entity(service.findProduct(productId)).build();
     }
-    
+
     @GET
     @Path("/findProductBySize/{productCode}")//////////////
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findProductBySize(@PathParam("productCode")String productCode){
-        return Response.status(Response.Status.OK).entity(service.findProductBySize(productCode)).build();
+    public Response findProductBySize(@PathParam("productCode") String productCode) {
+        return Response.status(Response.Status.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Headers",
+                        "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Methods",
+                        "GET, POST, PUT, DELETE, OPTIONS, HEAD").entity(service.findProductBySize(productCode)).build();
     }
-     
+
     @POST
     @Path("/logStock")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response logStock(NewProduct newProduct){
+    public Response logStock(NewProduct newProduct) {
         return Response.status(Response.Status.OK).entity(service.logStock(newProduct)).build();
     }
-    
+
     @DELETE//cant delete the product, the product id will have to be removed from every table.
     @Path("/deleteProduct/{productId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteProduct(@PathParam("productId") String productId){
+    public Response deleteProduct(@PathParam("productId") String productId) {
         return Response.status(Response.Status.OK).entity(service.deleteProduct(productId)).build();
     }
-    
+
     @POST
     @Path("/putProductOnSale")///////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response putProductOnSale(Map<String, Double> productNameNewPrice){
-        return Response.status(Response.Status.OK).entity(service.putProductOnSale(productNameNewPrice)).build();
+    public Response putProductOnSale(Map<String, Double> productNameNewPrice) {
+        return Response.status(Response.Status.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Headers",
+                        "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Methods",
+                        "GET, POST, PUT, DELETE, OPTIONS, HEAD").entity(service.putProductOnSale(productNameNewPrice)).build();
     }
-    
+
     @POST
     @Path("/SearchForItem")///////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response SerachForItem(List<String> categoriesId){
+    public Response SerachForItem(List<String> categoriesId) {
         return Response.status(Response.Status.OK).entity(service.SerachForItem(categoriesId)).build();
     }
-    
+
     @GET
     @Path("/findAvailableStock/{productId}")//it works but it might change me might need an object, return where stock is, the product, size and store location.
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAvailableStock(@PathParam("productId")String productId){
+    public Response findAvailableStock(@PathParam("productId") String productId) {
         return Response.status(Response.Status.OK).entity(service.findStockOfProduct(productId)).build();
     }
-    
+
     @GET
     @Path("/findAllCategories")////////
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllCategories(){
+    public Response findAllCategories() {
         return Response.status(Response.Status.OK).entity(service.findAllCategories()).build();
     }
-    
+
     @GET
     @Path("/findAllSizes")////////
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllSizes(){
+    public Response findAllSizes() {
         return Response.status(Response.Status.OK).entity(service.findAllSizes()).build();
     }
-    
+
     @GET
     @Path("/findCategory/{categoryId}")/////////
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findCategory(@PathParam("categoryId")String categoryId){
+    public Response findCategory(@PathParam("categoryId") String categoryId) {
         return Response.status(Response.Status.OK).entity(service.findCategory(categoryId)).build();
-   }
-   
+    }
+
     @POST
     @Path("/addCategory")////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addCategory(Category category){
+    public Response addCategory(Category category) {
         return Response.status(Response.Status.OK).entity(service.addCategory(category)).build();
     }
-    
+
     //deleteCategory
     @DELETE
     @Path("/deleteCategory/{categoryId}")//will have to remove all other keys
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCategory(@PathParam("categoryId")String categoryId){
+    public Response deleteCategory(@PathParam("categoryId") String categoryId) {
         return Response.status(Response.Status.OK).entity(service.deleteCategory(categoryId)).build();
     }
-    
+
     @POST
     @Path("/addNewPromoCode")//////////
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addNewPromoCode(PromoCode promocode){
+    public Response addNewPromoCode(PromoCode promocode) {
         return Response.status(Response.Status.OK).entity(service.addNewPromoCode(promocode)).build();
     }
-    
+
     @GET
     @Path("/findPromoCode/{promocode}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findPromoCode(@PathParam("promocode")String promocode){
+    public Response findPromoCode(@PathParam("promocode") String promocode) {
         return Response.status(Response.Status.OK).entity(service.findPromoCode(promocode)).build();
     }
 }

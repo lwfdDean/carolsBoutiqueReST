@@ -45,19 +45,18 @@ public class SaleRepositoryImp implements ISaleRepository {
         if (con != null) {
             try {
                 con.setAutoCommit(false);
-                ps = con.prepareStatement("INSERT INTO sale(id, approved, totalPrice, employee, boutique, cardNumber)"
-                        + " VALUES(?, ?, ?, ?, ?, ?)");
+                ps = con.prepareStatement("INSERT INTO sale(id, approved, totalPrice, employee, boutique)"
+                        + " VALUES(?, ?, ?, ?, ?)");
                 ps.setString(1, sale.getId());
                 ps.setBoolean(2, sale.getApproved());
                 ps.setDouble(3, sale.getTotalPrice());
                 ps.setString(4, sale.getEmployee());
                 ps.setString(5, sale.getBoutique());
-                ps.setString(6, sale.getCardNumber());
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     int total = 0;
                     for (Product p : sale.getItems()) {
-                        if (p.getDiscountedPrice()!=null) {
+                        if (p.getDiscountedPrice()!=0.0) {
                             if (addSaleLineItem(sale.getId(), p.getId(),p.getDiscountedPrice())) {
                                 total++;
                             }

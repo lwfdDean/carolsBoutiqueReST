@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,12 +26,94 @@ public class EmailReader {
                 Sale sale = (Sale)source;
                 try{
                     content = new StringBuilder();
-                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\PurchaseReceipt.txt");
+                    file = new File("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
                     fis = new FileInputStream(file);
                     dis = new BufferedReader(new InputStreamReader(fis));
                     String holder = "";
-                    while (holder!=null) {                        
+                    double discount = 0.0;
+                    while (true) {                        
                         holder = dis.readLine();
+                        if(holder==null){
+                            break;
+                        }
+                        if (holder.contains("<tr height=\"35px\">")) {
+                            dis.readLine();
+                            dis.readLine();
+                            dis.readLine();
+                            dis.readLine();
+                            dis.readLine();
+                            for (int i = 0; i < sale.getItems().size(); i++) {
+                                holder+="                                                        <td>"+sale.getItems().get(i).getName() +"</td>\n";
+                                holder+="                                                        <td class=\"text-center\">"+1 +"</td>\n";
+                                holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getPrice() +"</td>\n";
+                                if(sale.getItems().get(i).getDiscountedPrice()!=null){
+                                    holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getDiscountedPrice() +"</td>\n";
+                                }else{
+                                    holder+="                                                        <td class=\"text-center\">"+0 +"</td>\n";
+                                }
+                                holder+="                                                    </tr>\n";
+                                if(i!=sale.getItems().size()){
+                                    holder+="                                                    <tr height=\"35px\">\n";
+                                }
+                            }  
+                        }
+                        if(holder.contains("*")){
+                            String firstHalf = "";
+                            String secondHalf = "";
+                            String middle = "";
+                            for (int i = 0; i < holder.length(); i++) {
+                                if(holder.charAt(i)=='*'){
+                                    if(holder.charAt(i+1)=='1'){
+                                        firstHalf = holder.substring(0, i);
+                                        middle = sale.getId();
+                                        secondHalf = holder.substring(i+2);
+                                    }
+                                    if(holder.charAt(i+1)=='2'){
+                                        firstHalf = holder.substring(0, i);
+                                        middle = sale.getEmployee();
+                                        secondHalf = holder.substring(i+2);
+                                    }
+                                    if(holder.charAt(i+1)=='3'){
+                                        firstHalf = holder.substring(0, i);
+                                        middle = sale.getBoutique();
+                                        secondHalf = holder.substring(i+2);
+                                    }
+                                    if(holder.charAt(i+1)=='8'){
+                                        firstHalf = holder.substring(0, i);
+                                        middle = sale.getTotalPrice().toString();
+                                        secondHalf = holder.substring(i+2);
+                                    }
+                                    if(holder.charAt(i+1)=='9'){
+                                        List<Product> items = sale.getItems();
+                                        for (int j = 0; j < items.size(); j++) {
+                                            if(items.get(j)!=null){
+                                                discount += items.get(j).getDiscountedPrice();
+                                            }   
+                                        }
+                                        firstHalf = holder.substring(0, i);
+                                        middle = discount+"";
+                                        secondHalf = holder.substring(i+2);
+                                    }
+                                    if(holder.charAt(i+1)=='1'){
+                                        if(holder.charAt(i+2)=='0'){
+                                            firstHalf = holder.substring(0, i);
+                                            middle = "15%";
+                                            secondHalf = holder.substring(i+3);
+                                        }
+                                    }
+                                    if(holder.charAt(i+1)=='1'){
+                                        if(holder.charAt(i+2)=='1'){
+                                            System.out.println("Discount = " +discount);
+                                            firstHalf = holder.substring(0, i);
+                                            Double d = sale.getTotalPrice()+(sale.getTotalPrice()*0.15)-discount;
+                                            middle = d.toString();
+                                            secondHalf = holder.substring(i+3);
+                                        }
+                                    }
+                                }
+                            }
+                            holder = firstHalf+middle+secondHalf;
+                        }
                         content.append(holder+"\n");
                     }
                 } catch (FileNotFoundException ex) {

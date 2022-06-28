@@ -9,6 +9,7 @@ import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
 import static java.lang.Math.random;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,8 @@ public class ProductServiceImp implements IServiceProduct{
     }
 
     @Override
-    public Product findProduct(String productId) {
-        return dao.findProduct(productId);
+    public Product findProduct(String productCode) {
+        return dao.findProduct(productCode.substring(0, 10));
     }
 
     @Override
@@ -77,11 +78,11 @@ public class ProductServiceImp implements IServiceProduct{
 
     @Override//(changes needed to fulfil http://localhost:8080/carolsBoutiqueRest/CarolsBoutique/product/logStock)
     public String logStock(NewProduct newProduct) {
-        Product product = newProduct.getProduct();
         StockEntry stockEntry = newProduct.getStockEntry();
-        if (product.getId()!=null) {
+        if (newProduct.getNewProduct()) {
+            Product product = newProduct.getProduct();
             dao.addProduct(product);
-            dao.addStockEntry(stockEntry, generateStockIds(product,stockEntry.getBoutiqueId()), product);
+            dao.addStockEntry(stockEntry, generateStockIds(product), product);
         }
         String[] productEntry =stockEntry.getProductCode().split(" ");
         Map<String,Integer> entry = dao.findStockEntry(productEntry[0], stockEntry.getBoutiqueId(), productEntry[1]);
@@ -91,13 +92,13 @@ public class ProductServiceImp implements IServiceProduct{
                 "stock could not be loaded";
     }
    
-    private List<String> generateStockIds(Product product,String boutiqueId) {
+    private List<String> generateStockIds(Product product) {
         List<String> stockIds = new ArrayList<>();
         for (int i = 0; i < product.getSizes().size(); i++) {
             StringBuilder sb = new StringBuilder();
             String cat = product.getCategories().get((int)(Math.random()*product.getCategories().size())).getId();
             sb.append((int)(random()*100000+1000));
-            sb.append(product.getSizes().get((int)(Math.random()*product.getSizes().size())));
+            sb.append(product.getSizes().get((int)(Math.random()*product.getSizes().size())).getId());
             sb.append(cat.charAt((int)(Math.random()*cat.length())));
             stockIds.add(sb.toString());
         }
@@ -122,13 +123,23 @@ public class ProductServiceImp implements IServiceProduct{
         if (promoCode.getCode() == null || promoCode.getCode().isEmpty() || promoCode.getCode().length()<6) {
             return "The promocode provided is invalid";
         }
-        return dao.addPromo(promoCode)?"Promo added":"failed to add promo";
+        String[] expiry = promoCode.getDate().split("-");
+        LocalDate dt = LocalDate.of(
+                Integer.parseInt(expiry[0]), 
+                Integer.parseInt(expiry[1]), 
+                Integer.parseInt(expiry[2]));
+        return dao.addPromo(promoCode,dt)?"Promo added":"failed to add promo";
     }
 
     @Override
     public PromoCode findPromoCode(String promoCode) {
         PromoCode pc = dao.findPromo(promoCode);
-        if (LocalDate.now().isBefore(pc.getDate()) || LocalDate.now().isEqual(pc.getDate())) {
+        String[] expiry = pc.getDate().split("-");
+        LocalDate dt = LocalDate.of(
+                Integer.parseInt(expiry[0]), 
+                Integer.parseInt(expiry[1]), 
+                Integer.parseInt(expiry[2]));
+        if (LocalDate.now().isBefore(dt) || LocalDate.now().isEqual(dt)) {
             return pc;
         }
         return null;
