@@ -218,7 +218,7 @@ public class SaleRepositoryImp implements ISaleRepository {
                 }
                 ps3.close();
                 rs3.close();
-                ps3 = con.prepareStatement("select price,product from sale_line_item where sale = ?");
+                ps3 = con.prepareStatement("select price, product from sale_line_item where sale = ?");
                 ps3.setString(1, saleId);
                 rs3 = ps3.executeQuery();
                 while (rs3.next()) {                    
@@ -291,7 +291,7 @@ public class SaleRepositoryImp implements ISaleRepository {
         List<Category> categories = new ArrayList<>();
         if (con != null) {
             try {
-                ps2 = con.prepareStatement("SELECT id,name FROM category INNER JOIN product_category ON product_category.size = category.id"
+                ps2 = con.prepareStatement("SELECT id,name FROM category INNER JOIN product_category ON product_category.category = category.id"
                         + " WHERE product_category.product=?");
                 ps2.setString(1, productId);
                 rs2 = ps2.executeQuery();
