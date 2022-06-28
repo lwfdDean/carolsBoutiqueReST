@@ -131,7 +131,8 @@ public class TestEmployeeServiceImp {
          //boutique, code
          Map<String,String> codeCheckInfo = new HashMap<>();
          codeCheckInfo.put("1", "2");
-         assertEquals("Code valid",employeeService.verifyManagerCode(codeCheckInfo));
+         String a = "bb;vv";
+         assertEquals("Code valid",employeeService.verifyManagerCode(a));
      }
      
 }
