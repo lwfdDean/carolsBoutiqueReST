@@ -19,7 +19,7 @@ public class MessageService extends Thread{
     public MessageService(String cellPhoneNumber, String message) {
         this.cellPhoneNumber = cellPhoneNumber;
         this.message = message;
-        this.user = "Group1";
+        this.user = "GROUP1";
         this.password = "group1";
     }
 
@@ -40,33 +40,16 @@ public class MessageService extends Thread{
     private synchronized String buildMessage(){
         StringBuilder sb = new StringBuilder();
         List<String> tags = List.of(
-                "<smsreq>",
-                "<datetime>","</datetime>",
-                "<user>","</user>",
-                "<pass>","</pass>",
-                "<msisdn>","</msisdn>",
-                "<message>","</message>",
+                "<smsreq>"+
+                "<datetime>"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/mm/dd,hh,mm,ss"))+"</datetime>"+
+                "<user>"+this.user+"</user>"+
+                "<pass>"+this.password+"</pass>"+
+                "<msisdn>"+this.cellPhoneNumber+"</msisdn>"+
+                "<message>"+this.message+"</message>",
                 "</smsreq>"
         );
         for (String tag : tags) {
             sb.append(tag);
-            switch (tag) {
-                case "<datetime>":
-                    sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/mm/dd,hh,mm,ss")));
-                    break;
-                case "<user>":
-                    sb.append(user);
-                    break;
-                case "<pass>":
-                    sb.append(password);
-                    break; 
-                case "<msisdn>":
-                    sb.append(cellPhoneNumber);
-                    break;
-                case "<message>":
-                    sb.append(message);
-                    break;    
-            }
         }
         return sb.toString();
     }

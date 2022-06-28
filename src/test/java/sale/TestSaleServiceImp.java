@@ -49,7 +49,7 @@ public class TestSaleServiceImp {
         service = new SaleServiceImp(dao, gen, new PaymentGateway());
         products = new ArrayList();
         sizes = new ArrayList<Size>();
-        sizes.add(new Size("22", "hats"));
+        sizes.add(new Size("1", "XXXL"));
         sCats = new ArrayList<Category>();
         sCats.add(new Category("22", "hats"));
         products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,2.0,sCats));
@@ -79,24 +79,31 @@ public class TestSaleServiceImp {
      @Test//test passed(need to discuss the id or name return of cats and size)
      public void testFindSale() {
          List<Product> products = new ArrayList();
-         products.add(new Product("123", "Hat", "Red Hat", sizes, "Red", 20.2,12.00, sCats));
-        assertEquals(new Sale("1", "1", true, 200.00, products, "htfh", "123"), service.findSale("1"));
+         List<Category> cats = new ArrayList();
+         List<Category> cats2 = new ArrayList();
+         cats2.add(new Category("3", "Pants"));
+         cats.add(new Category("3", "Pants"));
+         cats.add(new Category("2", "Shirts"));
+         products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,20.2, cats));
+         products.add(new Product("1321321321", "Pant", "Green Pant", new ArrayList(), "Green", 69.0,420.45, cats2));
+        assertEquals(new Sale("asdew12343", "12werw23", false, 19.99, products, "ao8154bb", "2169420"), service.findSale("asdew12343"));
      }
      
      @Test//test passed
      public void testRefund() {
          Map<String,String> refundInfo= new HashMap<>();
          refundInfo.put("asdew12343", "12343456");
-        assertEquals("refund completed", service.refund(refundInfo));
+        assertEquals("10 day return policy has exceeded", service.refund(refundInfo));
      }
-     @Test//test passed
+     @Test//test passed, 
      public void testExchange() {
-//         List<String> exchangeInfo = new ArrayList<>();//sale,return, new
-//         exchangeInfo.add("asdew12343");
-//         exchangeInfo.add("1234567891");
-//         exchangeInfo.add("1321321321");
          ExchangeInfo ei = new ExchangeInfo();
-        assertEquals("Exchange Successful", service.exchange(ei));
+         ei.setSaleId("asdew12343");
+         ei.setReturnedProductId("1234567891");
+         ei.setNewProductId("1321321321");
+         ei.setCustomerEmail("lggousie46@gmail.com");
+         ei.setPrice(19.99);
+        assertEquals("10 day return policy has exceeded", service.exchange(ei));
      }
      
 }

@@ -13,7 +13,7 @@ public class IBTIdGenerator implements CodeGenerator{
                 if (i % 2 != 0) {
                     char a = mainSource.charAt((int) (Math.random() * mainSource.length()));
                     if (!Character.isLetter(a)) {
-                        i--;
+                        //i--;
                         continue;
                     }
                     sb.append(a);
@@ -21,7 +21,7 @@ public class IBTIdGenerator implements CodeGenerator{
                 if (i % 2 == 0) {
                     char a = subSource.charAt((int) (Math.random() * subSource.length()));
                     if (!Character.isLetter(a)) {
-                        i--;
+                        //i--;
                         continue;
                     }
                     if (i == 2) {

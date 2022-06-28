@@ -37,7 +37,7 @@ public class IBTRepositoryImp implements IIBTRepository {
     public boolean addIBT(IBT ibt) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("insert into ibt(id,customerEmail,approved,productCode,requestingBoutique,approvingBoutique) values(?,?,?,?,?,?)");
+                ps = con.prepareStatement("insert into ibt(id,customerEmail,approved,productcode,requestingBoutique,approvingBoutique) values(?,?,?,?,?,?)");
                 ps.setString(1, ibt.getId());
                 ps.setString(2, ibt.getCustomerEmail());
                 ps.setBoolean(3, ibt.getApproved());

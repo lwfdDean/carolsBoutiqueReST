@@ -30,6 +30,9 @@ public class ReservedproductServiceImp implements IServiceReservedproduct {
     public String makeReserveProduct(Reservedproduct reserveProduct) {
         String[] productInfo = reserveProduct.getProductCode().split(" ");
         Map<String, Integer> entry = dao.findStockEntry(productInfo[0], reserveProduct.getBoutiqueId(), productInfo[1]);
+        if(entry.size()==0){
+            return "There is no stock of the product";
+        }
         String id = entry.keySet().iterator().next();
         return dao.addReserveProduct(reserveProduct, id, entry.get(id)) ? "product reserved" : "error occured";
     }
