@@ -18,6 +18,6 @@ public interface IServiceEmployee {
     Role getRole(String roleId);
     String addRole(Role role);
 
-    String verifyManagerCode(Map<String, String> managerCode);
+    String verifyManagerCode(String managerCode);
     
 }

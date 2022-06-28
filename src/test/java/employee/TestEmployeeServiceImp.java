@@ -126,16 +126,12 @@ public class TestEmployeeServiceImp {
 //         assertEquals("Success",employeeService.addRole(new Role("6","Sweeper",3)));
 //     }
      
-     
-                
-     
-     //dean changed the method after test was done, needs to be done over
-//     @Test//Passed the test
-//     public void testVerifyManagerCode(){
-//         //boutique, code
-//         Map<String,String> codeCheckInfo = new HashMap<>();
-//         codeCheckInfo.put("aa6082aa", "2");
-//         assertEquals("Code valid",employeeService.verifyManagerCode(codeCheckInfo));
-//     }
-     
+     @Test//Passed the test
+     public void testVerifyManagerCode(){
+         //boutique, code
+         Map<String,String> codeCheckInfo = new HashMap<>();
+         codeCheckInfo.put("1", "2");
+         String a = "bb;vv";
+         assertEquals("Code valid",employeeService.verifyManagerCode(a));
+     }
 }
