@@ -42,9 +42,9 @@ public class EmailReader {
                             dis.readLine();
                             dis.readLine();
                             dis.readLine();
+                            holder+="\n";
                             for (int i = 0; i < sale.getItems().size(); i++) {
                                 holder+="                                                        <td>"+sale.getItems().get(i).getName() +"</td>\n";
-                                holder+="                                                        <td class=\"text-center\">"+1 +"</td>\n";
                                 holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getPrice() +"</td>\n";
                                 if(sale.getItems().get(i).getDiscountedPrice()!=null){
                                     holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getDiscountedPrice() +"</td>\n";
@@ -163,97 +163,27 @@ public class EmailReader {
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"KeepAside36":
                 Product product = (Product)source;
-                try{
-                    content = new StringBuilder();
-                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\KeepAside36.txt");
-                    fis = new FileInputStream(file);
-                    dis = new BufferedReader(new InputStreamReader(fis));
-                    String holder = "";
-                    while (holder!=null) {                        
-                        holder = dis.readLine();
-                        content.append(holder+"\n");
-                    }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(EmailReader.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                    dis.close();
-                }
+                content = new StringBuilder("Your keep aside request have been approved for "+product.getName()+"\nYou have 36 hours to collect it");
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"KeepAside24":
                 product = (Product)source;
-                try{
-                    content = new StringBuilder();
-                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\KeepAside24.txt");
-                    fis = new FileInputStream(file);
-                    dis = new BufferedReader(new InputStreamReader(fis));
-                    String holder = "";
-                    while (holder!=null) {                        
-                        holder = dis.readLine();
-                        content.append(holder+"\n");
-                    }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(EmailReader.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                    dis.close();
-                }
+                content = new StringBuilder("Your keep aside request have been approved for "+product.getName()+"\nYou have 24 hours to collect it");
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"KeepAside12":
                 product = (Product)source;
-                try{
-                    content = new StringBuilder();
-                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\KeepAside12.txt");
-                    fis = new FileInputStream(file);
-                    dis = new BufferedReader(new InputStreamReader(fis));
-                    String holder = "";
-                    while (holder!=null) {                        
-                        holder = dis.readLine();
-                        content.append(holder+"\n");
-                    }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(EmailReader.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                    dis.close();
-                }
+                content = new StringBuilder("Your keep aside request have been approved for "+product.getName()+"\nYou have 12 hours to collect it");
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"KeepAsideExpired":
                 product = (Product)source;
-                try{
-                    content = new StringBuilder();
-                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\KeepAsideExpired.txt");
-                    fis = new FileInputStream(file);
-                    dis = new BufferedReader(new InputStreamReader(fis));
-                    String holder = "";
-                    while (holder!=null) {                        
-                        holder = dis.readLine();
-                        content.append(holder+"\n");
-                    }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(EmailReader.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                    dis.close();
-                }
+                content = new StringBuilder("Your keep aside request has expired, please come again!");
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"IbtRequest":
                 IBT ibt = (IBT)source;
-                try{
-                    content = new StringBuilder();
-                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\IbtRequest.txt");
-                    fis = new FileInputStream(file);
-                    dis = new BufferedReader(new InputStreamReader(fis));
-                    String holder = "";
-                    while (holder!=null) {                        
-                        holder = dis.readLine();
-                        content.append(holder+"\n");
-                    }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(EmailReader.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                    dis.close();
-                }
+                content = new StringBuilder(ibt.getRequestingBoutique()+" has requested an IBT for product("+ibt.getProductCode()+") from "+ibt.getApprovingBoutique()+"\nPlease go on the system and ");
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"IbtApprove":

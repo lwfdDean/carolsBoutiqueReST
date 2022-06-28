@@ -7,7 +7,9 @@ import co.za.carolsBoutique.Sale.repository.SaleRepositoryImp;
 import co.za.carolsBoutique.Sale.service.SaleIdGenerator;
 import co.za.carolsBoutique.Sale.service.SaleServiceImp;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
+import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.Size;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +28,8 @@ public class TestSaleServiceImp {
     SaleIdGenerator gen;
     SaleServiceImp service;
     Sale saleTest;
-    List sizes;
-    List sCats;
+    List<Size> sizes;
+    List<Category> sCats;
     List<Product> products;
     public TestSaleServiceImp() {
     }
@@ -46,11 +48,11 @@ public class TestSaleServiceImp {
         gen = new SaleIdGenerator();
         service = new SaleServiceImp(dao, gen, new PaymentGateway());
         products = new ArrayList();
-        sizes = new ArrayList<String>();
-        sizes.add("1");
-        sCats = new ArrayList<String>();
-        sCats.add("2");
-        products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,null,sCats));
+        sizes = new ArrayList<Size>();
+        sizes.add(new Size("22", "hats"));
+        sCats = new ArrayList<Category>();
+        sCats.add(new Category("22", "hats"));
+        products.add(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,2.0,sCats));
         saleTest = new Sale("asdew12311", "12werw23", false, 19.99, products, "ao8154bb","123");
         saleTest.setCustomerEmail("dean.swanepoel13@gmail.com");
     }
