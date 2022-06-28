@@ -37,7 +37,7 @@ public class IBTRepositoryImp implements IIBTRepository {
     public boolean addIBT(IBT ibt) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("insert into ibt(id,customerEmail,approved,productCode,requestingBoutique,approvingBoutique) values(?,?,?,?,?,?,?)");
+                ps = con.prepareStatement("insert into ibt(id,customerEmail,approved,productCode,requestingBoutique,approvingBoutique) values(?,?,?,?,?,?)");
                 ps.setString(1, ibt.getId());
                 ps.setString(2, ibt.getCustomerEmail());
                 ps.setBoolean(3, ibt.getApproved());
@@ -227,11 +227,11 @@ public class IBTRepositoryImp implements IIBTRepository {
         String email = new String();
         if (con!=null) {
             try {
-                ps = con.prepareStatement("select email from employee where role = man101 and boutique = ?");
+                ps = con.prepareStatement("select emailAddress from employee where role = \"man101\" and boutique = ?");
                 ps.setString(1, boutiqueId);
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    email = rs.getString("email");
+                    email = rs.getString("emailAddress");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);

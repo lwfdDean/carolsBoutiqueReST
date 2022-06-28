@@ -72,6 +72,7 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 				}
 			}
 		}
+                System.out.println(employee.toString());
 		return employee;
 	}
 
