@@ -1,5 +1,8 @@
 package co.za.carolsBoutique.product.service;
 
+import co.za.carolsBoutique.EmailTemplate.EmailReader;
+import co.za.carolsBoutique.mailService.MailService;
+import co.za.carolsBoutique.messageService.MessageService;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.NewProduct;
 import co.za.carolsBoutique.product.model.Product;
@@ -7,14 +10,19 @@ import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
+import co.za.carolsBoutique.promotions.PromotionSender;
+import jakarta.mail.MessagingException;
+import java.io.IOException;
 import static java.lang.Math.random;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProductServiceImp implements IServiceProduct{
+    private EmailReader er = new EmailReader();
     private IProductRepository dao;
     public ProductServiceImp(IProductRepository dao){
         this.dao = dao;
@@ -128,9 +136,32 @@ public class ProductServiceImp implements IServiceProduct{
                 Integer.parseInt(expiry[0]), 
                 Integer.parseInt(expiry[1]), 
                 Integer.parseInt(expiry[2]));
-        return dao.addPromo(promoCode,dt)?"Promo added":"failed to add promo";
+        if(dao.addPromo(promoCode,dt)){
+            promoCode.setCategory(dao.findCategory(promoCode.getCategory()).getName());
+            List<String> contactInfo = dao.findContactInfo();
+            for (int i = 0; i < contactInfo.size(); i++) {
+                if (contactInfo.get(i).contains("@")) {
+                    try {
+                        new MailService(contactInfo.get(i),"Promotion",er.readInEmail("Promotion", promoCode)).sendMail();
+                        return "Promo added";
+                    } catch (MessagingException ex) {
+                        Logger.getLogger(ProductServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+                        return "failed to add promo";
+                    } catch (IOException ex) {
+                        Logger.getLogger(ProductServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+                        return "failed to add promo";
+                    }
+                }else{
+                new MessageService(contactInfo.get(i), "New Promotion!\n"+
+                                                        promoCode.getCategory()+" is on promotion for"+
+                                                        promoCode.getDiscount()+"\n"+
+                                                        "PromoCode: "+promoCode.getCode());
+                return "Promo added";
+                }
+            }
+        }
+        return "failed to add promo";
     }
-
     @Override
     public PromoCode findPromoCode(String promoCode) {
         PromoCode pc = dao.findPromo(promoCode);

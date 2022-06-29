@@ -222,10 +222,10 @@ public class SaleRepositoryImp implements ISaleRepository {
                 ps3.setString(1, saleId);
                 rs3 = ps3.executeQuery();
                 while (rs3.next()) {                    
-                    String productId = rs.getString("product");
+                    String productId = rs3.getString("product");
                     for (Product product : products) {
                         if (product.getId().equals(productId)) {
-                            product.setDiscountedPrice(rs.getDouble("price"));
+                            product.setDiscountedPrice(rs3.getDouble("price"));
                         }
                     }
                 }

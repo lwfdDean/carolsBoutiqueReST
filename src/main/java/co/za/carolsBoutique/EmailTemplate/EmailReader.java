@@ -27,6 +27,8 @@ public class EmailReader {
             case"PurchaseReceipt":
                 Sale sale = (Sale)source;
                 try{
+                    String cardNum = sale.getCardNumber().substring(sale.getCardNumber().length()-5, sale.getCardNumber().length());
+                    String fullCard = "************"+cardNum;
                     content = new StringBuilder();
                     file = new File("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
                     fis = new FileInputStream(file);
@@ -129,7 +131,7 @@ public class EmailReader {
                 ExchangeInfo exchangeInfo = (ExchangeInfo)source;
                 try{
                     content = new StringBuilder();
-                    file = new File("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
+                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\Repository\\CarolsServerApp\\CarolsServerApp\\src\\main\\webapp\\receiptTemplates\\sale_receipt.html");
                     fis = new FileInputStream(file);
                     dis = new BufferedReader(new InputStreamReader(fis));
                     String holder = "";
@@ -152,11 +154,9 @@ public class EmailReader {
                             holder+="                                                    </tr>\n";
                             holder+="                                                    <tr height=\"35px\">\n";holder+="                                                        <td>"+exchangeInfo.getNewProductId()+" *new Item"+"</td>\n";
                             holder+="                                                        <td>"+exchangeInfo.getReturnedProductId()+" *exchanged Item"+"</td>\n";
-
                             holder+="                                                        <td class=\"text-center\">"+exchangeInfo.getPrice() +"</td>\n";
                             holder+="                                                        <td class=\"text-center\">"+0 +"</td>\n";
                             holder+="                                                    </tr>\n";
-                            
                         }
                         if(holder.contains("*")){
                             String firstHalf = "";
@@ -219,7 +219,7 @@ public class EmailReader {
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"AmmendedReceiptRefund":  
-                sale = (Sale)source;
+                exchangeInfo = (ExchangeInfo)source;
                 try{
                     content = new StringBuilder();
                     file = new File("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
@@ -239,19 +239,10 @@ public class EmailReader {
                             dis.readLine();
                             dis.readLine();
                             holder+="\n";
-                            for (int i = 0; i < sale.getItems().size(); i++) {
-                                holder+="                                                        <td>"+sale.getItems().get(i).getName() +"</td>\n";
-                                holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getPrice() +"</td>\n";
-                                if(sale.getItems().get(i).getDiscountedPrice()!=null){
-                                    holder+="                                                        <td class=\"text-center\">"+sale.getItems().get(i).getDiscountedPrice() +"</td>\n";
-                                }else{
-                                    holder+="                                                        <td class=\"text-center\">"+0 +"</td>\n";
-                                }
+                                holder+="                                                        <td>"+exchangeInfo.getReturnedProductId()+"</td>\n";
+                                holder+="                                                        <td class=\"text-center\">"+exchangeInfo.getPrice() +"</td>\n";
+                                holder+="                                                        <td class=\"text-center\">"+0 +"</td>\n";
                                 holder+="                                                    </tr>\n";
-                                if(i!=sale.getItems().size()){
-                                    holder+="                                                    <tr height=\"35px\">\n";
-                                }
-                            }  
                         }
                         if(holder.contains("*")){
                             String firstHalf = "";
@@ -261,33 +252,27 @@ public class EmailReader {
                                 if(holder.charAt(i)=='*'){
                                     if(holder.charAt(i+1)=='1'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getId();
+                                        middle = exchangeInfo.getSaleId();
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='2'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getEmployee();
+                                        middle = "";
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='3'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getBoutique();
+                                        middle = "";
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='8'){
                                         firstHalf = holder.substring(0, i);
-                                        middle = sale.getTotalPrice().toString();
+                                        middle = "";
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='9'){
-                                        List<Product> items = sale.getItems();
-                                        for (int j = 0; j < items.size(); j++) {
-                                            if(items.get(j)!=null){
-                                                discount += items.get(j).getDiscountedPrice();
-                                            }   
-                                        }
                                         firstHalf = holder.substring(0, i);
-                                        middle = discount+"";
+                                        middle = "";
                                         secondHalf = holder.substring(i+2);
                                     }
                                     if(holder.charAt(i+1)=='1'){
@@ -301,8 +286,7 @@ public class EmailReader {
                                         if(holder.charAt(i+2)=='1'){
                                             System.out.println("Discount = " +discount);
                                             firstHalf = holder.substring(0, i);
-                                            Double d = sale.getTotalPrice()+(sale.getTotalPrice()*0.15)-discount;
-                                            middle = d.toString();
+                                            middle = "0";
                                             secondHalf = holder.substring(i+3);
                                         }
                                     }
@@ -355,15 +339,38 @@ public class EmailReader {
                 break;
 ///////////////////////////////case\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
             case"Promotion":
-                PromoCode messege = (PromoCode)source;
+                PromoCode message = (PromoCode)source;
                 try{
                     content = new StringBuilder();
-                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\Promotion.txt");
+                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\Repository\\CarolsServerApp\\CarolsServerApp\\src\\main\\webapp\\receiptTemplates\\promoteProduct.txt");
                     fis = new FileInputStream(file);
                     dis = new BufferedReader(new InputStreamReader(fis));
                     String holder = "";
-                    while (holder!=null) {                        
+                    while (true) {                        
                         holder = dis.readLine();
+                        if(holder==null){
+                            break;
+                        }
+                        if(holder.contains("*")){
+                            String firstHalf = "";
+                            String secondHalf = "";
+                            String middle = "";
+                            for (int i = 0; i < holder.length(); i++) {
+                                if(holder.charAt(i)=='*'){
+                                    if(holder.charAt(i+1)=='3'){
+                                        firstHalf = holder.substring(0, i);
+                                        middle = message.getCategory();
+                                        secondHalf = holder.substring(i+2);
+                                    }
+                                    if(holder.charAt(i+1)=='4'){
+                                        firstHalf = holder.substring(0, i);
+                                        middle = message.getCode();
+                                        secondHalf = holder.substring(i+2);
+                                    }
+                                }
+                            }
+                            holder = firstHalf+middle+secondHalf;
+                        }
                         content.append(holder+"\n");
                     }
                 } catch (FileNotFoundException ex) {
