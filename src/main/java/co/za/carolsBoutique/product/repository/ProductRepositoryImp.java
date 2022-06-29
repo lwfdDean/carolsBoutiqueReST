@@ -795,14 +795,13 @@ public class ProductRepositoryImp implements IProductRepository {
         PromoCode promoCode = null;
         if (con != null) {
             try {
-                ps = con.prepareStatement("Select * from promotioncode where code = ?");
+                ps = con.prepareStatement("Select * from promotion_code where code = ?");
                 ps.setString(1, code);
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     promoCode = new PromoCode(code,
                             rs.getDouble("discount"),
-                            rs.getInt("type"),
-                            rs.getDate("expireDate").toLocalDate().toString(),
+                            rs.getDate("expiryDate").toLocalDate().toString(),
                             rs.getString("category"));
                 }
             } catch (SQLException ex) {
@@ -831,12 +830,11 @@ public class ProductRepositoryImp implements IProductRepository {
     public boolean addPromo(PromoCode promoCode, LocalDate expiry) {
         if (con != null) {
             try {
-                ps = con.prepareStatement("insert into promotion_code(code,discount,type,expiryDate,category) values(?,?,?,?,?)");
+                ps = con.prepareStatement("insert into promotion_code(code,discount,expiryDate,category) values(?,?,?,?)");
                 ps.setString(1, promoCode.getCode());
                 ps.setDouble(2, promoCode.getDiscount());
-                ps.setInt(3, promoCode.getType());
-                ps.setDate(4, Date.valueOf(expiry));
-                ps.setString(5, promoCode.getCategory());
+                ps.setDate(3, Date.valueOf(expiry));
+                ps.setString(4, promoCode.getCategory());
                 rowsAffected = ps.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);

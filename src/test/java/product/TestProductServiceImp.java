@@ -64,7 +64,7 @@ public class TestProductServiceImp {
         sizes.add(new Size("13", "6"));
         sizes.add(new Size("14", "7"));
         sizes.add(new Size("15", "8"));
-        product = new Product("thuyr45321", "Denim", "Denim Pants", sizes, "Blue", 100.90,0.00,cats);
+        product = new Product("thuyr7895321", "Denim", "Denim Pants", sizes, "Blue", 100.90,0.00,cats);
         product2 = new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,15.00,cats);
         allProducts.add(product);
         stockEntry =new StockEntry("blden1212 32", "ao8154bb", 10, "Dl3983nl");
