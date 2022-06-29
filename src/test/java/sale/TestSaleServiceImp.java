@@ -10,6 +10,7 @@ import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.Size;
+import co.za.carolsBoutique.product.model.refundedProduct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,10 +92,12 @@ public class TestSaleServiceImp {
      
      @Test//
      public void testRefund() {
-         Map<String,String> refundInfo= new HashMap<>();
-         refundInfo.put("asdew12343", "12343456");
+         refundedProduct refundInfo= new refundedProduct();
+         refundInfo.setSaleId("asdew12343");
+         refundInfo.setRefundProductId(("12343456"));
         assertEquals("10 day return policy has exceeded", service.refund(refundInfo));
      }
+     
      @Test//test passed, 
      public void testExchange() {
          ExchangeInfo ei = new ExchangeInfo();
