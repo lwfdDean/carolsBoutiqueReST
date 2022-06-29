@@ -39,7 +39,7 @@ public class TestReservedproductServiceImp {
         dao = new ReservedproductRepositoryImp();
         gen = new ReservedproductIdGenerator();
         service = new ReservedproductServiceImp(dao, gen);
-        reserveProduct = new Reservedproduct("1234567891 1", "test@gmail.com", "1",LocalDateTime.now());
+        reserveProduct = new Reservedproduct("thuyr45321 10", "test@gmail.com", "ao8154bb",LocalDateTime.now());
     }
     
     @After
@@ -52,7 +52,7 @@ public class TestReservedproductServiceImp {
 
      @Test//test passed, changed the Id in db to auto inc.
      public void testMakeReserveProduct() {
-        assertEquals("There is no stock of the product",service.makeReserveProduct(reserveProduct));
+        assertEquals("product reserved",service.makeReserveProduct(reserveProduct));
      }
      
      @Test//Dean please help
@@ -64,9 +64,9 @@ public class TestReservedproductServiceImp {
     @Test//Passed the test
     public void testCollectKeepAside() {
         List<Size> sizes = new ArrayList<>();
-        sizes.add(new Size("1","XXXL"));
+        sizes.add(new Size("10","3"));
         List<Category> categories = new ArrayList<>();
         //categories.add(new Category());
-        assertEquals(new Product("1234567891", "Hat", "Red Hat", sizes, "Red", 19.99,20.2, categories),service.collectKeepAside("lol@gmail.com"));
+        assertEquals(new Product("thuyr45321", "Denim", "Denim Pants", sizes, "Blue", 100.9,0.0, categories),service.collectKeepAside("test@gmail.com"));
      }
 }

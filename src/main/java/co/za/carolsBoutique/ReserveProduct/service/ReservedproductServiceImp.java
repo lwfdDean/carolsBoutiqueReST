@@ -29,6 +29,7 @@ public class ReservedproductServiceImp implements IServiceReservedproduct {
     @Override
     public String makeReserveProduct(Reservedproduct reserveProduct) {
         String[] productInfo = reserveProduct.getProductCode().split(" ");
+        System.out.println(productInfo);
         Map<String, Integer> entry = dao.findStockEntry(productInfo[0], reserveProduct.getBoutiqueId(), productInfo[1]);
         if(entry.size()==0){
             return "There is no stock of the product";
@@ -45,11 +46,16 @@ public class ReservedproductServiceImp implements IServiceReservedproduct {
     @Override
     public Product collectKeepAside(String customerEmail) {
         String stockId = dao.findReserveProduct(customerEmail);
-        Map<String, String> productInfo = dao.addStock(stockId); //this line returns null
+        Map<String, String> productInfo = dao.addStock(stockId); 
+        System.out.println(productInfo.toString());
         String productId = productInfo.keySet().iterator().next();
         String size = productInfo.get(productId);
-        return dao.findProductByProductCode(productId, size);
-    }//index out of bounds thrown
+        if(dao.collectReserveProduct(customerEmail)){
+            System.out.println("before return");
+            return dao.findProductByProductCode(productId, size);
+        }
+        return null;
+    }
 
     @Override
     public void emailNotifyCustomers() {
