@@ -134,6 +134,10 @@ public class ProductServiceImp implements IServiceProduct{
     @Override
     public PromoCode findPromoCode(String promoCode) {
         PromoCode pc = dao.findPromo(promoCode);
+        if (pc == null) {
+            return null;
+        }
+        System.out.println(pc.getDate());
         String[] expiry = pc.getDate().split("-");
         LocalDate dt = LocalDate.of(
                 Integer.parseInt(expiry[0]), 

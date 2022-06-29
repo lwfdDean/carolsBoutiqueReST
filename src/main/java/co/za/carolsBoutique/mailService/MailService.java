@@ -57,15 +57,13 @@ public class MailService{
         
         Message message = new MimeMessage(session);
         MimeMultipart mmp = new MimeMultipart();
-        DataSource ds = new FileDataSource("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\images\\carolsboutique.png");
         message.setFrom(new InternetAddress(senderEmailId));
         message.setSubject(this.emailSubject);
         message.setText(emailBody);
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(this.receiverEmail));
         MimeBodyPart content = new MimeBodyPart();
         content.setText(emailBody,"utf-8","html");
-        mmp.addBodyPart(content);
-        content.setDataHandler(new DataHandler(ds));
+        mmp.addBodyPart(content);;
         message.setContent(mmp);
         
         Transport.send(message);
