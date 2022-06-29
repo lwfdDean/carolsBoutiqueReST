@@ -25,6 +25,7 @@ public class ReportServiceImp implements IServiceReport{
             results.add(reports.get(i));
         }
         System.out.println("checking if execution reaches find to stores");
+        results.forEach(r -> System.out.println(r.toString()));
         return results;
     }
     

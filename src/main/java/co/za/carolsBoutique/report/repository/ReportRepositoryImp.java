@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.report.repository;
 
+import co.za.carolsBoutique.boutique.model.Boutique;
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.report.model.Report;
 import java.sql.Connection;
@@ -40,27 +41,33 @@ public class ReportRepositoryImp implements IReportRepository{
     @Override
     public List<Report> findTopStoresInTermsOfSales(int month) {
         List<Report> report = new ArrayList<>();
-        List<String> stores = new ArrayList<>();
+        List<Boutique> stores = new ArrayList<>();
         if (con!=null) {
             try {
-                ps = con.prepareStatement("select id from boutique");
+                ps = con.prepareStatement("select * from boutique");
                 rs = ps.executeQuery();
-                while (rs.next()) {                    
-                    stores.add(rs.getString("id"));
+                while (rs.next()) {
+                    stores.add(new Boutique(
+                            rs.getString("id"),
+                            rs.getString("location"),
+                            rs.getDouble("dailytarget"),
+                            rs.getDouble("monthlytarget"),
+                            rs.getString("password")));
                 }
+                stores.forEach(System.out::println);
                 ps.close();
                 rs.close();
-                for (String store : stores) {
+                for (Boutique store : stores) {
                     Double totalForStore = 0.0;
                     ps = con.prepareStatement("select date,totalPrice from sale where boutique = ?");
-                    ps.setString(1, store);
+                    ps.setString(1, store.getId());
                     rs = ps.executeQuery();
                     while (rs.next()) {
                         if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue()==month) {
                             totalForStore += rs.getDouble("totalPrice");
                         }
                     }
-                    report.add(new Report(store,totalForStore));
+                    report.add(new Report(store.getLocation(),totalForStore));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
