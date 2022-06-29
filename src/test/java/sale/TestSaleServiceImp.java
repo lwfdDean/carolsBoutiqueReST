@@ -90,7 +90,7 @@ public class TestSaleServiceImp {
         assertEquals(new Sale("asdew12343", "12werw23", false, 19.99, products, "ao8154bb", "2169420"), service.findSale("asdew12343"));
      }
      
-     @Test//test passed
+     @Test//
      public void testRefund() {
          refundedProduct refundInfo= new refundedProduct();
          refundInfo.setSaleId("asdew12343");
@@ -106,7 +106,7 @@ public class TestSaleServiceImp {
          ei.setNewProductId("1321321321");
          ei.setCustomerEmail("lggousie46@gmail.com");
          ei.setPrice(19.99);
-        assertEquals("10 day return policy has exceeded", service.exchange(ei));
+         assertEquals("Exchange Successful", service.exchange(ei));
      }
      
 }

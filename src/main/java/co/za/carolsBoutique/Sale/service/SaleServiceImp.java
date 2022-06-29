@@ -11,6 +11,7 @@ import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.refundedProduct;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.logging.Level;
@@ -83,13 +84,26 @@ public class SaleServiceImp implements IServiceSale {
 
     @Override
     public String exchange(ExchangeInfo exchangeInfo) {
-        if (dao.findSaleDate(exchangeInfo.getSaleId()).toLocalDateTime().getDayOfYear() + 10 <= LocalDateTime.now().getDayOfYear()) {
-            return "10 day return policy has exceeded";
+        System.out.println("check hit the the exchange in serviceImp");
+        Timestamp time = dao.findSaleDate(exchangeInfo.getSaleId());
+        System.out.println(exchangeInfo.getSaleId());
+        if(time==null){
+            System.out.println("returned null on date");
         }
+        System.out.println(time.toString());
+        int iTime = time.toLocalDateTime().getDayOfYear();
+        int now = LocalDateTime.now().getDayOfYear();
+//        if (iTime+ 10 <= now) {
+//            return "10 day return policy has exceeded";
+//        }
         boolean b = dao.updateSaleLineItem(exchangeInfo.getSaleId(), exchangeInfo.getReturnedProductId(),
                 exchangeInfo.getNewProductId(), exchangeInfo.getPrice());
         if (b) {
-            prepareMail(exchangeInfo.getCustomerEmail(), "Exchange", "");
+            try {
+                prepareMail(exchangeInfo.getCustomerEmail(), "Exchange", er.readInEmail("AmmendedReceiptExchange", exchangeInfo));
+            } catch (IOException ex) {
+                Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return "Exchange Successful";
         }
         return "exchange Failed";

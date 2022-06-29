@@ -1,12 +1,12 @@
 package co.za.carolsBoutique.product.repository;
 
-import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
 import co.za.carolsBoutique.databaseManager.DBManager;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
+import co.za.carolsBoutique.promotions.PromotionSender;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -35,12 +35,12 @@ public class ProductRepositoryImp implements IProductRepository {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             con = DriverManager.getConnection(url, "root", "Root");
         } catch (SQLException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -881,6 +881,23 @@ public class ProductRepositoryImp implements IProductRepository {
             }
         }
         return sizes;
+    }
+    @Override
+    public List findContactInfo(){
+        List info = new ArrayList();
+         if (con!=null) {
+            try {
+                ps = con.prepareStatement("select * from subscriberlist");
+                rs = ps.executeQuery();
+                while (rs.next()) {                    
+                    info.add(rs.getString("contactInfo"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PromotionSender.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return info;
     }
 
 }

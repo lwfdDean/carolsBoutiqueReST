@@ -31,4 +31,5 @@ public interface IProductRepository {
     PromoCode findPromo(String code);
     boolean addPromo(PromoCode promoCode, LocalDate dt);
     List<Size> findAllSizes();
+    public List findContactInfo();
 }

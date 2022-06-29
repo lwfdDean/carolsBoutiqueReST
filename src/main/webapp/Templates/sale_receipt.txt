@@ -45,7 +45,7 @@
                                                             document.write(date);
                                                         </script>
                                                 
-                                                </li>
+                                                </li><li><strong>CardNo&nbsp;&nbsp;&nbsp; :&nbsp; </strong>*12</li>
 
                                             </ul>
                                         </div>
