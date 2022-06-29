@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.product.repository;
 
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
+import co.za.carolsBoutique.databaseManager.DBManager;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.PromoCode;
@@ -46,6 +47,11 @@ public class ProductRepositoryImp implements IProductRepository {
     @Override
     public boolean addProduct(Product product) {
         boolean success = false;
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {/*TODO: add a category/product*/
                 con.setAutoCommit(false);
@@ -74,6 +80,13 @@ public class ProductRepositoryImp implements IProductRepository {
                 if (ps != null) {
                     try {
                         ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if(con!=null){
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
