@@ -229,7 +229,7 @@ public class EmailReader {
                 sale = (Sale)source;
                 try{
                     content = new StringBuilder();
-                    file = new File("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
+                    file = new File("C:\\Users\\wille\\OneDrive\\Desktop\\LWFD showRoom\\Repository\\CarolsServerApp\\CarolsServerApp\\src\\main\\webapp\\receiptTemplates\\sale_receipt.html");
                     fis = new FileInputStream(file);
                     dis = new BufferedReader(new InputStreamReader(fis));
                     String holder = "";

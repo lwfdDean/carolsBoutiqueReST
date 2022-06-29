@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.report.repository;
 
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
+import co.za.carolsBoutique.databaseManager.DBManager;
 import co.za.carolsBoutique.report.model.Report;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,8 +17,8 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ReportRepositoryImp implements IReportRepository{
-    
+public class ReportRepositoryImp implements IReportRepository {
+
     private Connection con;
     private PreparedStatement ps;
     private ResultSet rs;
@@ -41,11 +42,16 @@ public class ReportRepositoryImp implements IReportRepository{
     public List<Report> findTopStoresInTermsOfSales(int month) {
         List<Report> report = new ArrayList<>();
         List<String> stores = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select id from boutique");
                 rs = ps.executeQuery();
-                while (rs.next()) {                    
+                while (rs.next()) {
                     stores.add(rs.getString("id"));
                 }
                 ps.close();
@@ -56,25 +62,32 @@ public class ReportRepositoryImp implements IReportRepository{
                     ps.setString(1, store);
                     rs = ps.executeQuery();
                     while (rs.next()) {
-                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue()==month) {
+                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue() == month) {
                             totalForStore += rs.getDouble("totalPrice");
                         }
                     }
-                    report.add(new Report(store,totalForStore));
+                    report.add(new Report(store, totalForStore));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -88,11 +101,16 @@ public class ReportRepositoryImp implements IReportRepository{
     public List<Report> findHighestRatedStores(int month) {
         List<Report> results = new ArrayList<>();
         List<String> stores = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select id from boutique");
                 rs = ps.executeQuery();
-                while (rs.next()) {                    
+                while (rs.next()) {
                     stores.add(rs.getString("id"));
                 }
                 ps.close();
@@ -104,28 +122,35 @@ public class ReportRepositoryImp implements IReportRepository{
                     ps.setString(1, store);
                     rs = ps.executeQuery();
                     while (rs.next()) {
-                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue()==month) {
+                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue() == month) {
                             numberOfRatings++;
                             totalRating += rs.getDouble("rating");
                         }
                     }
-                    if (numberOfRatings!=0) {
-                        results.add(new Report(store, totalRating/numberOfRatings));
+                    if (numberOfRatings != 0) {
+                        results.add(new Report(store, totalRating / numberOfRatings));
                     }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -138,31 +163,43 @@ public class ReportRepositoryImp implements IReportRepository{
     @Override
     public List<Report> findStoreMonthlySales(String store, int month) {
         List<Report> results = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select date,totalPrice from sale where boutique = ?");
                 ps.setString(1, store);
                 rs = ps.executeQuery();
                 double total = 0.0;
                 while (rs.next()) {
-                    if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue()==month) {
+                    if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue() == month) {
                         total += rs.getDouble("totalPrice");
                     }
                 }
                 results.add(new Report(store, total));
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -176,7 +213,12 @@ public class ReportRepositoryImp implements IReportRepository{
     public List<Report> findTopSellingEmployees(String store, int month) {
         List<String> employees = new ArrayList<>();
         List<Report> results = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select id from employee where boutique = ?");
                 ps.setString(1, store);
@@ -186,14 +228,14 @@ public class ReportRepositoryImp implements IReportRepository{
                 }
                 ps.close();
                 rs.close();
-                
+
                 for (int i = 0; i < employees.size(); i++) {
                     ps = con.prepareStatement("select totalPrice, date from sale where employee = ?");
                     ps.setString(1, employees.get(i));
                     rs = ps.executeQuery();
                     double totalSales = 0.0;
-                    while (rs.next()) {                        
-                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue()==month) {
+                    while (rs.next()) {
+                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue() == month) {
                             totalSales += rs.getDouble("totalPrice");
                         }
                     }
@@ -203,17 +245,24 @@ public class ReportRepositoryImp implements IReportRepository{
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -227,7 +276,12 @@ public class ReportRepositoryImp implements IReportRepository{
     public List<Report> findTopSellingEmployees(int month) {
         List<String> employees = new ArrayList<>();
         List<Report> results = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select id from employee");
                 rs = ps.executeQuery();
@@ -241,8 +295,8 @@ public class ReportRepositoryImp implements IReportRepository{
                     ps.setString(1, employees.get(i));
                     rs = ps.executeQuery();
                     double totalSales = 0.0;
-                    while (rs.next()) {                        
-                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue()==month) {
+                    while (rs.next()) {
+                        if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue() == month) {
                             totalSales += rs.getDouble("totalPrice");
                         }
                     }
@@ -252,21 +306,29 @@ public class ReportRepositoryImp implements IReportRepository{
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if (con != null) {
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
             }
         }
         return results;
@@ -276,7 +338,12 @@ public class ReportRepositoryImp implements IReportRepository{
     public List<Report> findStoreThatAchievedMonthlyTarget(int month) {
         Map<String, Double> stores = new TreeMap<>();
         List<Report> results = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select id,monthlyTarget from boutique");
                 rs = ps.executeQuery();
@@ -291,32 +358,39 @@ public class ReportRepositoryImp implements IReportRepository{
                     ps.setString(1, boutique);
                     rs = ps.executeQuery();
                     double total = 0.0;
-                    while (rs.next()) {                        
+                    while (rs.next()) {
                         if (true) {
-                            if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue()==month) {
+                            if (rs.getTimestamp("date").toLocalDateTime().getMonth().getValue() == month) {
                                 total += rs.getDouble("totalPrice");
                             }
                         }
                     }
-                    if (total>=stores.get(boutique)) {
-                        results.add(new Report(boutique,total));
+                    if (total >= stores.get(boutique)) {
+                        results.add(new Report(boutique, total));
                     }
                     ps.close();
                     rs.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -331,18 +405,23 @@ public class ReportRepositoryImp implements IReportRepository{
         List<Report> results = new ArrayList<>();
         List<String> products = new ArrayList<>();
         List<String> boutiques = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select id from product");
                 rs = ps.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     products.add(rs.getString("id"));
                 }
                 ps.close();
                 rs.close();
                 ps = con.prepareStatement("select id from boutique");
                 rs = ps.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     boutiques.add(rs.getString("id"));
                 }
                 ps.close();
@@ -355,27 +434,34 @@ public class ReportRepositoryImp implements IReportRepository{
                         ps.setString(1, boutique);
                         ps.setString(2, product);
                         rs = ps.executeQuery();
-                        if (rs.next()) {                            
+                        if (rs.next()) {
                             totalNumberOfSales = rs.getInt("total");
                         }
-                        results.add(new Report(product,boutique,totalNumberOfSales));
+                        results.add(new Report(product, boutique, totalNumberOfSales));
                     }
                     rs.close();
                     ps.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -388,12 +474,17 @@ public class ReportRepositoryImp implements IReportRepository{
     @Override
     public List<Report> findUnderPerformingStores(int interval) {
         List<Report> results = new ArrayList<>();
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 List<String> boutiques = new ArrayList<>();
                 ps = con.prepareStatement("select id from boutique");
                 rs = ps.executeQuery();
-                while (rs.next()) {                    
+                while (rs.next()) {
                     boutiques.add(rs.getString("id"));
                 }
                 ps.close();
@@ -405,27 +496,34 @@ public class ReportRepositoryImp implements IReportRepository{
                     rs = ps.executeQuery();
                     while (rs.next()) {
                         int month = rs.getTimestamp("date").toLocalDateTime().getMonth().getValue();
-                        if (month+interval>LocalDateTime.now().getMonth().getValue()) {
+                        if (month + interval > LocalDateTime.now().getMonth().getValue()) {
                             totalForStore += rs.getDouble("totalPrice");
                         }
                     }
-                    results.add(new Report(store,totalForStore));
+                    results.add(new Report(store, totalForStore));
                     ps.close();
                     rs.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -438,12 +536,17 @@ public class ReportRepositoryImp implements IReportRepository{
     @Override
     public Report findTopSalepersonForAProduct(String product) {
         Report report = null;
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 List<String> employees = new ArrayList<>();
                 ps = con.prepareStatement("select id from employee");
                 rs = ps.executeQuery();
-                while (rs.next()) {                    
+                while (rs.next()) {
                     employees.add(rs.getString("id"));
                 }
                 rs.close();
@@ -459,7 +562,7 @@ public class ReportRepositoryImp implements IReportRepository{
                     rs = ps.executeQuery();
                     if (rs.next()) {
                         int count = rs.getInt("total");
-                        if (count>empTotal) {
+                        if (count > empTotal) {
                             empTotal = count;
                             topEmp = employee;
                         }
@@ -468,20 +571,27 @@ public class ReportRepositoryImp implements IReportRepository{
                     ps.close();
                     rs.close();
                 }
-                report = new Report(topEmp,totalSold);
+                report = new Report(topEmp, totalSold);
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            }finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -494,34 +604,46 @@ public class ReportRepositoryImp implements IReportRepository{
     @Override
     public Report findCurrentDailySales(String store) {
         Report report = null;
-        if (con!=null) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (con != null) {
             try {
                 ps = con.prepareStatement("select totalPrice,date from sale where boutique = ?");
                 ps.setString(1, store);
-                rs =ps.executeQuery();
+                rs = ps.executeQuery();
                 double todaysSale = 0.0;
                 int i = 0;
-                while (rs.next()) {                    
-                    if (rs.getTimestamp("date").toLocalDateTime().getDayOfYear()==LocalDateTime.now().getDayOfYear()) {
+                while (rs.next()) {
+                    if (rs.getTimestamp("date").toLocalDateTime().getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
                         double holder = rs.getDouble("totalPrice");
-                        System.out.println(i +"th" + holder);
+                        System.out.println(i + "th" + holder);
                         todaysSale += holder;
                     }
                 }
                 report = new Report(store, todaysSale);
             } catch (SQLException ex) {
                 Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                if (ps!=null) {
+            } finally {
+                if (ps != null) {
                     try {
                         ps.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (rs!=null) {
+                if (rs != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReportRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -57,7 +57,8 @@ public class MailService{
         
         Message message = new MimeMessage(session);
         MimeMultipart mmp = new MimeMultipart();
-        DataSource ds = new FileDataSource("C:\\Users\\User\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\images\\carolsboutique.png");
+        DataSource ds = new FileDataSource("C:\\Users\\wille\\OneDrive\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\images\\carolsboutique.png");
+                                            
         message.setFrom(new InternetAddress(senderEmailId));
         message.setSubject(this.emailSubject);
         message.setText(emailBody);

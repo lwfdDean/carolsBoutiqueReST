@@ -8,6 +8,7 @@ import co.za.carolsBoutique.codeGenerator.CodeGenerator;
 import co.za.carolsBoutique.mailService.MailService;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
 import co.za.carolsBoutique.product.model.Product;
+import co.za.carolsBoutique.product.model.refundedProduct;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -55,13 +56,14 @@ public class SaleServiceImp implements IServiceSale {
     }
 
     @Override
-    public String refund(Map<String, String> refundInfo) {//create vrefund obj bcoz cardNum was removed + products is null
-        String saleId = refundInfo.keySet().iterator().next();
+    public String refund(refundedProduct refundInfo) {//create vrefund obj bcoz cardNum was removed + products is null
+        String saleId = refundInfo.getSaleId();
         if (dao.findSaleDate(saleId).toLocalDateTime().getDayOfYear() + 10 <= LocalDateTime.now().getDayOfYear()) {
             return "10 day return policy has exceeded";
         }
         Sale sale = dao.findSale(saleId);
-        String[] pInfo = refundInfo.get(saleId).split(" ");
+        sale.setCardNumber(refundInfo.getCardNumber());
+        String[] pInfo = refundInfo.getSaleId().split(" ");
         double refundAmmount = 0.0;
         for (Product p : sale.getItems()) {
             if (p.getId().equals(pInfo[0])) {
@@ -71,7 +73,7 @@ public class SaleServiceImp implements IServiceSale {
         sale.setTotalPrice(sale.getTotalPrice() - refundAmmount);
         if (sale.getCardNumber() != null) {
             try {
-                new MailService("", "Refund", "").sendMail();
+                new MailService(refundInfo.getCustomerEmail(), "Refund", "").sendMail();
             } catch (MessagingException ex) {
                 Logger.getLogger(SaleServiceImp.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -218,14 +218,14 @@ public class SaleRepositoryImp implements ISaleRepository {
                 }
                 ps3.close();
                 rs3.close();
-                ps3 = con.prepareStatement("select price, product from sale_line_item where sale = ?");
+                ps3 = con.prepareStatement("select sale_line_item.price, sale_line_item.product from sale_line_item where sale = ?");
                 ps3.setString(1, saleId);
                 rs3 = ps3.executeQuery();
                 while (rs3.next()) {                    
-                    String productId = rs.getString("product");
+                    String productId = rs3.getString("sale_line_item.product");
                     for (Product product : products) {
                         if (product.getId().equals(productId)) {
-                            product.setDiscountedPrice(rs.getDouble("price"));
+                            product.setDiscountedPrice(rs3.getDouble("price"));
                         }
                     }
                 }

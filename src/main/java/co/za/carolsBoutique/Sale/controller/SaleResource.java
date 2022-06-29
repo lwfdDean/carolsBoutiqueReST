@@ -7,6 +7,7 @@ import co.za.carolsBoutique.Sale.service.IServiceSale;
 import co.za.carolsBoutique.Sale.service.SaleIdGenerator;
 import co.za.carolsBoutique.Sale.service.SaleServiceImp;
 import co.za.carolsBoutique.paymentGateway.PaymentGateway;
+import co.za.carolsBoutique.product.model.refundedProduct;
 import java.util.Map;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -46,7 +47,7 @@ public class SaleResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response refund(Map<String,String> refundProduct){
+    public Response refund(refundedProduct refundProduct){
         return Response.status(Response.Status.OK).entity(service.refund(refundProduct)).build();
     }
     
