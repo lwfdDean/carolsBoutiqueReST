@@ -11,6 +11,7 @@ import java.util.Map;
 public interface IServiceProduct {
     List<Product> findAllProducts();
     Product findProduct(String productId);
+    Product findProduct2(String productId);
     Product findProductBySize(String productCode);
     String addProduct(Product product);
     String deleteProduct(String productId);

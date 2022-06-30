@@ -38,7 +38,6 @@ public class ProductResource {
     @Path("/findProduct/{productId}")//////////////
     @Produces(MediaType.APPLICATION_JSON)
     public Response findProduct(@PathParam("productId") String productId) {
-        System.out.println(service.findProduct(productId).toString());
         return Response.status(Response.Status.OK)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Credentials", "true")
@@ -155,5 +154,12 @@ public class ProductResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findPromoCode(@PathParam("promocode") String promocode) {
         return Response.status(Response.Status.OK).entity(service.findPromoCode(promocode)).build();
+    }
+    
+    @GET
+    @Path("/findProduct2/{productId}")//////////////
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findProduct2(@PathParam("productId") String productId) {
+        return Response.status(Response.Status.OK).entity(service.findProduct2(productId)).build();
     }
 }
