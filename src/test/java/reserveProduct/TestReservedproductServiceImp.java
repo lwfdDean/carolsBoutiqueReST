@@ -39,7 +39,7 @@ public class TestReservedproductServiceImp {
         dao = new ReservedproductRepositoryImp();
         gen = new ReservedproductIdGenerator();
         service = new ReservedproductServiceImp(dao, gen);
-        reserveProduct = new Reservedproduct("thuyr45321 10", "test@gmail.com", "ao8154bb",LocalDateTime.now());
+        reserveProduct = new Reservedproduct("1234567891 c1", "willem0402@gmail.com", "ao8154bb",LocalDateTime.now());
     }
     
     @After
@@ -67,6 +67,6 @@ public class TestReservedproductServiceImp {
         sizes.add(new Size("10","3"));
         List<Category> categories = new ArrayList<>();
         //categories.add(new Category());
-        assertEquals(new Product("thuyr45321", "Denim", "Denim Pants", sizes, "Blue", 100.9,0.0, categories),service.collectKeepAside("ff@ff"));
+        assertEquals(new Product("thuyr45321", "Denim", "Denim Pants", sizes, "Blue", 100.9,0.0, categories),service.collectKeepAside("lol@gmail.com"));
      }
 }

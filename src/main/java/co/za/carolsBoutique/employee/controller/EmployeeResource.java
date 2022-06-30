@@ -38,6 +38,7 @@ public class EmployeeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(Map<String, String> loginDetails) {
+        System.out.println("in login");
         return Response.status(Response.Status.OK).entity(service.login(loginDetails)).build();
     }
 

@@ -140,16 +140,16 @@ public class ProductServiceImp implements IServiceProduct{
             List<String> contactInfo = dao.findContactInfo();
             for (int i = 0; i < contactInfo.size(); i++) {
                 if (contactInfo.get(i).contains("@")) {
-                    try {
-                        new MailService(contactInfo.get(i),"Promotion",er.readInEmail("Promotion", promoCode)).sendMail();
+//                    try {
+//                        new MailService(contactInfo.get(i),"Promotion",er.readInEmail("Promotion", promoCode)).sendMail();
                         return "Promo added";
-                    } catch (MessagingException ex) {
-                        Logger.getLogger(ProductServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-                        return "failed to add promo";
-                    } catch (IOException ex) {
-                        Logger.getLogger(ProductServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-                        return "failed to add promo";
-                    }
+//                    } catch (MessagingException ex) {
+//                        Logger.getLogger(ProductServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+//                        return "failed to add promo";
+//                    } catch (IOException ex) {
+//                        Logger.getLogger(ProductServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+//                        return "failed to add promo";
+//                    }
                 }else{
                 new MessageService(contactInfo.get(i), "New Promotion!\n"+
                                                         promoCode.getCategory()+" is on promotion for"+

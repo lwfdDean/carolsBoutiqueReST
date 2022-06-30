@@ -30,7 +30,7 @@ public class EmailReader {
                     String cardNum = sale.getCardNumber().substring(sale.getCardNumber().length()-5, sale.getCardNumber().length());
                     String fullCard = "************"+cardNum;
                     content = new StringBuilder();
-                    file = new File("C:\\Users\\wille\\OneDrive\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
+                    file = new File("C:\\Users\\27609\\Desktop\\LWFD showRoom\\Repository\\carolsBoutiqueRest\\src\\main\\webapp\\Templates\\sale_receipt.txt");
                     fis = new FileInputStream(file);
                     dis = new BufferedReader(new InputStreamReader(fis));
                     String holder = "";

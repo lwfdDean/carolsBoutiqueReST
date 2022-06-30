@@ -30,6 +30,11 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
 
     @Override
     public String findReserveProduct(String customerEmail) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String id = null;
         try {
             con = DBManager.getConnection();
@@ -75,31 +80,31 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
 
     @Override
     public boolean addReserveProduct(Reservedproduct reserveProduct, String id, int quantity) {
-        boolean success = false;
         try {
             con = DBManager.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
+        boolean success = false;
         if (con != null) {
             try {
-                con.setAutoCommit(false);
+                //con.setAutoCommit(false);
                 ps = con.prepareStatement("insert into reservedproduct(customerEmail,stock,collected) values(?,?,?)");
                 ps.setString(1, reserveProduct.getCustomerEmail());
                 ps.setString(2, id);
-                ps.setBoolean(3, false);
+                ps.setInt(3, 0);
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     if (updateQuantity(id ,quantity-1)) {
-                        con.commit();
+                        //con.commit();
                         success = true;
-                    }else{
-                        con.rollback();
-                    }
-                }else{
-                    con.rollback();
-                }
-                con.setAutoCommit(true);
+                    }//else{
+                        //con.rollback();
+                    //}
+                }//else{
+                    //con.rollback();
+                //}
+                //con.setAutoCommit(true);
             } catch (SQLException ex) {
                 Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -223,12 +228,14 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                     int quantity = rs.getInt("quantity");
                     String product = rs.getString("product");
                     String size = rs.getString("size");
-                    if (updateQuantity(stockId,quantity+1)) {
-                        con.commit();
-                        productInfo.put(product, size);
-                    }else{
-                        con.rollback();
-                    }
+                    productInfo.put(product, size);
+                    con.commit();
+//                    if (updateQuantity(stockId,quantity+1)) {
+//                        con.commit();
+//                        productInfo.put(product, size);
+//                    }else{
+//                        con.rollback();
+//                    }
                 }
                 
                 con.setAutoCommit(true);
@@ -263,16 +270,17 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
     }
 
     private boolean updateQuantity(String stockId, int quantity) {
+        Connection con2 = null;
         try {
-            con = DBManager.getConnection();
+            con2 = DBManager.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         PreparedStatement ps1 = null;
         int rows = 0;
-        if (con!=null) {
+        if (con2!=null) {
             try {
-                ps1 = con.prepareStatement("update stock set quantity = ? where id = ?");
+                ps1 = con2.prepareStatement("update stock set quantity = ? where id = ?");
                 ps1.setInt(1, quantity);
                 ps1.setString(2, stockId);
                 rows = ps1.executeUpdate();
@@ -287,9 +295,9 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                         Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if(con!=null){
+                if(con2!=null){
                     try {
-                        con.close();
+                        con2.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -359,17 +367,18 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
     }
 
      private List<Size> getProductSizes(String productId) {
+         Connection con2 = null;
          try {
-            con = DBManager.getConnection();
+            con2 = DBManager.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         List<Size> sizes = new ArrayList<>();
-        if (con != null) {
+        if (con2 != null) {
             try {
-                ps1 = con.prepareStatement("SELECT id,name FROM size INNER JOIN product_size ON product_size.size = size.id WHERE product_size.product=?");
+                ps1 = con2.prepareStatement("SELECT id,name FROM size INNER JOIN product_size ON product_size.size = size.id WHERE product_size.product=?");
                 ps1.setString(1, productId);
                 rs1 = ps1.executeQuery();
                 while (rs1.next()) {
@@ -392,9 +401,9 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                         e.printStackTrace();
                     }
                 }
-                if(con!=null){
+                if(con2!=null){
                     try {
-                        con.close();
+                        con2.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -467,6 +476,11 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
 
     @Override
     public boolean collectReserveProduct(String email) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
          boolean success = false;
         if (con != null) {
             try {
@@ -487,6 +501,13 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                 if (ps != null) {
                     try {
                         ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (con != null) {
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }

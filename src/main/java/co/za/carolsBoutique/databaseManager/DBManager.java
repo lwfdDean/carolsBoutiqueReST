@@ -22,7 +22,7 @@ public class DBManager {
     static {
         dataSource1 = new BasicDataSource();
         dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource1.setUrl("jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false");
+        dataSource1.setUrl("jdbc:mysql://localhost:3306/carolsboutique2?autoReconnect=true&useSSL=false");
         dataSource1.setUsername("root");
         dataSource1.setPassword("Root");
         dataSource1.setMinIdle(10);

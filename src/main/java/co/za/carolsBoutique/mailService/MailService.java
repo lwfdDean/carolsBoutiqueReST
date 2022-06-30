@@ -15,10 +15,10 @@ import java.util.Properties;
 
 
 public class MailService{
-    final String senderEmailId = "carolsboutiquelwfd@yahoo.com";
-    final String senderPassword = "fyrk rvgr oigx qvcn";
-    final String emailSMTPSever = "smtp.mail.yahoo.com";
-    final String emailServerPort = "465";
+    final String senderEmailId = "lggousie46@gmail.com";
+    final String senderPassword = "feqexecjlwubfvpl";
+    final String emailSMTPSever = "smtp.mail.gmail.com";
+    final String emailServerPort = "587";
     String receiverEmail;
     String emailSubject;
     String emailBody;

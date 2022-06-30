@@ -778,13 +778,15 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public Product findProductBySize(String productId, String size) {
+        List<Size> sizes = null;
         try {
+            sizes = getProductSizes(productId);
             con = DBManager.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         Product product = null;
-        List<Size> sizes = getProductSizes(productId);
+        
         if (con != null) {
             try {
                 ps = con.prepareStatement("select * from product inner join product_size on product_size.product = product.id where product.id = ?"
