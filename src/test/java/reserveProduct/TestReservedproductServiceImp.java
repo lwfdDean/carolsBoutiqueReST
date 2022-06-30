@@ -67,6 +67,6 @@ public class TestReservedproductServiceImp {
         sizes.add(new Size("10","3"));
         List<Category> categories = new ArrayList<>();
         //categories.add(new Category());
-        assertEquals(new Product("thuyr45321", "Denim", "Denim Pants", sizes, "Blue", 100.9,0.0, categories),service.collectKeepAside("test@gmail.com"));
+        assertEquals(new Product("thuyr45321", "Denim", "Denim Pants", sizes, "Blue", 100.9,0.0, categories),service.collectKeepAside("ff@ff"));
      }
 }

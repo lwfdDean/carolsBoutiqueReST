@@ -418,6 +418,9 @@ public class SaleRepositoryImp implements ISaleRepository {
     @Override
     public boolean updateSaleLineItem(String saleId, String returnedProductId, String newProductId,double productPrice) {
         boolean success = false;
+        System.out.println(saleId+"\n"+
+                            returnedProductId+"\n"+
+                            newProductId +"\n");
         if (con != null) {
             try {
                 con.setAutoCommit(false);
@@ -427,6 +430,7 @@ public class SaleRepositoryImp implements ISaleRepository {
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 1) {
                     if (addSaleLineItem(saleId, newProductId,productPrice)) {
+                        System.out.println("Commit set to true");
                         con.commit();
                         success = true;
                     } else {

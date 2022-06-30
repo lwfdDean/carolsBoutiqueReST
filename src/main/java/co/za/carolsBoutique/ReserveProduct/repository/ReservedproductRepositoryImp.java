@@ -376,7 +376,7 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
                 ps = con.prepareStatement("update reservedproduct set collected = 1 where customerEmail = ?");
                 ps.setString(1, email);
                 rowsAffected = ps.executeUpdate();
-                if (rowsAffected == 1) {
+                if (rowsAffected >= 1) {
                     con.commit();
                     success = true;
                 } else {
