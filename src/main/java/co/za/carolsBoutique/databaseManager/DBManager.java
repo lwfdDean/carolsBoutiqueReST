@@ -21,10 +21,10 @@ public class DBManager {
     
     static {
         dataSource1 = new BasicDataSource();
-        dataSource1.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource1.setUrl("jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false");
         dataSource1.setUsername("root");
-        dataSource1.setPassword("root");
+        dataSource1.setPassword("Root");
         dataSource1.setMinIdle(10);
         dataSource1.setMaxIdle(10);
         dataSource1.setMaxOpenPreparedStatements(100);

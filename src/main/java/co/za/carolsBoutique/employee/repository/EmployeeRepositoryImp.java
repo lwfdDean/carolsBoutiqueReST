@@ -1,5 +1,6 @@
 package co.za.carolsBoutique.employee.repository;
 
+import co.za.carolsBoutique.databaseManager.DBManager;
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import java.sql.Connection;
@@ -21,21 +22,16 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
     private int rowsAffected;
 
     public EmployeeRepositoryImp() {
-        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            con = DriverManager.getConnection(url, "root", "Root");
-        } catch (SQLException ex) {
-            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     @Override
     public Employee findEmployee(String employeeId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Employee employee = null;
         if (con != null) {
             try {
@@ -70,6 +66,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return employee;
@@ -77,6 +80,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public List<Employee> findAllEmployees(String boutiqueId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Employee> employees = new ArrayList<>();
         if (con != null) {
             try {
@@ -112,6 +120,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return employees;
@@ -119,6 +134,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public boolean addEmployee(Employee employee) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("insert into employee(id,name,surname,emailAddress,password,managerUniqueCode,role,boutique) values(?,?,?,?,?,?,?,?)");
@@ -141,6 +161,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -148,6 +175,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public boolean deleteEmployee(String employeeId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("delete from employee where id=?");
@@ -163,6 +195,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -170,6 +209,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public boolean updateToTeller(String employeeId, String password, String roleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("UPDATE employee SET password=?, role=? where id=?");
@@ -187,6 +231,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -194,6 +245,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public boolean updateToManager(String employeeId, String managerUniqueCode, String roleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("UPDATE employee SET managerUniqueCode=?, role=? where id=?");
@@ -211,12 +267,24 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
     }
 
     private Role getEmployeeRole(String employeeId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Role role = null;
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
@@ -245,6 +313,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return role;
@@ -252,6 +327,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public List<Employee> findAllByRole(String roleId, String boutiqueId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Employee> employees = new ArrayList<>();
         if (con != null) {
             try {
@@ -289,6 +369,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return employees;
@@ -298,6 +385,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
     @Override
 
     public Role findRole(String roleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Role role = null;
         if (con != null) {
             try {
@@ -324,6 +416,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return role;
@@ -331,6 +430,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public List<Role> findAllRoles() {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Role> role = new ArrayList<>();
         if (con != null) {
             try {
@@ -358,6 +462,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return role;
@@ -366,6 +477,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public boolean addRole(Role role) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("Insert Into role(id,name,authorizationlvl) values(?,?,?)");
@@ -384,6 +500,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -391,6 +514,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public boolean deleteRole(String roleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("DELETE FROM role Where id= ?");
@@ -408,6 +536,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -415,6 +550,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public boolean verifyManagerCode(String boutiqueId,String managersUniqueCode) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         boolean verified = false;
         if (con != null) {
             try {
@@ -442,6 +582,13 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
                 if (ps != null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if(con!=null){
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
