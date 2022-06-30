@@ -10,7 +10,6 @@ import co.za.carolsBoutique.product.model.PromoCode;
 import co.za.carolsBoutique.product.model.Size;
 import co.za.carolsBoutique.product.model.StockEntry;
 import co.za.carolsBoutique.product.repository.IProductRepository;
-import co.za.carolsBoutique.promotions.PromotionSender;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
 import static java.lang.Math.random;
@@ -183,5 +182,10 @@ public class ProductServiceImp implements IServiceProduct{
     @Override
     public List<Size> findAllSizes() {
         return dao.findAllSizes();
+    }
+
+    @Override
+    public Product findProduct2(String productId) {
+        return dao.findProduct(productId);
     }
 }

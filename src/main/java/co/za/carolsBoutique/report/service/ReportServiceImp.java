@@ -76,6 +76,9 @@ public class ReportServiceImp implements IServiceReport{
         List<Report> reports = dao.findStoreThatAchievedMonthlyTarget(rc.getMonth());
         Collections.sort(reports);
         List<Report> results = new ArrayList<>();
+        if(reports.isEmpty()){
+            return null;
+        }
         for (int i = reports.size()-1; i > reports.size()-rc.getResults()-1 ; i--) {
             results.add(reports.get(i));
         }
