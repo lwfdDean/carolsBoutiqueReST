@@ -9,6 +9,7 @@ public interface IReservedproductRepository {
     String findReserveProduct(String customerEmail);
     boolean addReserveProduct(Reservedproduct reserveProduct, String id, int quantity);
     boolean deleteReserveProduct(String email);
+    boolean collectReserveProduct(String email);
     Map<String,Integer> findStockEntry(String productId,String boutiqueId,String size);
     Map<String,String> addStock(String stockId);
     Product findProductByProductCode(String productId,String size);

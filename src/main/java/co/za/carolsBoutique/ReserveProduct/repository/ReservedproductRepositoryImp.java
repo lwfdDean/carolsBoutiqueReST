@@ -310,7 +310,7 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
         if (con!=null) {
             try {
                 ps = con.prepareStatement("select * from product inner join product_size on product_size.product = product.id"
-                        + " where product.id = ? and product_size.size = ?");
+                        + " where product.id = ? and product_size.size = ?");   
                 ps.setString(1, productId);
                 ps.setString(2, size);
                 rs = ps.executeQuery();
@@ -463,6 +463,37 @@ public class ReservedproductRepositoryImp implements IReservedproductRepository 
             }
         }
         return prods;
+    }
+
+    @Override
+    public boolean collectReserveProduct(String email) {
+         boolean success = false;
+        if (con != null) {
+            try {
+                con.setAutoCommit(false);
+                ps = con.prepareStatement("update reservedproduct set collected = 1 where customerEmail = ?");
+                ps.setString(1, email);
+                rowsAffected = ps.executeUpdate();
+                if (rowsAffected >= 1) {
+                    con.commit();
+                    success = true;
+                } else {
+                    con.rollback();
+                }
+                con.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (ps != null) {
+                    try {
+                        ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ReservedproductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return success;
     }
     
     
