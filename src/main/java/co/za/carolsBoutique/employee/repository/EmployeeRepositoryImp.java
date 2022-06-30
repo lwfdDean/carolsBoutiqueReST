@@ -4,13 +4,11 @@ import co.za.carolsBoutique.databaseManager.DBManager;
 import co.za.carolsBoutique.employee.model.Employee;
 import co.za.carolsBoutique.employee.model.Role;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +20,6 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
     private int rowsAffected;
 
     public EmployeeRepositoryImp() {
-        
     }
 
     @Override
@@ -33,6 +30,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
             Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         Employee employee = null;
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("select * from employee where id=?");
@@ -86,6 +88,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
             Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         List<Employee> employees = new ArrayList<>();
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("select id,name,surname,password,managerUniqueCode,role,boutique,emailAddress from employee where boutique = ?");
@@ -391,6 +398,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
             Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         Role role = null;
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("select * from role where id=?");
@@ -436,6 +448,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
             Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         List<Role> role = new ArrayList<>();
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("Select * from role");

@@ -36,11 +36,11 @@ public class ProductRepositoryImp implements IProductRepository {
     @Override
     public boolean addProduct(Product product) {
         boolean success = false;
-        try {
-            con = DBManager.getConnection();
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            con = DBManager.getConnection();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         if (con != null) {
             try {/*TODO: add a category/product*/
                 con.setAutoCommit(false);
@@ -73,13 +73,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if(con!=null){
-                    try {
-                        con.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+//                if(con!=null){
+//                    try {
+//                        con.close();
+//                    } catch (SQLException ex) {
+//                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
             }
         }
         return success;
@@ -842,6 +842,11 @@ public class ProductRepositoryImp implements IProductRepository {
             Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         Map<String, Integer> stockEntry = new HashMap<>();
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("select id,quantity from stock where product=? and boutique = ? and size = ?");
@@ -889,6 +894,11 @@ public class ProductRepositoryImp implements IProductRepository {
             Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         boolean success = false;
+//        try {
+//            con = DBManager.getConnection();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         if (con != null) {
             try {
                 con.setAutoCommit(false);
@@ -944,7 +954,11 @@ public class ProductRepositoryImp implements IProductRepository {
             Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         PreparedStatement ps1 = null;
-        ResultSet rs1 = null;
+//        try {
+//            con = DBManager.getConnection();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         int rows = 0;
         if (con != null) {
             try {

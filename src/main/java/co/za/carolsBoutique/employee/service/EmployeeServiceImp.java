@@ -54,7 +54,14 @@ public class EmployeeServiceImp implements IServiceEmployee{
         if (dao.findEmployee(employee.getId())==null) {
             if (verifyKey(employee.getPassword(),8)) {
                 if (dao.addEmployee(employee)) {
-                    prepareMail(employee.getEmailAddress(), "emp id", "");
+                    prepareMail(employee.getEmailAddress(), "emp id",
+                            "Welcome To Carols Boutique " + employee.getName()
+                            + ", We are glad to have you join our team as a "+employee.getRole().getName()
+                                    + ". Your employee ID is " +employee.getId() + "\n\n\n\nIf your role isn't that of Teller or Manager "
+                                            + "you will not be able to login to our system.\n\n\n\n"
+                                            + "If you are a Teller or Manager please rememeber your ID and Password as you will need them to access the System."
+                                            + "\n\nKind Regards"
+                                            + "\nCarol Zungu");
                     return "Employee added";
                 }
                 return "Couldn't add employee";
