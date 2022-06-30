@@ -31,17 +31,6 @@ public class ProductRepositoryImp implements IProductRepository {
 
     public ProductRepositoryImp() {
 
-        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            con = DriverManager.getConnection(url, "root", "Root");
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -97,6 +86,11 @@ public class ProductRepositoryImp implements IProductRepository {
     }
 
     private boolean addProductSizes(Product product) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         int rows = 0;
         if (con != null) {
@@ -119,12 +113,24 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rows == product.getSizes().size();
     }
 
     private boolean addProductCategory(Product product) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         int roles = 0;
         if (con != null) {
@@ -146,6 +152,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return roles == product.getCategories().size();
@@ -153,11 +166,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public boolean addStockEntry(StockEntry stockEntry, List<String> stockId, Product product) {
-//        try {
-//            con = DBManager.getConnection();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 for (int i = 0; i < product.getSizes().size(); i++) {
@@ -180,6 +193,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == product.getSizes().size();
@@ -187,6 +207,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override //laurence
     public Product findProduct(String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Product product = null;
         if (con != null) {
             try {
@@ -221,12 +246,24 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return product;
     }
 
     private List<Size> getProductSizes(String productId) {//(Laurence) changed quarie(from id to name)
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         List<Size> sizes = new ArrayList<>();
@@ -255,6 +292,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return sizes;
@@ -262,6 +306,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public List<Product> findAllProducts() {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Product> products = new ArrayList<>();
         if (con != null) {
             try {                         //(Laurence) fixed statement (products to product)(removed size)
@@ -297,12 +346,24 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return products;
     }
 
     private List<Category> findProductCategories(String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         List<Category> categories = new ArrayList<>();
@@ -332,6 +393,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return categories;
@@ -339,6 +407,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public boolean deleteProduct(String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("DELETE FROM product_size WHERE  product=?");
@@ -376,6 +449,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -383,6 +463,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public boolean updateProduct(Map<String, Double> newPrice) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String productId = "";
         Double price = 0.0;
         for (Map.Entry<String, Double> entry : newPrice.entrySet()) {
@@ -405,6 +490,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -412,6 +504,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public Category findCategory(String categoryId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Category category = null;
         if (con != null) {
             try {
@@ -439,6 +536,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return category;
@@ -446,6 +550,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public List<Category> findAllCategories() {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Category> categories = new ArrayList<>();
         if (con != null) {
             try {
@@ -472,6 +581,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return categories;
@@ -479,6 +595,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public boolean addCategory(Category category) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("INSERT INTO category(id,name) VALUES(?,?);");
@@ -495,6 +616,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -502,6 +630,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override//(Laurence) had to change statement completely, had to delete dependency first
     public boolean deleteCategory(String categoryId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("DELETE FROM product_category WHERE category = ?");
@@ -523,6 +656,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -530,6 +670,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public List<Product> findProductsByCategories(List<String> categoriesId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<String> productIds = new ArrayList();
         List<Product> products = new ArrayList();
         if (con != null) {
@@ -564,6 +709,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
 
@@ -571,6 +723,11 @@ public class ProductRepositoryImp implements IProductRepository {
     }
     
     private Product findProduct2(String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         Product product = null;
@@ -607,6 +764,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return product;
@@ -614,6 +778,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public Product findProductBySize(String productId, String size) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Product product = null;
         List<Size> sizes = getProductSizes(productId);
         if (con != null) {
@@ -653,6 +822,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return product;
@@ -660,6 +836,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public Map<String, Integer> findStockEntry(String productId, String boutiqueId, String size) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Map<String, Integer> stockEntry = new HashMap<>();
         try {
             con = DBManager.getConnection();
@@ -693,6 +874,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return stockEntry;
@@ -700,6 +888,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public boolean addNewStockLog(String employeeId, int quantityBefore, int quantityAdded, String stockId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         boolean success = false;
 //        try {
 //            con = DBManager.getConnection();
@@ -742,12 +935,24 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return success;
     }
 
     private boolean addStock(String stockId, int newQuantity) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
 //        try {
 //            con = DBManager.getConnection();
@@ -771,6 +976,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rows == 1;
@@ -778,6 +990,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override//(Laurence)method retruns ID of boutique,size
     public Map<String, String> findAvailabeStock(String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Map<String, String> available = new HashMap<>();
         if (con != null) {
             try {
@@ -804,6 +1021,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return available;
@@ -811,6 +1035,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public PromoCode findPromo(String code) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PromoCode promoCode = null;
         if (con != null) {
             try {
@@ -840,6 +1069,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return promoCode;
@@ -847,6 +1083,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public boolean addPromo(PromoCode promoCode, LocalDate expiry) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("insert into promotion_code(code,discount,expiryDate,category) values(?,?,?,?)");
@@ -865,6 +1106,13 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -872,6 +1120,11 @@ public class ProductRepositoryImp implements IProductRepository {
 
     @Override
     public List<Size> findAllSizes() {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Size> sizes = new ArrayList<>();
         if (con != null) {
             try {
@@ -897,12 +1150,24 @@ public class ProductRepositoryImp implements IProductRepository {
                         Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return sizes;
     }
     @Override
     public List findContactInfo(){
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List info = new ArrayList();
          if (con!=null) {
             try {
@@ -913,6 +1178,15 @@ public class ProductRepositoryImp implements IProductRepository {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PromotionSender.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ProductRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         

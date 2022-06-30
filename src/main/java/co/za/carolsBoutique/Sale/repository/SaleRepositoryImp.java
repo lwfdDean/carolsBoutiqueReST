@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.Sale.repository;
 
 import co.za.carolsBoutique.Sale.model.Sale;
+import co.za.carolsBoutique.databaseManager.DBManager;
 import co.za.carolsBoutique.product.model.Category;
 import co.za.carolsBoutique.product.model.Product;
 import co.za.carolsBoutique.product.model.Size;
@@ -26,21 +27,16 @@ public class SaleRepositoryImp implements ISaleRepository {
     private int rowsAffected;
 
     public SaleRepositoryImp() {
-        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            con = DriverManager.getConnection(url, "root", "Root");
-        } catch (SQLException ex) {
-            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     @Override
     public boolean addSale(Sale sale) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         boolean success = false;
         if (con != null) {
             try {
@@ -89,6 +85,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException ex) {
                         Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -96,6 +98,11 @@ public class SaleRepositoryImp implements ISaleRepository {
     }
 
     private boolean removeFromStock(Sale sale) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String bId = sale.getBoutique();
         Map<String, String> productCodes = new HashMap<>();
         for (Product product : sale.getItems()) {
@@ -122,7 +129,13 @@ public class SaleRepositoryImp implements ISaleRepository {
                         } catch (SQLException ex) {
                             Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }
                 }
             }
         }
@@ -130,6 +143,11 @@ public class SaleRepositoryImp implements ISaleRepository {
     }
 
     private boolean addSaleLineItem(String saleId, String productId,double price) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         int rows = 0;
         if (con != null) {
@@ -150,6 +168,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException ex) {
                         Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -158,6 +182,11 @@ public class SaleRepositoryImp implements ISaleRepository {
 
     @Override
     public Sale findSale(String saleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Sale sale = null;
         if (con != null) {
             try {
@@ -190,6 +219,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException ex) {
                         Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -197,6 +232,11 @@ public class SaleRepositoryImp implements ISaleRepository {
     }
 
     private List<Product> getSaleLineItems(String saleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps3 = null;
         ResultSet rs3 = null;
         List<Product> products = new ArrayList<>();
@@ -245,6 +285,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -252,6 +298,11 @@ public class SaleRepositoryImp implements ISaleRepository {
     }
 
     private List<Size> getProductSizes(String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         ResultSet rs1 = null;
         List<Size> sizes = new ArrayList<>();
@@ -279,6 +330,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -286,6 +343,11 @@ public class SaleRepositoryImp implements ISaleRepository {
     }
 
     private List<Category> findProductCategories(String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps2 = null;
         ResultSet rs2 = null;
         List<Category> categories = new ArrayList<>();
@@ -315,6 +377,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -323,6 +391,11 @@ public class SaleRepositoryImp implements ISaleRepository {
 
     @Override
     public boolean updateSale(String saleId, Double totalPrice, String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         boolean success = false;
         if (con != null) {
             try {
@@ -351,6 +424,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException ex) {
                         Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -358,6 +437,11 @@ public class SaleRepositoryImp implements ISaleRepository {
     }
 
     private boolean updateSaleLineItem(String saleId, String productId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PreparedStatement ps1 = null;
         int rows = 0;
         if (con != null) {
@@ -375,6 +459,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -383,6 +473,11 @@ public class SaleRepositoryImp implements ISaleRepository {
 
     @Override
     public Timestamp findSaleDate(String saleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Timestamp timestamp = null;
         if (con != null) {
             try {
@@ -409,6 +504,12 @@ public class SaleRepositoryImp implements ISaleRepository {
                     } catch (SQLException ex) {
                         Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -417,6 +518,11 @@ public class SaleRepositoryImp implements ISaleRepository {
 
     @Override
     public boolean updateSaleLineItem(String saleId, String returnedProductId, String newProductId,double productPrice) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         boolean success = false;
         if (con != null) {
             try {
@@ -442,6 +548,13 @@ public class SaleRepositoryImp implements ISaleRepository {
                 if (ps != null) {
                     try {
                         ps.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if(con!=null){
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(SaleRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }

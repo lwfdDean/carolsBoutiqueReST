@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.boutique.repository;
 
 import co.za.carolsBoutique.boutique.model.Boutique;
+import co.za.carolsBoutique.databaseManager.DBManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,21 +20,16 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
     private int rowsAffected;
 
     public BoutiqueRepositoryImp() {
-        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            con = DriverManager.getConnection(url, "root", "Root");
-        } catch (SQLException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     @Override //willem
     public Boutique findBoutique(String boutiqueId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Boutique boutique = null;
         if (con != null) {
             try {
@@ -65,6 +61,13 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return boutique;
@@ -72,6 +75,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
 
     @Override
     public boolean addBoutique(Boutique boutique) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("Insert Into boutique(id, location, dailytarget, monthlyTarget, password) values(?, ?, ?, ?, ?)");
@@ -91,6 +99,13 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -98,6 +113,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
 
     @Override
     public boolean deleteBoutique(String boutiqueId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("DELETE FROM boutique Where id = ?");
@@ -115,6 +135,13 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -122,6 +149,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
 
     @Override
     public List<Boutique> findAllBoutiques() {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Boutique> boutiques = new ArrayList<>();
         if (con != null) {
             try {
@@ -151,6 +183,13 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return boutiques;
@@ -158,6 +197,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
 
     @Override
     public boolean subscribeToNewsletter(String contactInfo) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("insert into subscriberlist(contactInfo) values(?)");
@@ -173,6 +217,13 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -180,6 +231,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
 
     @Override
     public boolean addReview(int rating, String comment, String boutique) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("insert into review(rating, comment, boutique) values(?,?,?)");
@@ -197,6 +253,13 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                         e.printStackTrace();
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -204,6 +267,11 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
 
     @Override
     public boolean updateBoutique(Boutique boutique) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("update boutique set dailytarget = ?, monthlytarget = ? where id = ?");
@@ -219,6 +287,13 @@ public class BoutiqueRepositoryImp implements IBoutiqueRepository {//^
                         ps.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
+                    }
+                }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }

@@ -24,6 +24,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public Employee findEmployee(String employeeId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Employee employee = null;
         try {
             con = DBManager.getConnection();
@@ -77,6 +82,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public List<Employee> findAllEmployees(String boutiqueId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Employee> employees = new ArrayList<>();
         try {
             con = DBManager.getConnection();
@@ -382,6 +392,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
     @Override
 
     public Role findRole(String roleId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Role role = null;
         try {
             con = DBManager.getConnection();
@@ -427,6 +442,11 @@ public class EmployeeRepositoryImp implements IEmployeeRepository {
 
     @Override
     public List<Role> findAllRoles() {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<Role> role = new ArrayList<>();
         try {
             con = DBManager.getConnection();

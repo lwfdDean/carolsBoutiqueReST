@@ -1,6 +1,7 @@
 package co.za.carolsBoutique.ibt.repository;
 
 import co.za.carolsBoutique.boutique.repository.BoutiqueRepositoryImp;
+import co.za.carolsBoutique.databaseManager.DBManager;
 import co.za.carolsBoutique.ibt.model.IBT;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,21 +21,16 @@ public class IBTRepositoryImp implements IIBTRepository {
     private int rowsAffected;
 
     public IBTRepositoryImp() {
-        String url = "jdbc:mysql://localhost:3306/carolsboutique?autoReconnect=true&useSSL=false";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            con = DriverManager.getConnection(url, "root", "Root");
-        } catch (SQLException ex) {
-            Logger.getLogger(BoutiqueRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     @Override
     public boolean addIBT(IBT ibt) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("insert into ibt(id,customerEmail,approved,productcode,requestingBoutique,approvingBoutique) values(?,?,?,?,?,?)");
@@ -55,6 +51,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -62,6 +65,11 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public IBT findIBT(String ibtId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         IBT ibt = null;
         if (con != null) {
             try {
@@ -94,6 +102,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return ibt;
@@ -101,6 +116,11 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public List<IBT> findStoreIBTS(String storeId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<IBT> ibtRequests = new ArrayList<>();
         if (con != null) {
             try {
@@ -133,6 +153,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return ibtRequests;
@@ -140,6 +167,11 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public boolean updateIBT(String ibtId, boolean approved) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("update ibt set approved = ? where id = ?");
@@ -156,6 +188,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -163,6 +202,11 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public boolean deleteIBT(String ibtId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (con != null) {
             try {
                 ps = con.prepareStatement("delete from ibt where id = ?");
@@ -178,6 +222,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return rowsAffected == 1;
@@ -185,6 +236,11 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public List<IBT> findStoreIBTRequests(String storeId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         List<IBT> ibtRequested = new ArrayList<>();
         if (con != null) {
             try {
@@ -217,6 +273,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                if(con!=null){
+                    try {
+                        con.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return ibtRequested;
@@ -224,6 +287,11 @@ public class IBTRepositoryImp implements IIBTRepository {
 
     @Override
     public String getManagerEmail(String boutiqueId) {
+        try {
+            con = DBManager.getConnection();
+        } catch (SQLException ex) {
+            Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String email = new String();
         if (con!=null) {
             try {
@@ -246,6 +314,13 @@ public class IBTRepositoryImp implements IIBTRepository {
                 if (rs!=null) {
                     try {
                         rs.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if(con!=null){
+                    try {
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(IBTRepositoryImp.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -64,7 +64,7 @@ public class SaleServiceImp implements IServiceSale {
         }
         Sale sale = dao.findSale(saleId);
         sale.setCardNumber(refundInfo.getCardNumber());
-        String[] pInfo = refundInfo.getSaleId().split(" ");
+        String[] pInfo = refundInfo.getRefundProductId().split(" ");
         double refundAmmount = 0.0;
         for (Product p : sale.getItems()) {
             if (p.getId().equals(pInfo[0])) {
